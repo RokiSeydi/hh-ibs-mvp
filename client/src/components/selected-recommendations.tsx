@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Calendar, Play, Users, Sparkles, Star, MapPin, Clock, ArrowRight, ShoppingCart } from "lucide-react";
+import { useLocation } from "wouter";
 
 interface Provider {
   id: number;
@@ -83,6 +84,7 @@ const calculateTotalSavings = (providers: Provider[]): { original: number, disco
 };
 
 export default function SelectedRecommendations({ providers, onStartOver }: SelectedRecommendationsProps) {
+  const [, setLocation] = useLocation();
   const totalSavings = calculateTotalSavings(providers);
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -232,6 +234,7 @@ export default function SelectedRecommendations({ providers, onStartOver }: Sele
         </motion.button>
         
         <motion.button
+          onClick={() => setLocation('/confirmation')}
           className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-3"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}

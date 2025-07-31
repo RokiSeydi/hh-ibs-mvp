@@ -5,11 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import CareAssistant from "@/pages/care-assistant";
+import Confirmation from "@/pages/confirmation";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={CareAssistant} />
+      <Route path="/confirmation" component={Confirmation} />
       <Route component={NotFound} />
     </Switch>
   );
