@@ -78,7 +78,7 @@ export default function CareAssistant() {
         <div className="flex items-center justify-center mb-4">
           <h1 className="text-3xl font-semibold text-gray-800">Holding Health</h1>
         </div>
-        <p className="text-gray-600 font-light">We're here to support you through anything 💜</p>
+        <p className="text-gray-600 font-light">supporting your life through chronic conditions</p>
       </motion.div>
 
       {/* Input Section */}
