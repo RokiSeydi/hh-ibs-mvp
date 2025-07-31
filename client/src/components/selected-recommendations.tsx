@@ -36,6 +36,11 @@ const getDiscountPercentage = (originalPrice: string): number => {
 };
 
 const getHoldingHealthPrice = (originalPrice: string): string => {
+  // Handle free services
+  if (originalPrice.toLowerCase().includes('free')) {
+    return 'Free trial with Holding Health';
+  }
+  
   const match = originalPrice.match(/\$(\d+)/);
   if (!match) return originalPrice;
   
@@ -43,8 +48,6 @@ const getHoldingHealthPrice = (originalPrice: string): string => {
   const discount = getDiscountPercentage(originalPrice);
   const discountedPrice = Math.round(price * (1 - discount / 100));
   
-  // Handle special cases
-  if (originalPrice.includes('Free')) return 'Free';
   if (originalPrice.includes('month')) return `$${discountedPrice}/month`;
   if (originalPrice.includes('session')) return `$${discountedPrice}/session`;
   if (originalPrice.includes('treatment')) return `$${discountedPrice}/treatment`;
@@ -146,13 +149,24 @@ export default function SelectedRecommendations({ providers, onStartOver }: Sele
                       <span className="text-xs">{provider.availability}</span>
                     </div>
                     <div className="text-right">
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-400 line-through">{provider.price}</span>
-                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
-                          {getDiscountPercentage(provider.price)}% off
-                        </span>
-                      </div>
-                      <span className="text-sm font-bold text-green-600">{getHoldingHealthPrice(provider.price)}</span>
+                      {provider.price.toLowerCase().includes('free') ? (
+                        <div className="space-y-1">
+                          <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-semibold">
+                            Premium Access
+                          </span>
+                          <div className="text-sm font-bold text-blue-600">{getHoldingHealthPrice(provider.price)}</div>
+                        </div>
+                      ) : (
+                        <div className="space-y-1">
+                          <div className="flex items-center space-x-2">
+                            <span className="text-xs text-gray-400 line-through">{provider.price}</span>
+                            <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                              {getDiscountPercentage(provider.price)}% off
+                            </span>
+                          </div>
+                          <span className="text-sm font-bold text-green-600">{getHoldingHealthPrice(provider.price)}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
