@@ -248,18 +248,22 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
   };
 
   const handleDragEnd = (event: any, info: PanInfo) => {
-    const threshold = 100;
-    if (info.offset.x > threshold) {
+    const threshold = 80;
+    const velocity = info.velocity.x;
+    
+    // Consider both distance and velocity for more natural feel
+    if (info.offset.x > threshold || velocity > 500) {
       handleSwipe('right');
-    } else if (info.offset.x < -threshold) {
+    } else if (info.offset.x < -threshold || velocity < -500) {
       handleSwipe('left');
     }
   };
 
   const handleDrag = (event: any, info: PanInfo) => {
-    if (info.offset.x > 50) {
+    const threshold = 30;
+    if (info.offset.x > threshold) {
       setDragDirection('right');
-    } else if (info.offset.x < -50) {
+    } else if (info.offset.x < -threshold) {
       setDragDirection('left');
     } else {
       setDragDirection(null);
@@ -316,36 +320,67 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
             }`}
             style={{ zIndex: 2 }}
             drag="x"
-            dragConstraints={{ left: 0, right: 0 }}
+            dragConstraints={{ left: -150, right: 150 }}
+            dragElastic={0.1}
+            dragMomentum={false}
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
             whileDrag={{ 
-              rotate: dragDirection === 'right' ? 15 : dragDirection === 'left' ? -15 : 0,
-              scale: 1.05 
+              rotate: dragDirection === 'right' ? 12 : dragDirection === 'left' ? -12 : 0,
+              scale: 1.02,
+              transition: { type: "spring", stiffness: 600, damping: 30 }
             }}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1, 
+              y: 0,
+              transition: { type: "spring", stiffness: 400, damping: 30, mass: 1 }
+            }}
             exit={{ 
               opacity: 0, 
-              x: dragDirection === 'right' ? 300 : -300,
-              rotate: dragDirection === 'right' ? 30 : -30,
-              scale: 0.8
+              x: dragDirection === 'right' ? 400 : -400,
+              rotate: dragDirection === 'right' ? 25 : -25,
+              scale: 0.7,
+              transition: { 
+                type: "spring", 
+                stiffness: 500, 
+                damping: 35,
+                mass: 0.8
+              }
             }}
-            transition={{ type: "spring", stiffness: 300, damping: 25 }}
+            transition={{ 
+              type: "spring", 
+              stiffness: 400, 
+              damping: 30,
+              mass: 1
+            }}
           >
             {/* Swipe indicators */}
-            <div className={`absolute top-8 left-8 z-10 bg-green-500 text-white px-4 py-2 rounded-full font-bold transform rotate-12 transition-opacity ${
-              dragDirection === 'right' ? 'opacity-100' : 'opacity-0'
-            }`}>
+            <motion.div 
+              className="absolute top-8 left-8 z-10 bg-green-500 text-white px-4 py-2 rounded-full font-bold transform rotate-12"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ 
+                opacity: dragDirection === 'right' ? 1 : 0,
+                scale: dragDirection === 'right' ? 1 : 0.8
+              }}
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+            >
               <Heart className="h-5 w-5 inline mr-1" />
               LIKE
-            </div>
-            <div className={`absolute top-8 right-8 z-10 bg-red-500 text-white px-4 py-2 rounded-full font-bold transform -rotate-12 transition-opacity ${
-              dragDirection === 'left' ? 'opacity-100' : 'opacity-0'
-            }`}>
+            </motion.div>
+            <motion.div 
+              className="absolute top-8 right-8 z-10 bg-red-500 text-white px-4 py-2 rounded-full font-bold transform -rotate-12"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ 
+                opacity: dragDirection === 'left' ? 1 : 0,
+                scale: dragDirection === 'left' ? 1 : 0.8
+              }}
+              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+            >
               <X className="h-5 w-5 inline mr-1" />
               PASS
-            </div>
+            </motion.div>
 
             {/* Card content */}
             <div className="p-8 h-full flex flex-col">
