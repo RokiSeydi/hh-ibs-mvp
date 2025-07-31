@@ -128,7 +128,7 @@ export default function CareAssistant() {
           >
             <div className="bg-gradient-to-r from-[var(--care-purple)] to-[var(--care-blue)] text-white p-6 rounded-2xl shadow-lg text-center">
               <Heart className="h-6 w-6 mx-auto mb-3 fill-current" />
-              <p className="text-lg font-medium">Girl, I feel you. Sorry to hear that but we got you, here's what we recommend</p>
+              <p className="text-lg font-medium">Okay, deep breath. We got you.</p>
               <div className="mt-4">
                 <div className="inline-flex items-center space-x-1">
                   <motion.div 
