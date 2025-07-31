@@ -326,34 +326,30 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
             whileDrag={{ 
-              rotate: dragDirection === 'right' ? 12 : dragDirection === 'left' ? -12 : 0,
-              scale: 1.02,
-              transition: { type: "spring", stiffness: 600, damping: 30 }
+              rotate: dragDirection === 'right' ? 8 : dragDirection === 'left' ? -8 : 0,
+              scale: 1.01,
+              transition: { duration: 0.2, ease: "easeOut" }
             }}
             initial={{ opacity: 0, scale: 0.9, y: 20 }}
             animate={{ 
               opacity: 1, 
               scale: 1, 
               y: 0,
-              transition: { type: "spring", stiffness: 400, damping: 30, mass: 1 }
+              transition: { duration: 0.4, ease: "easeOut" }
             }}
             exit={{ 
               opacity: 0, 
-              x: dragDirection === 'right' ? 400 : -400,
-              rotate: dragDirection === 'right' ? 25 : -25,
-              scale: 0.7,
+              x: dragDirection === 'right' ? 400 : dragDirection === 'left' ? -400 : 0,
+              rotate: dragDirection === 'right' ? 20 : dragDirection === 'left' ? -20 : 0,
+              scale: 0.8,
               transition: { 
-                type: "spring", 
-                stiffness: 500, 
-                damping: 35,
-                mass: 0.8
+                duration: 0.6,
+                ease: "easeOut"
               }
             }}
             transition={{ 
-              type: "spring", 
-              stiffness: 400, 
-              damping: 30,
-              mass: 1
+              duration: 0.4,
+              ease: "easeOut"
             }}
           >
             {/* Swipe indicators */}
@@ -364,7 +360,7 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                 opacity: dragDirection === 'right' ? 1 : 0,
                 scale: dragDirection === 'right' ? 1 : 0.8
               }}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <Heart className="h-5 w-5 inline mr-1" />
               LIKE
@@ -376,7 +372,7 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                 opacity: dragDirection === 'left' ? 1 : 0,
                 scale: dragDirection === 'left' ? 1 : 0.8
               }}
-              transition={{ type: "spring", stiffness: 500, damping: 25 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             >
               <X className="h-5 w-5 inline mr-1" />
               PASS
