@@ -204,15 +204,7 @@ export default function CareAssistant() {
         )}
       </AnimatePresence>
 
-      {/* Footer */}
-      <motion.div 
-        className={`mt-12 text-center text-gray-500 text-sm transition-all duration-500 ${currentStep === "swiping" ? "blur-sm opacity-20" : ""}`}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: currentStep === "swiping" ? 0.2 : 1 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
-      >
-        <p>Remember: You're not alone, and it's okay to ask for help 💜</p>
-      </motion.div>
+
     </div>
   );
 }
