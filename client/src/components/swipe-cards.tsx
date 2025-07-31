@@ -570,10 +570,7 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
             </motion.button>
           </div>
 
-          {/* Helper text */}
-          <p className="text-center text-gray-500 text-sm mt-4">
-            Swipe right to add to your care plan • Swipe left to pass • {selectedProviders.length}/4 selected
-          </p>
+
         </>
       )}
     </div>
