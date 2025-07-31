@@ -15,6 +15,7 @@ interface Provider {
   icon: any;
   color: string;
   image: string;
+  videoUrl?: string;
 }
 
 interface SelectedRecommendationsProps {

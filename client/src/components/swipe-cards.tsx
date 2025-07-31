@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import { Calendar, Play, Users, Sparkles, Heart, X, Star, MapPin, Clock } from "lucide-react";
+import { Calendar, Play, Users, Sparkles, Heart, X, Star, MapPin, Clock, PlayCircle } from "lucide-react";
 
 // Helper functions for pricing
 const getDiscountPercentage = (originalPrice: string): number => {
@@ -49,6 +49,7 @@ interface Provider {
   icon: any;
   color: string;
   image: string;
+  videoUrl?: string;
 }
 
 const providers: Provider[] = [
@@ -65,7 +66,8 @@ const providers: Provider[] = [
     specialties: ['Breakup Recovery', 'Communication', 'Self-Worth'],
     icon: Calendar,
     color: 'from-violet-500 to-purple-600',
-    image: '👩‍⚕️'
+    image: '👩‍⚕️',
+    videoUrl: 'https://player.vimeo.com/video/947608166'
   },
   {
     id: 2,
@@ -80,7 +82,8 @@ const providers: Provider[] = [
     specialties: ['Pain Management', 'Stress Relief', 'Emotional Healing'],
     icon: Play,
     color: 'from-emerald-500 to-green-600',
-    image: '🧘‍♀️'
+    image: '🧘‍♀️',
+    videoUrl: 'https://player.vimeo.com/video/947608205'
   },
   {
     id: 3,
@@ -95,7 +98,8 @@ const providers: Provider[] = [
     specialties: ['Peer Support', 'Group Therapy', 'Shared Experiences'],
     icon: Users,
     color: 'from-blue-500 to-cyan-600',
-    image: '👥'
+    image: '👥',
+    videoUrl: 'https://player.vimeo.com/video/947608244'
   },
   {
     id: 4,
@@ -110,7 +114,8 @@ const providers: Provider[] = [
     specialties: ['Life Transitions', 'Goal Setting', 'Confidence Building'],
     icon: Sparkles,
     color: 'from-orange-500 to-red-600',
-    image: '👨‍💼'
+    image: '👨‍💼',
+    videoUrl: 'https://player.vimeo.com/video/947608286'
   },
   {
     id: 5,
@@ -125,7 +130,8 @@ const providers: Provider[] = [
     specialties: ['Massage Therapy', 'Aromatherapy', 'Relaxation'],
     icon: Sparkles,
     color: 'from-pink-500 to-rose-600',
-    image: '💆‍♀️'
+    image: '💆‍♀️',
+    videoUrl: 'https://player.vimeo.com/video/947608320'
   },
   {
     id: 6,
@@ -140,7 +146,8 @@ const providers: Provider[] = [
     specialties: ['Anxiety Relief', 'Breathing Techniques', 'Stress Management'],
     icon: Play,
     color: 'from-teal-500 to-cyan-600',
-    image: '🌬️'
+    image: '🌬️',
+    videoUrl: 'https://player.vimeo.com/video/947608350'
   },
   {
     id: 7,
@@ -155,7 +162,8 @@ const providers: Provider[] = [
     specialties: ['24/7 Support', 'Crisis Help', 'Online Community'],
     icon: Users,
     color: 'from-indigo-500 to-blue-600',
-    image: '💬'
+    image: '💬',
+    videoUrl: 'https://player.vimeo.com/video/947608380'
   },
   {
     id: 8,
@@ -170,7 +178,8 @@ const providers: Provider[] = [
     specialties: ['Mood Boosting', 'Gentle Yoga', 'Dance Therapy'],
     icon: Sparkles,
     color: 'from-green-500 to-emerald-600',
-    image: '🏃‍♀️'
+    image: '🏃‍♀️',
+    videoUrl: 'https://player.vimeo.com/video/947608410'
   }
 ];
 
@@ -182,6 +191,7 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
   const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const currentProvider = providers[currentIndex];
@@ -190,6 +200,9 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
     if (direction === 'right' && selectedProviders.length < 4) {
       setSelectedProviders(prev => [...prev, currentProvider]);
     }
+    
+    // Reset video state when switching cards
+    setIsVideoPlaying(false);
     
     if (currentIndex < providers.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -303,9 +316,69 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
 
             {/* Card content */}
             <div className="p-8 h-full flex flex-col">
-              {/* Header with emoji and icon */}
+              {/* Video Section */}
+              {currentProvider.videoUrl && (
+                <div className="mb-6">
+                  <div className="relative bg-gray-100 rounded-2xl overflow-hidden aspect-video">
+                    {!isVideoPlaying ? (
+                      <div 
+                        className="relative w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center cursor-pointer group"
+                        onClick={() => setIsVideoPlaying(true)}
+                      >
+                        {/* Thumbnail with emoji */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black/20 to-black/40">
+                          <div className="text-4xl mb-4">{currentProvider.image}</div>
+                        </div>
+                        
+                        {/* Play button overlay */}
+                        <motion.div
+                          className="absolute inset-0 flex items-center justify-center"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          <div className="bg-white/90 backdrop-blur-sm rounded-full p-4 shadow-lg group-hover:bg-white transition-colors">
+                            <PlayCircle className="h-12 w-12 text-gray-700" />
+                          </div>
+                        </motion.div>
+                        
+                        {/* Preview text */}
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <div className="bg-black/70 backdrop-blur-sm rounded-lg p-3">
+                            <p className="text-white text-sm font-medium">Watch preview of {currentProvider.name}</p>
+                            <p className="text-white/80 text-xs">Tap to play</p>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="relative w-full h-full">
+                        <iframe
+                          src={`${currentProvider.videoUrl}?autoplay=1&muted=1&controls=1`}
+                          className="w-full h-full"
+                          frameBorder="0"
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          allowFullScreen
+                        />
+                        <button
+                          onClick={() => setIsVideoPlaying(false)}
+                          className="absolute top-2 right-2 bg-black/50 hover:bg-black/70 text-white rounded-full p-2 transition-colors"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Header with icon */}
               <div className="flex items-center justify-between mb-6">
-                <div className="text-6xl">{currentProvider.image}</div>
+                <div className="flex items-center space-x-4">
+                  {!currentProvider.videoUrl && <div className="text-6xl">{currentProvider.image}</div>}
+                  <div>
+                    <h3 className="text-xl font-bold text-gray-800">{currentProvider.title}</h3>
+                    <h4 className="text-lg font-semibold text-gray-700">{currentProvider.name}</h4>
+                  </div>
+                </div>
                 <motion.div 
                   className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${currentProvider.color} flex items-center justify-center shadow-lg`}
                   whileHover={{ scale: 1.1, rotate: 5 }}
@@ -314,11 +387,13 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                 </motion.div>
               </div>
 
-              {/* Title and name */}
-              <div className="mb-4">
-                <h3 className="text-xl font-bold text-gray-800 mb-1">{currentProvider.title}</h3>
-                <h4 className="text-lg font-semibold text-gray-700">{currentProvider.name}</h4>
-              </div>
+              {/* Title and name - only show if no video */}
+              {!currentProvider.videoUrl && (
+                <div className="mb-4">
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">{currentProvider.title}</h3>
+                  <h4 className="text-lg font-semibold text-gray-700">{currentProvider.name}</h4>
+                </div>
+              )}
 
               {/* Rating and location */}
               <div className="flex items-center space-x-4 mb-4">
