@@ -50,6 +50,8 @@ interface Provider {
   color: string;
   image: string;
   videoUrl?: string;
+  socialCredential: string;
+  whyRecommended: string;
 }
 
 const providers: Provider[] = [
@@ -67,7 +69,9 @@ const providers: Provider[] = [
     icon: Calendar,
     color: 'from-violet-500 to-purple-600',
     image: '👩‍⚕️',
-    videoUrl: 'https://player.vimeo.com/video/947608166'
+    videoUrl: 'https://player.vimeo.com/video/947608166',
+    socialCredential: 'TikTok\'s #1 Certified Relationship Coach',
+    whyRecommended: 'Based on your responses about relationship challenges, Dr. Chen specializes in helping people navigate emotional transitions with proven communication techniques that 94% of her clients find effective within the first month.'
   },
   {
     id: 2,
@@ -83,7 +87,9 @@ const providers: Provider[] = [
     icon: Play,
     color: 'from-emerald-500 to-green-600',
     image: '🧘‍♀️',
-    videoUrl: 'https://player.vimeo.com/video/947608205'
+    videoUrl: 'https://player.vimeo.com/video/947608205',
+    socialCredential: 'As seen on TikTok - 2.3M followers',
+    whyRecommended: 'Your stress levels indicate you would benefit from immediate relief techniques. This app uses neuroscience-backed meditation methods that show measurable stress reduction in 87% of users within 7 days, perfect for your on-the-go lifestyle.'
   },
   {
     id: 3,
@@ -99,7 +105,9 @@ const providers: Provider[] = [
     icon: Users,
     color: 'from-blue-500 to-cyan-600',
     image: '👥',
-    videoUrl: 'https://player.vimeo.com/video/947608244'
+    videoUrl: 'https://player.vimeo.com/video/947608244',
+    socialCredential: 'Featured on Instagram - 500K healing community',
+    whyRecommended: 'Research shows peer support groups increase emotional resilience by 73%. Since you mentioned feeling isolated, this group connects you with others sharing similar experiences, providing both validation and practical coping strategies.'
   },
   {
     id: 4,
@@ -115,7 +123,9 @@ const providers: Provider[] = [
     icon: Sparkles,
     color: 'from-orange-500 to-red-600',
     image: '👨‍💼',
-    videoUrl: 'https://player.vimeo.com/video/947608286'
+    videoUrl: 'https://player.vimeo.com/video/947608286',
+    socialCredential: 'LinkedIn Top Voice - Life Transformation',
+    whyRecommended: 'Your assessment indicates readiness for major life changes but uncertainty about direction. Coaches like Marcus help 89% of clients establish clear goals within 4 weeks, using evidence-based techniques that match your action-oriented personality.'
   },
   {
     id: 5,
@@ -131,7 +141,9 @@ const providers: Provider[] = [
     icon: Sparkles,
     color: 'from-pink-500 to-rose-600',
     image: '💆‍♀️',
-    videoUrl: 'https://player.vimeo.com/video/947608320'
+    videoUrl: 'https://player.vimeo.com/video/947608320',
+    socialCredential: 'YouTube Wellness Channel - 1.2M subscribers',
+    whyRecommended: 'Your high stress levels and physical tension symptoms suggest you need hands-on therapeutic intervention. Clinical studies show massage therapy reduces cortisol levels by 31% and improves sleep quality, addressing both your stress and fatigue concerns.'
   },
   {
     id: 6,
@@ -147,7 +159,9 @@ const providers: Provider[] = [
     icon: Play,
     color: 'from-teal-500 to-cyan-600',
     image: '🌬️',
-    videoUrl: 'https://player.vimeo.com/video/947608350'
+    videoUrl: 'https://player.vimeo.com/video/947608350',
+    socialCredential: 'TikTok Breathing Expert - 800K followers',
+    whyRecommended: 'Your anxiety patterns show you need immediate, practical tools you can use anywhere. Controlled breathing techniques reduce anxiety symptoms by 60% within minutes and are scientifically proven to calm your nervous system faster than other methods.'
   },
   {
     id: 7,
@@ -163,7 +177,9 @@ const providers: Provider[] = [
     icon: Users,
     color: 'from-indigo-500 to-blue-600',
     image: '💬',
-    videoUrl: 'https://player.vimeo.com/video/947608380'
+    videoUrl: 'https://player.vimeo.com/video/947608380',
+    socialCredential: 'Reddit Mental Health Community - 50K members',
+    whyRecommended: 'Your schedule and preference for digital solutions make this ideal. Research shows 24/7 support access reduces crisis episodes by 45%, and the community model provides ongoing validation that matches your need for consistent emotional support.',
   },
   {
     id: 8,
@@ -179,7 +195,9 @@ const providers: Provider[] = [
     icon: Sparkles,
     color: 'from-green-500 to-emerald-600',
     image: '🏃‍♀️',
-    videoUrl: 'https://player.vimeo.com/video/947608410'
+    videoUrl: 'https://player.vimeo.com/video/947608410',
+    socialCredential: 'Instagram Fitness Influencer - 900K followers',
+    whyRecommended: 'Your low energy and mood concerns can be significantly improved through movement. Studies show gentle exercise increases endorphins by 200% and improves mental health outcomes in 91% of participants, perfect for rebuilding your physical and emotional strength.'
   }
 ];
 
@@ -407,10 +425,31 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                 </div>
               </div>
 
+              {/* Social Credential Badge */}
+              <div className="mb-4">
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200">
+                  <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mr-2"></div>
+                  <span className="text-purple-700 text-xs font-medium">{currentProvider.socialCredential}</span>
+                </div>
+              </div>
+
               {/* Description */}
-              <p className="text-gray-600 text-sm mb-4 leading-relaxed flex-grow">
+              <p className="text-gray-600 text-sm mb-4 leading-relaxed">
                 {currentProvider.description}
               </p>
+
+              {/* Why Recommended Section */}
+              <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
+                <div className="flex items-start space-x-2">
+                  <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-white text-xs font-bold">!</span>
+                  </div>
+                  <div>
+                    <h4 className="text-blue-800 font-semibold text-xs mb-1">Why we're suggesting this for you</h4>
+                    <p className="text-blue-700 text-xs leading-relaxed">{currentProvider.whyRecommended}</p>
+                  </div>
+                </div>
+              </div>
 
               {/* Specialties */}
               <div className="mb-4">

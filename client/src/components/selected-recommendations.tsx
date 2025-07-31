@@ -16,6 +16,8 @@ interface Provider {
   color: string;
   image: string;
   videoUrl?: string;
+  socialCredential: string;
+  whyRecommended: string;
 }
 
 interface SelectedRecommendationsProps {
