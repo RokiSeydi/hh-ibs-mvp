@@ -3,12 +3,30 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import CareSuggestions from "../components/care-suggestions";
+import SwipeCards from "../components/swipe-cards";
+import SelectedRecommendations from "../components/selected-recommendations";
+
+interface Provider {
+  id: number;
+  type: 'coach' | 'meditation' | 'support' | 'selfcare';
+  title: string;
+  name: string;
+  description: string;
+  rating: number;
+  location: string;
+  availability: string;
+  price: string;
+  specialties: string[];
+  icon: any;
+  color: string;
+  image: string;
+}
 
 export default function CareAssistant() {
   const [userInput, setUserInput] = useState("");
-  const [currentStep, setCurrentStep] = useState<"input" | "response" | "suggestions">("input");
+  const [currentStep, setCurrentStep] = useState<"input" | "response" | "swiping" | "results">("input");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
 
   const handleSubmit = async () => {
     if (!userInput.trim()) {
@@ -22,9 +40,9 @@ export default function CareAssistant() {
     
     setCurrentStep("response");
     
-    // After 2 seconds, show suggestions
+    // After 2 seconds, show swiping interface
     setTimeout(() => {
-      setCurrentStep("suggestions");
+      setCurrentStep("swiping");
       setIsSubmitting(false);
     }, 2000);
   };
@@ -34,6 +52,18 @@ export default function CareAssistant() {
       e.preventDefault();
       handleSubmit();
     }
+  };
+
+  const handleProviderSelection = (providers: Provider[]) => {
+    setSelectedProviders(providers);
+    setCurrentStep("results");
+  };
+
+  const handleStartOver = () => {
+    setUserInput("");
+    setCurrentStep("input");
+    setSelectedProviders([]);
+    setIsSubmitting(false);
   };
 
   return (
@@ -135,9 +165,9 @@ export default function CareAssistant() {
         )}
       </AnimatePresence>
 
-      {/* Care Suggestions */}
+      {/* Swipe Cards Interface */}
       <AnimatePresence>
-        {currentStep === "suggestions" && (
+        {currentStep === "swiping" && (
           <motion.div 
             className="w-full max-w-4xl"
             initial={{ opacity: 0 }}
@@ -150,9 +180,26 @@ export default function CareAssistant() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              Personalized Care Recommendations
+              Find Your Perfect Care Match
             </motion.h2>
-            <CareSuggestions />
+            <SwipeCards onSelection={handleProviderSelection} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Selected Recommendations */}
+      <AnimatePresence>
+        {currentStep === "results" && (
+          <motion.div 
+            className="w-full max-w-4xl"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+          >
+            <SelectedRecommendations 
+              providers={selectedProviders} 
+              onStartOver={handleStartOver}
+            />
           </motion.div>
         )}
       </AnimatePresence>
