@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import CareSuggestions from "@/components/care-suggestions";
+import CareSuggestions from "../components/care-suggestions";
 
 export default function CareAssistant() {
   const [userInput, setUserInput] = useState("");
@@ -52,7 +52,7 @@ export default function CareAssistant() {
           >
             <Heart className="h-8 w-8 care-coral mr-3 fill-current" />
           </motion.div>
-          <h1 className="text-3xl font-semibold text-gray-800">Care Assistant</h1>
+          <h1 className="text-3xl font-semibold text-gray-800">Holding Health</h1>
           <motion.div
             animate={{ scale: [1, 1.1, 1] }}
             transition={{ duration: 1.5, repeat: Infinity, delay: 0.7 }}
