@@ -68,7 +68,7 @@ const providers: Provider[] = [
     specialties: ['Breakup Recovery', 'Communication', 'Self-Worth'],
     icon: Calendar,
     color: 'from-violet-500 to-purple-600',
-    image: '👩‍⚕️',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608166',
     socialCredential: 'TikTok\'s #1 Certified Relationship Coach',
     whyRecommended: 'Based on your responses about relationship challenges, Dr. Chen specializes in helping people navigate emotional transitions with proven communication techniques that 94% of her clients find effective within the first month.'
@@ -86,7 +86,7 @@ const providers: Provider[] = [
     specialties: ['Pain Management', 'Stress Relief', 'Emotional Healing'],
     icon: Play,
     color: 'from-emerald-500 to-green-600',
-    image: '🧘‍♀️',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608205',
     socialCredential: 'As seen on TikTok - 2.3M followers',
     whyRecommended: 'Your stress levels indicate you would benefit from immediate relief techniques. This app uses neuroscience-backed meditation methods that show measurable stress reduction in 87% of users within 7 days, perfect for your on-the-go lifestyle.'
@@ -104,7 +104,7 @@ const providers: Provider[] = [
     specialties: ['Peer Support', 'Group Therapy', 'Shared Experiences'],
     icon: Users,
     color: 'from-blue-500 to-cyan-600',
-    image: '👥',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608244',
     socialCredential: 'Featured on Instagram - 500K healing community',
     whyRecommended: 'Research shows peer support groups increase emotional resilience by 73%. Since you mentioned feeling isolated, this group connects you with others sharing similar experiences, providing both validation and practical coping strategies.'
@@ -122,7 +122,7 @@ const providers: Provider[] = [
     specialties: ['Life Transitions', 'Goal Setting', 'Confidence Building'],
     icon: Sparkles,
     color: 'from-orange-500 to-red-600',
-    image: '👨‍💼',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608286',
     socialCredential: 'LinkedIn Top Voice - Life Transformation',
     whyRecommended: 'Your assessment indicates readiness for major life changes but uncertainty about direction. Coaches like Marcus help 89% of clients establish clear goals within 4 weeks, using evidence-based techniques that match your action-oriented personality.'
@@ -140,7 +140,7 @@ const providers: Provider[] = [
     specialties: ['Massage Therapy', 'Aromatherapy', 'Relaxation'],
     icon: Sparkles,
     color: 'from-pink-500 to-rose-600',
-    image: '💆‍♀️',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608320',
     socialCredential: 'YouTube Wellness Channel - 1.2M subscribers',
     whyRecommended: 'Your high stress levels and physical tension symptoms suggest you need hands-on therapeutic intervention. Clinical studies show massage therapy reduces cortisol levels by 31% and improves sleep quality, addressing both your stress and fatigue concerns.'
@@ -158,7 +158,7 @@ const providers: Provider[] = [
     specialties: ['Anxiety Relief', 'Breathing Techniques', 'Stress Management'],
     icon: Play,
     color: 'from-teal-500 to-cyan-600',
-    image: '🌬️',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608350',
     socialCredential: 'TikTok Breathing Expert - 800K followers',
     whyRecommended: 'Your anxiety patterns show you need immediate, practical tools you can use anywhere. Controlled breathing techniques reduce anxiety symptoms by 60% within minutes and are scientifically proven to calm your nervous system faster than other methods.'
@@ -176,7 +176,7 @@ const providers: Provider[] = [
     specialties: ['24/7 Support', 'Crisis Help', 'Online Community'],
     icon: Users,
     color: 'from-indigo-500 to-blue-600',
-    image: '💬',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608380',
     socialCredential: 'Reddit Mental Health Community - 50K members',
     whyRecommended: 'Your schedule and preference for digital solutions make this ideal. Research shows 24/7 support access reduces crisis episodes by 45%, and the community model provides ongoing validation that matches your need for consistent emotional support.',
@@ -194,7 +194,7 @@ const providers: Provider[] = [
     specialties: ['Mood Boosting', 'Gentle Yoga', 'Dance Therapy'],
     icon: Sparkles,
     color: 'from-green-500 to-emerald-600',
-    image: '🏃‍♀️',
+    image: '',
     videoUrl: 'https://player.vimeo.com/video/947608410',
     socialCredential: 'Instagram Fitness Influencer - 900K followers',
     whyRecommended: 'Your low energy and mood concerns can be significantly improved through movement. Studies show gentle exercise increases endorphins by 200% and improves mental health outcomes in 91% of participants, perfect for rebuilding your physical and emotional strength.'
@@ -216,22 +216,35 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
   const currentProvider = providers[currentIndex];
 
   const handleSwipe = (direction: 'left' | 'right') => {
+    let newSelectedProviders = selectedProviders;
+    
     if (direction === 'right' && selectedProviders.length < 4) {
-      setSelectedProviders(prev => [...prev, currentProvider]);
+      newSelectedProviders = [...selectedProviders, currentProvider];
+      setSelectedProviders(newSelectedProviders);
     }
     
     // Reset video and recommendation states when switching cards
     setIsVideoPlaying(false);
     setIsRecommendationOpen(false);
     
+    // If we've reached 4 selections, allow user to proceed immediately
+    if (newSelectedProviders.length >= 4) {
+      // Don't automatically trigger - let user choose to continue
+      setDragDirection(null);
+      return;
+    }
+    
     if (currentIndex < providers.length - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      // All cards swiped, trigger selection
-      const finalSelection = direction === 'right' ? [...selectedProviders, currentProvider] : selectedProviders;
-      onSelection(finalSelection);
+      // All cards swiped, trigger selection with current selections
+      onSelection(newSelectedProviders);
     }
     setDragDirection(null);
+  };
+
+  const handleContinueToDashboard = () => {
+    onSelection(selectedProviders);
   };
 
   const handleDragEnd = (event: any, info: PanInfo) => {
@@ -345,9 +358,11 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                         className="relative w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center cursor-pointer group"
                         onClick={() => setIsVideoPlaying(true)}
                       >
-                        {/* Thumbnail with emoji */}
+                        {/* Thumbnail with gradient overlay */}
                         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-black/20 to-black/40">
-                          <div className="text-4xl mb-4">{currentProvider.image}</div>
+                          <div className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${currentProvider.color} flex items-center justify-center shadow-lg`}>
+                            <IconComponent className="h-8 w-8 text-white" />
+                          </div>
                         </div>
                         
                         {/* Play button overlay */}
@@ -393,7 +408,6 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
               {/* Header with icon */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center space-x-4">
-                  {!currentProvider.videoUrl && <div className="text-6xl">{currentProvider.image}</div>}
                   <div>
                     <h3 className="text-xl font-bold text-gray-800">{currentProvider.title}</h3>
                     <h4 className="text-lg font-semibold text-gray-700">{currentProvider.name}</h4>
@@ -407,13 +421,7 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                 </motion.div>
               </div>
 
-              {/* Title and name - only show if no video */}
-              {!currentProvider.videoUrl && (
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-gray-800 mb-1">{currentProvider.title}</h3>
-                  <h4 className="text-lg font-semibold text-gray-700">{currentProvider.name}</h4>
-                </div>
-              )}
+
 
               {/* Rating and location */}
               <div className="flex items-center space-x-4 mb-4">
@@ -524,32 +532,50 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
         </AnimatePresence>
       </div>
 
-      {/* Action buttons */}
-      <div className="flex justify-center space-x-8 mt-8">
-        <motion.button
-          className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-red-200 hover:border-red-400 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => handleSwipe('left')}
-        >
-          <X className="h-8 w-8 text-red-500" />
-        </motion.button>
-        
-        <motion.button
-          className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-green-200 hover:border-green-400 transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={() => handleSwipe('right')}
-          disabled={selectedProviders.length >= 4}
-        >
-          <Heart className="h-8 w-8 text-green-500" />
-        </motion.button>
-      </div>
+      {/* Show Continue button if 4 selections reached */}
+      {selectedProviders.length >= 4 ? (
+        <div className="mt-8 text-center">
+          <motion.button
+            onClick={handleContinueToDashboard}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Continue to Your Care Dashboard →
+          </motion.button>
+          <p className="text-gray-600 text-sm mt-4">
+            You've selected {selectedProviders.length} care options. Ready to see your personalized plan!
+          </p>
+        </div>
+      ) : (
+        <>
+          {/* Action buttons */}
+          <div className="flex justify-center space-x-8 mt-8">
+            <motion.button
+              className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-red-200 hover:border-red-400 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleSwipe('left')}
+            >
+              <X className="h-8 w-8 text-red-500" />
+            </motion.button>
+            
+            <motion.button
+              className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-green-200 hover:border-green-400 transition-colors"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => handleSwipe('right')}
+            >
+              <Heart className="h-8 w-8 text-green-500" />
+            </motion.button>
+          </div>
 
-      {/* Helper text */}
-      <p className="text-center text-gray-500 text-sm mt-4">
-        Swipe right to add to your care plan • Swipe left to pass
-      </p>
+          {/* Helper text */}
+          <p className="text-center text-gray-500 text-sm mt-4">
+            Swipe right to add to your care plan • Swipe left to pass • {selectedProviders.length}/4 selected
+          </p>
+        </>
+      )}
     </div>
   );
 }
