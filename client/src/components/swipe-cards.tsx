@@ -2,6 +2,35 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Calendar, Play, Users, Sparkles, Heart, X, Star, MapPin, Clock } from "lucide-react";
 
+// Helper functions for pricing
+const getDiscountPercentage = (originalPrice: string): number => {
+  const match = originalPrice.match(/\$(\d+)/);
+  if (!match) return 25;
+  
+  const price = parseInt(match[1]);
+  if (price <= 30) return 40;
+  if (price <= 60) return 35;
+  if (price <= 100) return 30;
+  return 25;
+};
+
+const getHoldingHealthPrice = (originalPrice: string): string => {
+  const match = originalPrice.match(/\$(\d+)/);
+  if (!match) return originalPrice;
+  
+  const price = parseInt(match[1]);
+  const discount = getDiscountPercentage(originalPrice);
+  const discountedPrice = Math.round(price * (1 - discount / 100));
+  
+  if (originalPrice.includes('Free')) return 'Free';
+  if (originalPrice.includes('month')) return `$${discountedPrice}/month`;
+  if (originalPrice.includes('session')) return `$${discountedPrice}/session`;
+  if (originalPrice.includes('treatment')) return `$${discountedPrice}/treatment`;
+  if (originalPrice.includes('class')) return `$${discountedPrice}/class`;
+  
+  return `$${discountedPrice}`;
+};
+
 interface Provider {
   id: number;
   type: 'coach' | 'meditation' | 'support' | 'selfcare';
@@ -324,7 +353,15 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                   <Clock className="h-4 w-4 mr-1" />
                   <span className="text-sm">{currentProvider.availability}</span>
                 </div>
-                <span className="text-lg font-bold text-gray-800">{currentProvider.price}</span>
+                <div className="text-right">
+                  <div className="flex items-center space-x-2 mb-1">
+                    <span className="text-sm text-gray-400 line-through">{currentProvider.price}</span>
+                    <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                      {getDiscountPercentage(currentProvider.price)}% off
+                    </span>
+                  </div>
+                  <span className="text-lg font-bold text-green-600">{getHoldingHealthPrice(currentProvider.price)}</span>
+                </div>
               </div>
             </div>
           </motion.div>

@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, Play, Users, Sparkles, Star, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Calendar, Play, Users, Sparkles, Star, MapPin, Clock, ArrowRight, ShoppingCart } from "lucide-react";
 
 interface Provider {
   id: number;
@@ -22,7 +22,62 @@ interface SelectedRecommendationsProps {
   onStartOver: () => void;
 }
 
+// Helper functions for pricing
+const getDiscountPercentage = (originalPrice: string): number => {
+  // Extract numeric value from price string
+  const match = originalPrice.match(/\$(\d+)/);
+  if (!match) return 25; // Default discount
+  
+  const price = parseInt(match[1]);
+  if (price <= 30) return 40; // Higher discount for lower prices
+  if (price <= 60) return 35;
+  if (price <= 100) return 30;
+  return 25; // Lower discount for higher prices
+};
+
+const getHoldingHealthPrice = (originalPrice: string): string => {
+  const match = originalPrice.match(/\$(\d+)/);
+  if (!match) return originalPrice;
+  
+  const price = parseInt(match[1]);
+  const discount = getDiscountPercentage(originalPrice);
+  const discountedPrice = Math.round(price * (1 - discount / 100));
+  
+  // Handle special cases
+  if (originalPrice.includes('Free')) return 'Free';
+  if (originalPrice.includes('month')) return `$${discountedPrice}/month`;
+  if (originalPrice.includes('session')) return `$${discountedPrice}/session`;
+  if (originalPrice.includes('treatment')) return `$${discountedPrice}/treatment`;
+  if (originalPrice.includes('class')) return `$${discountedPrice}/class`;
+  
+  return `$${discountedPrice}`;
+};
+
+const calculateTotalSavings = (providers: Provider[]): { original: number, discounted: number, savings: number } => {
+  let originalTotal = 0;
+  let discountedTotal = 0;
+  
+  providers.forEach(provider => {
+    const match = provider.price.match(/\$(\d+)/);
+    if (match) {
+      const price = parseInt(match[1]);
+      const discount = getDiscountPercentage(provider.price);
+      const discountedPrice = Math.round(price * (1 - discount / 100));
+      
+      originalTotal += price;
+      discountedTotal += discountedPrice;
+    }
+  });
+  
+  return {
+    original: originalTotal,
+    discounted: discountedTotal,
+    savings: originalTotal - discountedTotal
+  };
+};
+
 export default function SelectedRecommendations({ providers, onStartOver }: SelectedRecommendationsProps) {
+  const totalSavings = calculateTotalSavings(providers);
   return (
     <div className="w-full max-w-4xl mx-auto">
       <motion.div
@@ -90,7 +145,15 @@ export default function SelectedRecommendations({ providers, onStartOver }: Sele
                       <Clock className="h-3 w-3 mr-1" />
                       <span className="text-xs">{provider.availability}</span>
                     </div>
-                    <span className="text-sm font-bold text-gray-800">{provider.price}</span>
+                    <div className="text-right">
+                      <div className="flex items-center space-x-2">
+                        <span className="text-xs text-gray-400 line-through">{provider.price}</span>
+                        <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                          {getDiscountPercentage(provider.price)}% off
+                        </span>
+                      </div>
+                      <span className="text-sm font-bold text-green-600">{getHoldingHealthPrice(provider.price)}</span>
+                    </div>
                   </div>
 
                   {/* Book now button */}
@@ -109,6 +172,32 @@ export default function SelectedRecommendations({ providers, onStartOver }: Sele
         })}
       </div>
 
+      {/* Total Savings Summary */}
+      <motion.div
+        className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 mb-8 border border-green-100"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.6 }}
+      >
+        <div className="text-center">
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Your Holding Health Savings</h3>
+          <div className="flex justify-center items-center space-x-4 mb-4">
+            <div className="text-center">
+              <span className="text-sm text-gray-500">Original Total:</span>
+              <p className="text-lg font-semibold text-gray-400 line-through">${totalSavings.original}</p>
+            </div>
+            <div className="text-center">
+              <span className="text-sm text-gray-500">Holding Health Price:</span>
+              <p className="text-2xl font-bold text-green-600">${totalSavings.discounted}</p>
+            </div>
+            <div className="text-center">
+              <span className="text-sm text-gray-500">You Save:</span>
+              <p className="text-xl font-bold text-green-500">${totalSavings.savings}</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Action buttons */}
       <motion.div
         className="flex justify-center space-x-4"
@@ -126,7 +215,16 @@ export default function SelectedRecommendations({ providers, onStartOver }: Sele
         </motion.button>
         
         <motion.button
-          className="bg-gradient-to-r from-violet-500 to-purple-600 text-white px-8 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+          className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-4 rounded-xl font-bold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-3"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <ShoppingCart className="h-5 w-5" />
+          <span>Book It All - Save ${totalSavings.savings}</span>
+        </motion.button>
+        
+        <motion.button
+          className="bg-gradient-to-r from-violet-500 to-purple-600 text-white px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
