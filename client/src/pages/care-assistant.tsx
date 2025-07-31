@@ -76,19 +76,7 @@ export default function CareAssistant() {
         transition={{ duration: 0.6 }}
       >
         <div className="flex items-center justify-center mb-4">
-          <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-          >
-            <Heart className="h-8 w-8 care-coral mr-3 fill-current" />
-          </motion.div>
           <h1 className="text-3xl font-semibold text-gray-800">Holding Health</h1>
-          <motion.div
-            animate={{ scale: [1, 1.1, 1] }}
-            transition={{ duration: 1.5, repeat: Infinity, delay: 0.7 }}
-          >
-            <Heart className="h-8 w-8 care-coral ml-3 fill-current" />
-          </motion.div>
         </div>
         <p className="text-gray-600 font-light">We're here to support you through anything 💜</p>
       </motion.div>
