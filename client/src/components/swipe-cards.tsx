@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
-import { Calendar, Play, Users, Sparkles, Heart, X, Star, MapPin, Clock, PlayCircle } from "lucide-react";
+import { Calendar, Play, Users, Sparkles, Heart, X, Star, MapPin, Clock, PlayCircle, ChevronDown, ChevronUp } from "lucide-react";
 
 // Helper functions for pricing
 const getDiscountPercentage = (originalPrice: string): number => {
@@ -210,6 +210,7 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
   const [dragDirection, setDragDirection] = useState<'left' | 'right' | null>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isRecommendationOpen, setIsRecommendationOpen] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   const currentProvider = providers[currentIndex];
@@ -219,8 +220,9 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
       setSelectedProviders(prev => [...prev, currentProvider]);
     }
     
-    // Reset video state when switching cards
+    // Reset video and recommendation states when switching cards
     setIsVideoPlaying(false);
+    setIsRecommendationOpen(false);
     
     if (currentIndex < providers.length - 1) {
       setCurrentIndex(prev => prev + 1);
@@ -438,17 +440,42 @@ export default function SwipeCards({ onSelection }: SwipeCardsProps) {
                 {currentProvider.description}
               </p>
 
-              {/* Why Recommended Section */}
-              <div className="mb-4 p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100">
-                <div className="flex items-start space-x-2">
-                  <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-white text-xs font-bold">!</span>
+              {/* Why Recommended Dropdown */}
+              <div className="mb-4">
+                <button
+                  onClick={() => setIsRecommendationOpen(!isRecommendationOpen)}
+                  className="w-full p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-100 hover:from-blue-100 hover:to-indigo-100 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-5 h-5 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center flex-shrink-0">
+                        <span className="text-white text-xs font-bold">!</span>
+                      </div>
+                      <h4 className="text-blue-800 font-semibold text-xs">Why we're suggesting this for you</h4>
+                    </div>
+                    {isRecommendationOpen ? (
+                      <ChevronUp className="h-4 w-4 text-blue-600" />
+                    ) : (
+                      <ChevronDown className="h-4 w-4 text-blue-600" />
+                    )}
                   </div>
-                  <div>
-                    <h4 className="text-blue-800 font-semibold text-xs mb-1">Why we're suggesting this for you</h4>
-                    <p className="text-blue-700 text-xs leading-relaxed">{currentProvider.whyRecommended}</p>
-                  </div>
-                </div>
+                </button>
+                
+                <AnimatePresence>
+                  {isRecommendationOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      className="overflow-hidden"
+                    >
+                      <div className="pt-3 px-3 pb-1">
+                        <p className="text-blue-700 text-xs leading-relaxed">{currentProvider.whyRecommended}</p>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* Specialties */}
