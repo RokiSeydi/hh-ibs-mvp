@@ -70,9 +70,9 @@ export default function CareAssistant() {
     <div className="min-h-screen flex flex-col items-center justify-start pt-8 px-4">
       {/* Header */}
       <motion.div 
-        className="text-center mb-8"
+        className={`text-center mb-8 transition-all duration-500 ${currentStep === "swiping" ? "blur-sm opacity-30" : ""}`}
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: currentStep === "swiping" ? 0.3 : 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         <div className="flex items-center justify-center mb-4">
@@ -206,9 +206,9 @@ export default function CareAssistant() {
 
       {/* Footer */}
       <motion.div 
-        className="mt-12 text-center text-gray-500 text-sm"
+        className={`mt-12 text-center text-gray-500 text-sm transition-all duration-500 ${currentStep === "swiping" ? "blur-sm opacity-20" : ""}`}
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
+        animate={{ opacity: currentStep === "swiping" ? 0.2 : 1 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
         <p>Remember: You're not alone, and it's okay to ask for help 💜</p>
