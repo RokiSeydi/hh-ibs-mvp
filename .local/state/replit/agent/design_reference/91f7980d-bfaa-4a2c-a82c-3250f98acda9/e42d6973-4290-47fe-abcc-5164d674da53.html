@@ -1,0 +1,302 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Care Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'care-purple': '#8B7FCF',
+                        'care-green': '#A8C090',
+                        'care-coral': '#FF9F9B',
+                        'care-blue': '#7FB3D3'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #F8F4FF 0%, #F0F8FF 100%);
+            min-height: 100vh;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        .card-enter {
+            animation: cardEnter 0.6s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes cardEnter {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus:focus {
+            transform: scale(1.02);
+            box-shadow: 0 8px 25px rgba(139, 127, 207, 0.15);
+        }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pulse-heart {
+            animation: pulseHeart 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulseHeart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 to-blue-50">
+    <!-- @COMPONENT: CareAssistantInterface -->
+    <div class="min-h-screen flex flex-col items-center justify-start pt-8 px-4">
+        
+        <!-- Header -->
+        <!-- @COMPONENT: Header -->
+        <div class="text-center mb-8 fade-in">
+            <div class="flex items-center justify-center mb-4">
+                <i class="fas fa-heart text-care-coral text-3xl pulse-heart mr-3"></i>
+                <h1 class="text-3xl font-semibold text-gray-800">Care Assistant</h1>
+                <i class="fas fa-heart text-care-coral text-3xl pulse-heart ml-3"></i>
+            </div>
+            <p class="text-gray-600 font-light">We're here to support you through anything 💜</p>
+        </div>
+        <!-- @END_COMPONENT: Header -->
+
+        <!-- Input Section -->
+        <!-- @COMPONENT: PromptInput -->
+        <div class="w-full max-w-2xl mb-8" id="inputSection">
+            <div class="relative">
+                <textarea 
+                    id="userInput"
+                    data-mock="true"
+                    placeholder="Share what's on your mind... we're here to listen and help 💙"
+                    class="w-full p-6 text-lg bg-white rounded-2xl shadow-lg border-0 focus:outline-none focus:ring-0 input-focus resize-none h-32"
+                    style="box-shadow: 0 4px 20px rgba(139, 127, 207, 0.08);"
+                ></textarea>
+                <button 
+                    id="submitBtn"
+                    data-event="click:handleSubmit"
+                    class="absolute bottom-4 right-4 bg-gradient-to-r from-care-purple to-care-blue text-white px-6 py-3 rounded-xl font-medium hover:shadow-lg transition-all duration-300 hover:scale-105"
+                >
+                    <i class="fas fa-paper-plane mr-2"></i>Send
+                </button>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: PromptInput -->
+
+        <!-- Response Message -->
+        <!-- @COMPONENT: ResponseMessage -->
+        <div id="responseMessage" class="hidden w-full max-w-2xl mb-8">
+            <div class="bg-gradient-to-r from-care-purple to-care-blue text-white p-6 rounded-2xl shadow-lg text-center slide-up">
+                <i class="fas fa-heart text-2xl mb-3 block"></i>
+                <p class="text-lg font-medium">Girl, I feel you. Sorry to hear that but we got you, here's what we recommend</p>
+                <div class="mt-4">
+                    <div class="inline-flex items-center space-x-1">
+                        <div class="w-2 h-2 bg-white rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                        <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: ResponseMessage -->
+
+        <!-- Care Suggestions -->
+        <!-- @COMPONENT: CareSuggestions -->
+        <div id="careSuggestions" class="hidden w-full max-w-4xl">
+            <h2 class="text-2xl font-semibold text-gray-800 text-center mb-8">Personalized Care Recommendations</h2>
+            
+            <!-- @MAP: suggestions.map(suggestion => ( -->
+            <div class="grid md:grid-cols-2 gap-6">
+                
+                <!-- Suggestion Card 1 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover card-enter" style="animation-delay: 0.1s;" data-mock="true">
+                    <div class="flex items-start space-x-4">
+                        <!-- Professional counseling session image -->
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                             alt="Professional counselor in session" 
+                             class="w-16 h-16 rounded-full object-cover shadow-md">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Book a session with a relationship coach</h3>
+                            <p class="text-gray-600 text-sm mb-3">We found someone near you with 5-star reviews and expertise in relationship transitions</p>
+                            <div class="flex items-center text-care-purple text-sm font-medium">
+                                <i class="fas fa-calendar-check mr-1"></i>
+                                Available today
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestion Card 2 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover card-enter" style="animation-delay: 0.3s;" data-mock="true">
+                    <div class="flex items-start space-x-4">
+                        <!-- Meditation and mindfulness practice -->
+                        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                             alt="Peaceful meditation scene with nature" 
+                             class="w-16 h-16 rounded-full object-cover shadow-md">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Try guided pain meditation</h3>
+                            <p class="text-gray-600 text-sm mb-3">15-minute sessions designed specifically for managing physical and emotional pain</p>
+                            <div class="flex items-center text-care-green text-sm font-medium">
+                                <i class="fas fa-play-circle mr-1"></i>
+                                Start now
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestion Card 3 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover card-enter" style="animation-delay: 0.5s;" data-mock="true">
+                    <div class="flex items-start space-x-4">
+                        <!-- Support group meeting -->
+                        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                             alt="Supportive group of diverse people" 
+                             class="w-16 h-16 rounded-full object-cover shadow-md">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Join a support group</h3>
+                            <p class="text-gray-600 text-sm mb-3">Connect with others who understand what you're going through in a safe space</p>
+                            <div class="flex items-center text-care-blue text-sm font-medium">
+                                <i class="fas fa-users mr-1"></i>
+                                Next meeting: Tomorrow 7 PM
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggestion Card 4 -->
+                <div class="bg-white rounded-2xl p-6 shadow-lg card-hover card-enter" style="animation-delay: 0.7s;" data-mock="true">
+                    <div class="flex items-start space-x-4">
+                        <!-- Self-care wellness activities -->
+                        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" 
+                             alt="Relaxing spa and wellness setup" 
+                             class="w-16 h-16 rounded-full object-cover shadow-md">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-2">Plan some self-care activities</h3>
+                            <p class="text-gray-600 text-sm mb-3">Personalized wellness suggestions to help you feel better physically and emotionally</p>
+                            <div class="flex items-center text-care-coral text-sm font-medium">
+                                <i class="fas fa-spa mr-1"></i>
+                                Get started
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- @END_MAP )) -->
+        </div>
+        <!-- @END_COMPONENT: CareSuggestions -->
+
+        <!-- Footer -->
+        <div class="mt-12 text-center text-gray-500 text-sm">
+            <p>Remember: You're not alone, and it's okay to ask for help 💜</p>
+        </div>
+
+    </div>
+    <!-- @END_COMPONENT: CareAssistantInterface -->
+
+    <script>
+        (function() {
+            // TODO: Implement real backend integration for care suggestions
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const userInput = document.getElementById('userInput');
+            const inputSection = document.getElementById('inputSection');
+            const responseMessage = document.getElementById('responseMessage');
+            const careSuggestions = document.getElementById('careSuggestions');
+
+            submitBtn.addEventListener('click', function() {
+                const inputText = userInput.value.trim();
+                
+                if (inputText.length === 0) {
+                    // Simple validation feedback
+                    userInput.style.borderColor = '#FF9F9B';
+                    userInput.placeholder = 'Please share something so we can help you better 💙';
+                    setTimeout(() => {
+                        userInput.style.borderColor = '';
+                        userInput.placeholder = 'Share what\'s on your mind... we\'re here to listen and help 💙';
+                    }, 3000);
+                    return;
+                }
+
+                // Hide input section with animation
+                inputSection.style.transform = 'translateY(-20px)';
+                inputSection.style.opacity = '0.3';
+                
+                // Show response message
+                responseMessage.classList.remove('hidden');
+                
+                // After 2 seconds, show care suggestions
+                setTimeout(() => {
+                    responseMessage.style.transform = 'translateY(-10px)';
+                    responseMessage.style.opacity = '0.8';
+                    
+                    careSuggestions.classList.remove('hidden');
+                    
+                    // Trigger card animations
+                    const cards = careSuggestions.querySelectorAll('.card-enter');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.style.animationPlayState = 'running';
+                        }, index * 200);
+                    });
+                    
+                }, 2000);
+            });
+
+            // Enter key functionality
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    submitBtn.click();
+                }
+            });
+
+            // Auto-resize textarea
+            userInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 200) + 'px';
+            });
+        })();
+    </script>
+</body>
+</html>
