@@ -5,6 +5,10 @@ import SwipeCards from "../components/swipe-cards";
 import SelectedRecommendations from "../components/selected-recommendations";
 import IntakeForm from "../components/intake-form";
 import ThankYou from "./thank-you";
+import PaymentPage from "./payment";
+import ProgramSuccess from "./program-success";
+import AmbassadorSignup from "../components/ambassador-signup";
+import FeedbackSignup from "../components/feedback-signup";
 import { type Provider } from "../data/providers";
 
 interface IntakeFormData {
@@ -35,10 +39,21 @@ const getResponseMessage = (reason: string): string => {
 export default function CareAssistant() {
   const [formData, setFormData] = useState<IntakeFormData | null>(null);
   const [currentStep, setCurrentStep] = useState<
-    "input" | "response" | "swiping" | "results" | "thank-you"
+    | "input"
+    | "response"
+    | "swiping"
+    | "results"
+    | "thank-you"
+    | "payment"
+    | "payment-success"
+    | "ambassador-signup"
+    | "feedback-signup"
   >("input");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
+  const [programType, setProgramType] = useState<
+    "ambassador" | "feedback" | "payment" | "waitlist"
+  >("payment");
 
   const handleFormSubmit = async (data: IntakeFormData) => {
     setFormData(data);
@@ -73,10 +88,44 @@ export default function CareAssistant() {
   };
 
   const handleJoinWaitlist = () => {
+    setProgramType("waitlist");
     setCurrentStep("thank-you");
   };
 
   const handleBackFromThankYou = () => {
+    setCurrentStep("results");
+  };
+
+  const handleBuyMembership = (type?: "ambassador" | "feedback" | "viral") => {
+    if (type === "ambassador") {
+      setProgramType("ambassador");
+      setCurrentStep("ambassador-signup");
+    } else if (type === "feedback") {
+      setProgramType("feedback");
+      setCurrentStep("feedback-signup");
+    } else {
+      setProgramType("payment");
+      setCurrentStep("payment");
+    }
+  };
+
+  const handlePaymentSuccess = () => {
+    setCurrentStep("payment-success");
+  };
+
+  const handleAmbassadorSignupComplete = () => {
+    setCurrentStep("payment-success");
+  };
+
+  const handleFeedbackSignupComplete = () => {
+    setCurrentStep("payment-success");
+  };
+
+  const handleBackFromPayment = () => {
+    setCurrentStep("results");
+  };
+
+  const handleBackFromSignup = () => {
     setCurrentStep("results");
   };
 
@@ -185,6 +234,7 @@ export default function CareAssistant() {
               providers={selectedProviders}
               onStartOver={handleStartOver}
               onJoinWaitlist={handleJoinWaitlist}
+              onBuyMembership={handleBuyMembership}
             />
           </motion.div>
         )}
@@ -201,6 +251,92 @@ export default function CareAssistant() {
             transition={{ duration: 0.3 }}
           >
             <ThankYou onBack={handleBackFromThankYou} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Payment Page */}
+      <AnimatePresence>
+        {currentStep === "payment" && (
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <PaymentPage
+              onBack={handleBackFromPayment}
+              onSuccess={handlePaymentSuccess}
+              totalSavings={selectedProviders.reduce((total, provider) => {
+                // Simple calculation - in real app this would match SelectedRecommendations logic
+                const basePrice =
+                  provider.type === "therapy"
+                    ? 80
+                    : provider.type === "coach"
+                    ? 60
+                    : provider.type === "wellness"
+                    ? 50
+                    : 25;
+                return total + basePrice;
+              }, 0)}
+              selectedProviders={selectedProviders}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Ambassador Signup Page */}
+      <AnimatePresence>
+        {currentStep === "ambassador-signup" && (
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <AmbassadorSignup
+              onBack={handleBackFromSignup}
+              onComplete={handleAmbassadorSignupComplete}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Feedback Signup Page */}
+      <AnimatePresence>
+        {currentStep === "feedback-signup" && (
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <FeedbackSignup
+              onBack={handleBackFromSignup}
+              onComplete={handleFeedbackSignupComplete}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Payment Success Page */}
+      <AnimatePresence>
+        {currentStep === "payment-success" && (
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ProgramSuccess
+              onStartOver={handleStartOver}
+              selectedProviders={selectedProviders}
+              programType={programType}
+            />
           </motion.div>
         )}
       </AnimatePresence>

@@ -17,6 +17,7 @@ interface SelectedRecommendationsProps {
   providers: Provider[];
   onStartOver: () => void;
   onJoinWaitlist: () => void;
+  onBuyMembership: (type?: "ambassador" | "feedback" | "viral") => void;
 }
 
 // Dynamic spots remaining calculation
@@ -93,6 +94,7 @@ export default function SelectedRecommendations({
   providers,
   onStartOver,
   onJoinWaitlist,
+  onBuyMembership,
 }: SelectedRecommendationsProps) {
   const [, setLocation] = useLocation();
   const totalSavings = calculateTotalSavings(providers);
@@ -182,7 +184,7 @@ export default function SelectedRecommendations({
                   {/* CTA buttons */}
                   <div className="flex space-x-2 mt-4">
                     <motion.button
-                      onClick={() => setLocation("/confirmation")}
+                      onClick={() => onBuyMembership("ambassador")}
                       className={`flex-1 bg-gradient-to-r ${provider.color} text-white py-2 px-3 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-1`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
@@ -250,72 +252,125 @@ export default function SelectedRecommendations({
 
       {/* Action buttons */}
       <motion.div
-        className="space-y-4"
+        className="space-y-6"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        {/* Primary CTAs */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <motion.button
-            onClick={() => setLocation("/confirmation")}
-            className="relative bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 text-white px-8 py-4 rounded-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 flex items-center justify-center space-x-3 flex-1 sm:flex-none overflow-hidden"
-            style={{
-              boxShadow: `
-                0 0 20px rgba(34, 197, 94, 0.6),
-                0 0 40px rgba(34, 197, 94, 0.4),
-                0 0 60px rgba(34, 197, 94, 0.2),
-                0 4px 20px rgba(0, 0, 0, 0.3)
-              `,
-              border: "2px solid rgba(34, 197, 94, 0.8)",
-              animation: "neonPulse 2s ease-in-out infinite alternate",
-            }}
-            whileHover={{
-              scale: 1.08,
-              boxShadow: `
-                0 0 30px rgba(34, 197, 94, 0.8),
-                0 0 60px rgba(34, 197, 94, 0.6),
-                0 0 90px rgba(34, 197, 94, 0.4)
-              `,
-            }}
-            whileTap={{ scale: 0.95 }}
+        {/* Three Main Options */}
+        <div className="grid md:grid-cols-3 gap-4">
+          {/* Option 1: Ambassador Program */}
+          <motion.div
+            className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-purple-400"
+            whileHover={{ y: -4, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onBuyMembership("ambassador")}
           >
-            {/* Animated background shimmer */}
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform translate-x-[-100%] animate-shimmer"></div>
+            <div className="text-center">
+              <div className="text-3xl mb-3">✨</div>
+              <h3 className="text-lg font-bold mb-2">Become an Ambassador</h3>
+              <div className="bg-white/20 rounded-lg p-3 mb-4">
+                <p className="text-2xl font-bold">FREE</p>
+                <p className="text-sm opacity-90">for 3 months</p>
+              </div>
+              <p className="text-sm opacity-90 mb-4">
+                Share your HH journey online and get full access to everything -
+                no membership fee!
+              </p>
+              <div className="bg-white/10 rounded-lg p-2 mb-3">
+                <p className="text-xs font-semibold">
+                  You'll post 1-2 times/month about your wellness journey
+                </p>
+              </div>
+              <motion.button
+                className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                I'm In! ✨
+              </motion.button>
+            </div>
+          </motion.div>
 
-            <motion.div
-              animate={{
-                rotate: [0, 5, -5, 0],
-                scale: [1, 1.1, 1],
-              }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                repeatType: "reverse",
-              }}
-            >
-              <ShoppingCart className="h-6 w-6" />
-            </motion.div>
-            <span className="relative z-10 text-lg">
-              🔥 Buy Membership & Book All - Save £{totalSavings.savings} 🔥
+          {/* Option 2: Feedback Program */}
+          <motion.div
+            className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-blue-400"
+            whileHover={{ y: -4, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => onBuyMembership("feedback")}
+          >
+            <div className="text-center">
+              <div className="text-3xl mb-3">💙</div>
+              <h3 className="text-lg font-bold mb-2">VIP Feedback Member</h3>
+              <div className="bg-white/20 rounded-lg p-3 mb-4">
+                <p className="text-sm opacity-75 line-through">£30/month</p>
+                <p className="text-2xl font-bold">£15/month</p>
+                <p className="text-sm opacity-90">first 3 months</p>
+              </div>
+              <p className="text-sm opacity-90 mb-4">
+                Pay half price and help us improve by sharing private feedback
+                after sessions
+              </p>
+              <div className="bg-white/10 rounded-lg p-2 mb-3">
+                <p className="text-xs font-semibold">
+                  Quick 2-min feedback after each session
+                </p>
+              </div>
+              <motion.button
+                className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Start VIP Access 💙
+              </motion.button>
+            </div>
+          </motion.div>
+
+          {/* Option 3: Waitlist + Referral */}
+          <motion.div
+            className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-orange-400"
+            whileHover={{ y: -4, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={onJoinWaitlist}
+          >
+            <div className="text-center">
+              <div className="text-3xl mb-3">🎯</div>
+              <h3 className="text-lg font-bold mb-2">Waitlist VIP</h3>
+              <div className="bg-white/20 rounded-lg p-3 mb-4">
+                <p className="text-2xl font-bold">FREE</p>
+                <p className="text-sm opacity-90">guaranteed spot next drop</p>
+              </div>
+              <p className="text-sm opacity-90 mb-4">
+                Share with 10 friends who join the waitlist = free month when we
+                open next!
+              </p>
+              <div className="bg-white/10 rounded-lg p-2 mb-3">
+                <p className="text-xs font-semibold">
+                  Skip the queue + earn free months
+                </p>
+              </div>
+              <motion.button
+                className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                Join Waitlist 🎯
+              </motion.button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Urgency Message */}
+        <div className="text-center">
+          <div className="inline-block bg-red-100 border border-red-200 rounded-lg px-4 py-2">
+            <span className="text-red-700 font-semibold text-sm">
+              🔥 Only {spotsRemaining} spots left this month across all
+              programs!
             </span>
-          </motion.button>
+          </div>
         </div>
 
-        {/* Secondary CTA */}
-        <div className="flex justify-center">
-          <motion.button
-            onClick={() => setLocation("/waitlist")}
-            className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center space-x-2"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <Users className="h-4 w-4" />
-            <span>Or Join The Waitlist </span>
-          </motion.button>
-        </div>
-
-        {/* Tertiary action */}
+        {/* Secondary action */}
         <div className="flex justify-center">
           <motion.button
             onClick={onStartOver}
@@ -323,7 +378,7 @@ export default function SelectedRecommendations({
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Start Over
+            ← Start Over
           </motion.button>
         </div>
       </motion.div>
