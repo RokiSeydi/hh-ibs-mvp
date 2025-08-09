@@ -3,9 +3,23 @@ import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { ArrowLeft, Star, Users, Heart, CreditCard, Shield } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import {
+  ArrowLeft,
+  Star,
+  Users,
+  Heart,
+  CreditCard,
+  Shield,
+} from "lucide-react";
 import { createAmbassadorSetup } from "../lib/stripe";
+import { analytics } from "../lib/client-analytics";
 import ApplePayButton from "./apple-pay-button";
 
 interface AmbassadorSignupProps {
@@ -17,7 +31,9 @@ export default function AmbassadorSignup({
   onBack,
   onComplete,
 }: AmbassadorSignupProps) {
-  const [currentStep, setCurrentStep] = useState<'application' | 'payment'>('application');
+  const [currentStep, setCurrentStep] = useState<"application" | "payment">(
+    "application"
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     socialHandle: "",
@@ -32,18 +48,39 @@ export default function AmbassadorSignup({
     billingName: "",
   });
 
-  const handleApplicationSubmit = (e: React.FormEvent) => {
+  const handleApplicationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentStep('payment');
+
+    // Track ambassador application
+    await analytics.trackAmbassadorApplication({
+      email: formData.email,
+      socialHandle: formData.socialHandle,
+      platform: formData.platform,
+      followerCount: formData.followerCount,
+      contentStyle: formData.contentStyle,
+      whyAmbassador: formData.whyAmbassador,
+    });
+
+    setCurrentStep("payment");
   };
 
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Use the new Stripe helper for ambassador setup
       await createAmbassadorSetup(formData);
+
+      // Track payment success
+      await analytics.trackPaymentSuccess({
+        email: formData.email,
+        tier: "ambassador",
+        paymentMethod: "card_save",
+        amount: 0, // No charge for ambassador signup
+        transactionId: "ambassador_setup",
+      });
+
       onComplete();
     } catch (error) {
       console.error("Card save failed:", error);
@@ -55,13 +92,13 @@ export default function AmbassadorSignup({
 
   const handleDigitalWalletSuccess = async (paymentMethod: any) => {
     setIsLoading(true);
-    
+
     try {
       // Save the digital wallet payment method for future charging
       await createAmbassadorSetup({
         ...formData,
         paymentMethod: paymentMethod,
-        paymentType: 'digital_wallet'
+        paymentType: "digital_wallet",
       });
       onComplete();
     } catch (error) {
@@ -85,23 +122,32 @@ export default function AmbassadorSignup({
         transition={{ duration: 0.5 }}
       >
         <div className="flex items-center mb-6">
-          <Button variant="ghost" onClick={currentStep === 'application' ? onBack : () => setCurrentStep('application')} className="mr-4">
+          <Button
+            variant="ghost"
+            onClick={
+              currentStep === "application"
+                ? onBack
+                : () => setCurrentStep("application")
+            }
+            className="mr-4"
+          >
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              {currentStep === 'application' ? 'Become an Ambassador' : 'Save Payment Method'}
+              {currentStep === "application"
+                ? "Become an Ambassador"
+                : "Save Payment Method"}
             </h1>
             <p className="text-gray-600 mt-1">
-              {currentStep === 'application' 
-                ? 'Join our community and get 3 months free!'
-                : 'We\'ll save your card and charge when your free period ends'
-              }
+              {currentStep === "application"
+                ? "Join our community and get 3 months free!"
+                : "We'll save your card and charge when your free period ends"}
             </p>
           </div>
         </div>
 
-        {currentStep === 'application' ? (
+        {currentStep === "application" ? (
           <>
             <Card className="mb-6 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50">
               <CardHeader>
@@ -137,105 +183,117 @@ export default function AmbassadorSignup({
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleApplicationSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Social Media Handle
-                  </label>
-                  <Input
-                    placeholder="@yourusername"
-                    value={formData.socialHandle}
-                    onChange={(e) =>
-                      setFormData({ ...formData, socialHandle: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Primary Platform
-                  </label>
-                  <select
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    value={formData.platform}
-                    onChange={(e) =>
-                      setFormData({ ...formData, platform: e.target.value })
-                    }
-                    required
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Social Media Handle
+                      </label>
+                      <Input
+                        placeholder="@yourusername"
+                        value={formData.socialHandle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            socialHandle: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-2">
+                        Primary Platform
+                      </label>
+                      <select
+                        className="w-full p-2 border border-gray-300 rounded-md"
+                        value={formData.platform}
+                        onChange={(e) =>
+                          setFormData({ ...formData, platform: e.target.value })
+                        }
+                        required
+                      >
+                        <option value="">Select platform</option>
+                        <option value="instagram">Instagram</option>
+                        <option value="tiktok">TikTok</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="twitter">Twitter/X</option>
+                        <option value="linkedin">LinkedIn</option>
+                        <option value="other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Approximate Follower Count
+                    </label>
+                    <select
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={formData.followerCount}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          followerCount: e.target.value,
+                        })
+                      }
+                      required
+                    >
+                      <option value="">Select range</option>
+                      <option value="under-1k">Under 1,000</option>
+                      <option value="1k-5k">1,000 - 5,000</option>
+                      <option value="5k-10k">5,000 - 10,000</option>
+                      <option value="10k-50k">10,000 - 50,000</option>
+                      <option value="50k-100k">50,000 - 100,000</option>
+                      <option value="100k-plus">100,000+</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Content Style/Niche
+                    </label>
+                    <Input
+                      placeholder="e.g., wellness, lifestyle, mental health, spirituality..."
+                      value={formData.contentStyle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          contentStyle: e.target.value,
+                        })
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Why do you want to become an ambassador?
+                    </label>
+                    <Textarea
+                      placeholder="Tell us about your passion for wellness and how you'd like to help others..."
+                      value={formData.whyAmbassador}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          whyAmbassador: e.target.value,
+                        })
+                      }
+                      rows={4}
+                      required
+                    />
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
+                    size="lg"
                   >
-                    <option value="">Select platform</option>
-                    <option value="instagram">Instagram</option>
-                    <option value="tiktok">TikTok</option>
-                    <option value="youtube">YouTube</option>
-                    <option value="twitter">Twitter/X</option>
-                    <option value="linkedin">LinkedIn</option>
-                    <option value="other">Other</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Approximate Follower Count
-                </label>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={formData.followerCount}
-                  onChange={(e) =>
-                    setFormData({ ...formData, followerCount: e.target.value })
-                  }
-                  required
-                >
-                  <option value="">Select range</option>
-                  <option value="under-1k">Under 1,000</option>
-                  <option value="1k-5k">1,000 - 5,000</option>
-                  <option value="5k-10k">5,000 - 10,000</option>
-                  <option value="10k-50k">10,000 - 50,000</option>
-                  <option value="50k-100k">50,000 - 100,000</option>
-                  <option value="100k-plus">100,000+</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Content Style/Niche
-                </label>
-                <Input
-                  placeholder="e.g., wellness, lifestyle, mental health, spirituality..."
-                  value={formData.contentStyle}
-                  onChange={(e) =>
-                    setFormData({ ...formData, contentStyle: e.target.value })
-                  }
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Why do you want to become an ambassador?
-                </label>
-                <Textarea
-                  placeholder="Tell us about your passion for wellness and how you'd like to help others..."
-                  value={formData.whyAmbassador}
-                  onChange={(e) =>
-                    setFormData({ ...formData, whyAmbassador: e.target.value })
-                  }
-                  rows={4}
-                  required
-                />
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
-                size="lg"
-              >
-                Continue to Payment Setup
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-        </>
+                    Continue to Payment Setup
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </>
         ) : (
           // Payment Step
           <>
@@ -259,7 +317,8 @@ export default function AmbassadorSignup({
               <CardHeader>
                 <CardTitle>Payment Information</CardTitle>
                 <CardDescription>
-                  We'll securely save your card and only charge £30/month starting in month 4
+                  We'll securely save your card and only charge £30/month
+                  starting in month 4
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -283,7 +342,9 @@ export default function AmbassadorSignup({
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -295,7 +356,12 @@ export default function AmbassadorSignup({
                     <Input
                       placeholder="Full name on card"
                       value={formData.billingName}
-                      onChange={(e) => setFormData({ ...formData, billingName: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          billingName: e.target.value,
+                        })
+                      }
                       required
                     />
                   </div>
@@ -307,7 +373,9 @@ export default function AmbassadorSignup({
                     <Input
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
-                      onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, cardNumber: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -320,7 +388,12 @@ export default function AmbassadorSignup({
                       <Input
                         placeholder="MM/YY"
                         value={formData.expiryDate}
-                        onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            expiryDate: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -331,7 +404,9 @@ export default function AmbassadorSignup({
                       <Input
                         placeholder="123"
                         value={formData.cvv}
-                        onChange={(e) => setFormData({ ...formData, cvv: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, cvv: e.target.value })
+                        }
                         required
                       />
                     </div>
@@ -340,7 +415,9 @@ export default function AmbassadorSignup({
                   <div className="bg-green-50 p-4 rounded-lg border border-green-200">
                     <div className="flex items-center mb-2">
                       <Shield className="w-5 h-5 mr-2 text-green-600" />
-                      <h4 className="font-semibold text-green-800">Your Billing Schedule</h4>
+                      <h4 className="font-semibold text-green-800">
+                        Your Billing Schedule
+                      </h4>
                     </div>
                     <ul className="text-sm text-green-700 space-y-1">
                       <li>• Today: Card saved securely (£0 charged)</li>
@@ -355,7 +432,9 @@ export default function AmbassadorSignup({
                     size="lg"
                     disabled={isLoading}
                   >
-                    {isLoading ? "Saving Card..." : "Save Card & Complete Application"}
+                    {isLoading
+                      ? "Saving Card..."
+                      : "Save Card & Complete Application"}
                   </Button>
                 </form>
               </CardContent>

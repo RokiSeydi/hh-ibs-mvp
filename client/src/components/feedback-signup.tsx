@@ -3,9 +3,23 @@ import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card";
-import { ArrowLeft, MessageCircle, Star, DollarSign, CreditCard, Shield } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
+import {
+  ArrowLeft,
+  MessageCircle,
+  Star,
+  DollarSign,
+  CreditCard,
+  Shield,
+} from "lucide-react";
 import { createFeedbackSubscription } from "../lib/stripe";
+import { analytics } from "../lib/client-analytics";
 import ApplePayButton from "./apple-pay-button";
 
 interface FeedbackSignupProps {
@@ -17,7 +31,9 @@ export default function FeedbackSignup({
   onBack,
   onComplete,
 }: FeedbackSignupProps) {
-  const [currentStep, setCurrentStep] = useState<'application' | 'payment'>('application');
+  const [currentStep, setCurrentStep] = useState<"application" | "payment">(
+    "application"
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     experienceLevel: "",
@@ -32,18 +48,39 @@ export default function FeedbackSignup({
     billingName: "",
   });
 
-  const handleApplicationSubmit = (e: React.FormEvent) => {
+  const handleApplicationSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setCurrentStep('payment');
+
+    // Track feedback application
+    await analytics.trackFeedbackApplication({
+      email: formData.email,
+      experienceLevel: formData.experienceLevel,
+      interests: formData.interests,
+      feedbackStyle: formData.feedbackStyle,
+      availability: formData.availability,
+      whyFeedback: formData.whyFeedback,
+    });
+
+    setCurrentStep("payment");
   };
 
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Use the new Stripe helper for feedback subscription
       await createFeedbackSubscription(formData);
+
+      // Track payment success
+      await analytics.trackPaymentSuccess({
+        email: formData.email,
+        tier: "feedback",
+        paymentMethod: "card_charge",
+        amount: 15, // £15 for feedback tier
+        transactionId: "feedback_subscription",
+      });
+
       onComplete();
     } catch (error) {
       console.error("Payment failed:", error);
@@ -55,13 +92,13 @@ export default function FeedbackSignup({
 
   const handleDigitalWalletSuccess = async (paymentMethod: any) => {
     setIsLoading(true);
-    
+
     try {
       // Process the digital wallet payment
       await createFeedbackSubscription({
         ...formData,
         paymentMethod: paymentMethod,
-        paymentType: 'digital_wallet'
+        paymentType: "digital_wallet",
       });
       onComplete();
     } catch (error) {
@@ -85,198 +122,222 @@ export default function FeedbackSignup({
         transition={{ duration: 0.5 }}
       >
         <div className="flex items-center mb-6">
-          <Button variant="ghost" onClick={currentStep === 'application' ? onBack : () => setCurrentStep('application')} className="mr-4">
+          <Button
+            variant="ghost"
+            onClick={
+              currentStep === "application"
+                ? onBack
+                : () => setCurrentStep("application")
+            }
+            className="mr-4"
+          >
             <ArrowLeft className="w-4 h-4" />
           </Button>
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
-              {currentStep === 'application' ? 'VIP Feedback Member' : 'Complete Your Subscription'}
+              {currentStep === "application"
+                ? "VIP Feedback Member"
+                : "Complete Your Subscription"}
             </h1>
             <p className="text-gray-600 mt-1">
-              {currentStep === 'application' 
-                ? 'Help us improve and save 50% for 3 months!'
-                : 'Start your discounted membership at £15/month'
-              }
+              {currentStep === "application"
+                ? "Help us improve and save 50% for 3 months!"
+                : "Start your discounted membership at £15/month"}
             </p>
           </div>
         </div>
 
-        {currentStep === 'application' ? (
+        {currentStep === "application" ? (
           <>
-        <Card className="mb-6 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
-          <CardHeader>
-            <CardTitle className="flex items-center text-blue-700">
-              <Star className="w-5 h-5 mr-2" />
-              VIP Member Benefits
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-4 text-sm">
-              <div className="flex items-center">
-                <DollarSign className="w-4 h-4 mr-2 text-green-500" />
-                <span>50% off for 3 months</span>
-              </div>
-              <div className="flex items-center">
-                <MessageCircle className="w-4 h-4 mr-2 text-blue-500" />
-                <span>Direct feedback channel</span>
-              </div>
-              <div className="flex items-center">
-                <Star className="w-4 h-4 mr-2 text-yellow-500" />
-                <span>Shape the future of the platform</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Join our VIP Feedback Program</CardTitle>
-            <CardDescription>
-              We value your insights and want to create the best experience
-              possible
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleApplicationSubmit} className="space-y-6">
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Experience with wellness platforms
-                </label>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={formData.experienceLevel}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      experienceLevel: e.target.value,
-                    })
-                  }
-                  required
-                >
-                  <option value="">Select your experience level</option>
-                  <option value="beginner">New to wellness platforms</option>
-                  <option value="some">
-                    Some experience with wellness apps
-                  </option>
-                  <option value="experienced">
-                    Very experienced with wellness platforms
-                  </option>
-                  <option value="professional">
-                    Work in wellness/healthcare industry
-                  </option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Primary wellness interests
-                </label>
-                <Input
-                  placeholder="e.g., therapy, meditation, fitness, nutrition, spiritual guidance..."
-                  value={formData.interests}
-                  onChange={(e) =>
-                    setFormData({ ...formData, interests: e.target.value })
-                  }
-                  required
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Preferred feedback style
-                </label>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={formData.feedbackStyle}
-                  onChange={(e) =>
-                    setFormData({ ...formData, feedbackStyle: e.target.value })
-                  }
-                  required
-                >
-                  <option value="">
-                    How would you like to provide feedback?
-                  </option>
-                  <option value="surveys">Quick surveys after sessions</option>
-                  <option value="interviews">Monthly video interviews</option>
-                  <option value="written">Detailed written feedback</option>
-                  <option value="mixed">Mix of all methods</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Time availability for feedback
-                </label>
-                <select
-                  className="w-full p-2 border border-gray-300 rounded-md"
-                  value={formData.availability}
-                  onChange={(e) =>
-                    setFormData({ ...formData, availability: e.target.value })
-                  }
-                  required
-                >
-                  <option value="">How much time can you dedicate?</option>
-                  <option value="5-10-min">
-                    5-10 minutes after each session
-                  </option>
-                  <option value="15-30-min">15-30 minutes weekly</option>
-                  <option value="30-60-min">30-60 minutes monthly</option>
-                  <option value="flexible">
-                    Flexible based on the request
-                  </option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-2">
-                  Why are you interested in providing feedback?
-                </label>
-                <Textarea
-                  placeholder="Tell us what motivates you to help improve wellness platforms..."
-                  value={formData.whyFeedback}
-                  onChange={(e) =>
-                    setFormData({ ...formData, whyFeedback: e.target.value })
-                  }
-                  rows={4}
-                  required
-                />
-              </div>
-
-              <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                <h4 className="font-semibold text-blue-800 mb-2">
-                  Your VIP Pricing
-                </h4>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-600 line-through">
-                      Regular: £30/month
-                    </p>
-                    <p className="text-xl font-bold text-blue-700">
-                      VIP: £15/month
-                    </p>
-                    <p className="text-xs text-blue-600">
-                      For the first 3 months
-                    </p>
+            <Card className="mb-6 border-blue-200 bg-gradient-to-br from-blue-50 to-cyan-50">
+              <CardHeader>
+                <CardTitle className="flex items-center text-blue-700">
+                  <Star className="w-5 h-5 mr-2" />
+                  VIP Member Benefits
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center">
+                    <DollarSign className="w-4 h-4 mr-2 text-green-500" />
+                    <span>50% off for 3 months</span>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-semibold text-green-600">
-                      You save £45!
-                    </p>
+                  <div className="flex items-center">
+                    <MessageCircle className="w-4 h-4 mr-2 text-blue-500" />
+                    <span>Direct feedback channel</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Star className="w-4 h-4 mr-2 text-yellow-500" />
+                    <span>Shape the future of the platform</span>
                   </div>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              <Button
-                type="submit"
-                className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
-                size="lg"
-              >
-                Continue to Payment
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-        </>
+            <Card>
+              <CardHeader>
+                <CardTitle>Join our VIP Feedback Program</CardTitle>
+                <CardDescription>
+                  We value your insights and want to create the best experience
+                  possible
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleApplicationSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Experience with wellness platforms
+                    </label>
+                    <select
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={formData.experienceLevel}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          experienceLevel: e.target.value,
+                        })
+                      }
+                      required
+                    >
+                      <option value="">Select your experience level</option>
+                      <option value="beginner">
+                        New to wellness platforms
+                      </option>
+                      <option value="some">
+                        Some experience with wellness apps
+                      </option>
+                      <option value="experienced">
+                        Very experienced with wellness platforms
+                      </option>
+                      <option value="professional">
+                        Work in wellness/healthcare industry
+                      </option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Primary wellness interests
+                    </label>
+                    <Input
+                      placeholder="e.g., therapy, meditation, fitness, nutrition, spiritual guidance..."
+                      value={formData.interests}
+                      onChange={(e) =>
+                        setFormData({ ...formData, interests: e.target.value })
+                      }
+                      required
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Preferred feedback style
+                    </label>
+                    <select
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={formData.feedbackStyle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          feedbackStyle: e.target.value,
+                        })
+                      }
+                      required
+                    >
+                      <option value="">
+                        How would you like to provide feedback?
+                      </option>
+                      <option value="surveys">
+                        Quick surveys after sessions
+                      </option>
+                      <option value="interviews">
+                        Monthly video interviews
+                      </option>
+                      <option value="written">Detailed written feedback</option>
+                      <option value="mixed">Mix of all methods</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Time availability for feedback
+                    </label>
+                    <select
+                      className="w-full p-2 border border-gray-300 rounded-md"
+                      value={formData.availability}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          availability: e.target.value,
+                        })
+                      }
+                      required
+                    >
+                      <option value="">How much time can you dedicate?</option>
+                      <option value="5-10-min">
+                        5-10 minutes after each session
+                      </option>
+                      <option value="15-30-min">15-30 minutes weekly</option>
+                      <option value="30-60-min">30-60 minutes monthly</option>
+                      <option value="flexible">
+                        Flexible based on the request
+                      </option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Why are you interested in providing feedback?
+                    </label>
+                    <Textarea
+                      placeholder="Tell us what motivates you to help improve wellness platforms..."
+                      value={formData.whyFeedback}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          whyFeedback: e.target.value,
+                        })
+                      }
+                      rows={4}
+                      required
+                    />
+                  </div>
+
+                  <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+                    <h4 className="font-semibold text-blue-800 mb-2">
+                      Your VIP Pricing
+                    </h4>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-gray-600 line-through">
+                          Regular: £30/month
+                        </p>
+                        <p className="text-xl font-bold text-blue-700">
+                          VIP: £15/month
+                        </p>
+                        <p className="text-xs text-blue-600">
+                          For the first 3 months
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-semibold text-green-600">
+                          You save £45!
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Button
+                    type="submit"
+                    className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
+                    size="lg"
+                  >
+                    Continue to Payment
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </>
         ) : (
           // Payment Step
           <>
@@ -289,8 +350,12 @@ export default function FeedbackSignup({
               </CardHeader>
               <CardContent>
                 <div className="text-sm text-blue-700">
-                  <p className="mb-2">✅ £15/month for first 3 months (50% off)</p>
-                  <p className="mb-2">✅ Automatically increases to £30/month in month 4</p>
+                  <p className="mb-2">
+                    ✅ £15/month for first 3 months (50% off)
+                  </p>
+                  <p className="mb-2">
+                    ✅ Automatically increases to £30/month in month 4
+                  </p>
                   <p>✅ Cancel anytime</p>
                 </div>
               </CardContent>
@@ -324,7 +389,9 @@ export default function FeedbackSignup({
                       type="email"
                       placeholder="your@email.com"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -336,7 +403,12 @@ export default function FeedbackSignup({
                     <Input
                       placeholder="Full name on card"
                       value={formData.billingName}
-                      onChange={(e) => setFormData({ ...formData, billingName: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          billingName: e.target.value,
+                        })
+                      }
                       required
                     />
                   </div>
@@ -348,7 +420,9 @@ export default function FeedbackSignup({
                     <Input
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
-                      onChange={(e) => setFormData({ ...formData, cardNumber: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, cardNumber: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -361,7 +435,12 @@ export default function FeedbackSignup({
                       <Input
                         placeholder="MM/YY"
                         value={formData.expiryDate}
-                        onChange={(e) => setFormData({ ...formData, expiryDate: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            expiryDate: e.target.value,
+                          })
+                        }
                         required
                       />
                     </div>
@@ -372,7 +451,9 @@ export default function FeedbackSignup({
                       <Input
                         placeholder="123"
                         value={formData.cvv}
-                        onChange={(e) => setFormData({ ...formData, cvv: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, cvv: e.target.value })
+                        }
                         required
                       />
                     </div>
@@ -381,7 +462,9 @@ export default function FeedbackSignup({
                   <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
                     <div className="flex items-center mb-2">
                       <DollarSign className="w-5 h-5 mr-2 text-blue-600" />
-                      <h4 className="font-semibold text-blue-800">Your Billing Schedule</h4>
+                      <h4 className="font-semibold text-blue-800">
+                        Your Billing Schedule
+                      </h4>
                     </div>
                     <ul className="text-sm text-blue-700 space-y-1">
                       <li>• Today: £15 charged (discounted rate)</li>
@@ -396,7 +479,9 @@ export default function FeedbackSignup({
                     size="lg"
                     disabled={isLoading}
                   >
-                    {isLoading ? "Processing Payment..." : "Complete Subscription - £15"}
+                    {isLoading
+                      ? "Processing Payment..."
+                      : "Complete Subscription - £15"}
                   </Button>
                 </form>
               </CardContent>

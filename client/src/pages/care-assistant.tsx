@@ -9,6 +9,7 @@ import PaymentPage from "./payment";
 import ProgramSuccess from "./program-success";
 import AmbassadorSignup from "../components/ambassador-signup";
 import FeedbackSignup from "../components/feedback-signup";
+import { analytics } from "../lib/client-analytics";
 import { type Provider } from "../data/providers";
 
 interface IntakeFormData {
@@ -59,6 +60,14 @@ export default function CareAssistant() {
     setFormData(data);
     setIsSubmitting(true);
 
+    // Track form submission
+    await analytics.trackFormSubmission(data);
+    await analytics.trackConversionFunnel({
+      email: data.email,
+      step: "form_complete",
+      metadata: { reason: data.reason },
+    });
+
     // Simulate API delay
     await new Promise((resolve) => setTimeout(resolve, 500));
 
@@ -75,8 +84,21 @@ export default function CareAssistant() {
     // This function is no longer needed with the form
   };
 
-  const handleProviderSelection = (providers: Provider[]) => {
+  const handleProviderSelection = async (providers: Provider[]) => {
     setSelectedProviders(providers);
+
+    // Track swipe completion and tier selection view
+    if (formData) {
+      await analytics.trackConversionFunnel({
+        email: formData.email,
+        step: "swipe_complete",
+        metadata: {
+          selectedCount: providers.length,
+          providers: providers.map((p) => p.name),
+        },
+      });
+    }
+
     setCurrentStep("results");
   };
 
@@ -87,8 +109,18 @@ export default function CareAssistant() {
     setIsSubmitting(false);
   };
 
-  const handleJoinWaitlist = () => {
+  const handleJoinWaitlist = async () => {
     setProgramType("waitlist");
+
+    // Track tier selection
+    if (formData) {
+      await analytics.trackTierSelection({
+        email: formData.email,
+        tier: "waitlist",
+        selectedProviders,
+      });
+    }
+
     setCurrentStep("thank-you");
   };
 
@@ -96,12 +128,34 @@ export default function CareAssistant() {
     setCurrentStep("results");
   };
 
-  const handleBuyMembership = (type?: "ambassador" | "feedback" | "viral") => {
+  const handleBuyMembership = async (
+    type?: "ambassador" | "feedback" | "viral"
+  ) => {
     if (type === "ambassador") {
       setProgramType("ambassador");
+
+      // Track tier selection
+      if (formData) {
+        await analytics.trackTierSelection({
+          email: formData.email,
+          tier: "ambassador",
+          selectedProviders,
+        });
+      }
+
       setCurrentStep("ambassador-signup");
     } else if (type === "feedback") {
       setProgramType("feedback");
+
+      // Track tier selection
+      if (formData) {
+        await analytics.trackTierSelection({
+          email: formData.email,
+          tier: "feedback",
+          selectedProviders,
+        });
+      }
+
       setCurrentStep("feedback-signup");
     } else {
       setProgramType("payment");
@@ -146,7 +200,7 @@ export default function CareAssistant() {
           </h1>
         </div>
         <p className="text-gray-600 font-light">
-          supporting your life through chronic conditions
+          create the care you need, the way you need it
         </p>
       </motion.div>
 
@@ -216,6 +270,7 @@ export default function CareAssistant() {
             <SwipeCards
               onSelection={handleProviderSelection}
               userReason={formData?.reason || "going-through-something"}
+              userEmail={formData?.email}
             />
           </motion.div>
         )}
@@ -250,7 +305,10 @@ export default function CareAssistant() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <ThankYou onBack={handleBackFromThankYou} />
+            <ThankYou
+              onBack={handleBackFromThankYou}
+              userEmail={formData?.email}
+            />
           </motion.div>
         )}
       </AnimatePresence>

@@ -17,15 +17,18 @@ import {
 import { providersByReason, type Provider } from "../data/providers";
 import { TikTokEmbed } from "./tiktok-embed";
 import { InstagramEmbed } from "./instagram-embed";
+import { analytics } from "../lib/client-analytics";
 
 interface SwipeCardsProps {
   onSelection: (selectedProviders: Provider[]) => void;
   userReason: string;
+  userEmail?: string;
 }
 
 export default function SwipeCards({
   onSelection,
   userReason,
+  userEmail,
 }: SwipeCardsProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
@@ -42,8 +45,19 @@ export default function SwipeCards({
     providersByReason["going-through-something"];
   const currentProvider = providers[currentIndex];
 
-  const handleSwipe = (direction: "left" | "right") => {
+  const handleSwipe = async (direction: "left" | "right") => {
     let newSelectedProviders = selectedProviders;
+
+    // Track swipe action
+    if (userEmail) {
+      await analytics.trackSwipeAction({
+        email: userEmail,
+        providerId: currentProvider.id,
+        providerName: currentProvider.name,
+        providerType: currentProvider.type,
+        action: direction === "left" ? "swipe_left" : "swipe_right",
+      });
+    }
 
     if (direction === "right" && selectedProviders.length < 4) {
       newSelectedProviders = [...selectedProviders, currentProvider];

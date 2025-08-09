@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Share2, Copy, Heart, Users, Gift, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { analytics } from "../lib/client-analytics";
 
 // Simple referral tracking (for demo purposes)
 interface ReferralStats {
@@ -14,9 +15,10 @@ interface ReferralStats {
 
 interface ThankYouProps {
   onBack: () => void;
+  userEmail?: string;
 }
 
-export default function ThankYou({ onBack }: ThankYouProps) {
+export default function ThankYou({ onBack, userEmail }: ThankYouProps) {
   const [referralCode, setReferralCode] = useState("");
   const [copied, setCopied] = useState(false);
   const [shareUrl, setShareUrl] = useState("");
@@ -45,7 +47,19 @@ export default function ThankYou({ onBack }: ThankYouProps) {
       progressPercentage: (count / 10) * 100,
       isComplete: count >= 10,
     });
-  }, []);
+
+    // Track waitlist signup
+    if (userEmail) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const referralCode = urlParams.get("ref");
+
+      analytics.trackWaitlistSignup({
+        email: userEmail,
+        referralCode: code,
+        referredBy: referralCode || undefined,
+      });
+    }
+  }, [userEmail]);
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(shareUrl);

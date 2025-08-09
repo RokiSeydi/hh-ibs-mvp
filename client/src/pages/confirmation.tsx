@@ -15,7 +15,12 @@ export default function Confirmation() {
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ delay: 0.3, duration: 0.5, type: "spring", stiffness: 200 }}
+          transition={{
+            delay: 0.3,
+            duration: 0.5,
+            type: "spring",
+            stiffness: 200,
+          }}
           className="mb-6"
         >
           <CheckCircle className="h-16 w-16 text-green-500 mx-auto" />
@@ -52,7 +57,7 @@ export default function Confirmation() {
           className="mb-8"
         >
           <p className="text-gray-700 flex items-center justify-center">
-            Let us know how you get on 
+            Let us know how you get on
             <span className="ml-2 text-xl">😌</span>
           </p>
         </motion.div>
@@ -64,15 +69,13 @@ export default function Confirmation() {
           className="space-y-3"
         >
           <Link href="/">
-            <Button 
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium py-3 rounded-full transition-all duration-200"
-            >
+            <Button className="w-full bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white font-medium py-3 rounded-full transition-all duration-200">
               Back to Home
             </Button>
           </Link>
-          
+
           <p className="text-sm text-gray-500">
-            Supporting your life through chronic conditions
+            Create the care you need, the way you need it.
           </p>
         </motion.div>
       </motion.div>

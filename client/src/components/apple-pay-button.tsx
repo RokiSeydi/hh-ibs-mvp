@@ -10,12 +10,12 @@ interface ApplePayButtonProps {
   disabled?: boolean;
 }
 
-export default function ApplePayButton({ 
-  amount, 
-  label, 
-  onSuccess, 
-  onError, 
-  disabled = false 
+export default function ApplePayButton({
+  amount,
+  label,
+  onSuccess,
+  onError,
+  disabled = false,
 }: ApplePayButtonProps) {
   const [isAppleDevice, setIsAppleDevice] = useState(false);
   const [isAndroidDevice, setIsAndroidDevice] = useState(false);
@@ -25,7 +25,7 @@ export default function ApplePayButton({
     const userAgent = navigator.userAgent.toLowerCase();
     const isIOS = /iphone|ipad|ipod/.test(userAgent);
     const isAndroid = /android/.test(userAgent);
-    
+
     setIsAppleDevice(isIOS);
     setIsAndroidDevice(isAndroid);
   }, []);
@@ -34,18 +34,18 @@ export default function ApplePayButton({
     try {
       // In a real implementation, this would use Apple Pay JS API
       // For now, we'll simulate the process
-      console.log('Apple Pay initiated for amount:', amount);
-      
+      console.log("Apple Pay initiated for amount:", amount);
+
       // Simulate payment method creation
       const mockPaymentMethod = {
-        id: 'pm_apple_pay_mock',
-        type: 'apple_pay',
+        id: "pm_apple_pay_mock",
+        type: "apple_pay",
         card: {
-          brand: 'visa',
-          last4: '4242'
-        }
+          brand: "visa",
+          last4: "4242",
+        },
       };
-      
+
       onSuccess(mockPaymentMethod);
     } catch (error) {
       onError(error);
@@ -56,18 +56,18 @@ export default function ApplePayButton({
     try {
       // In a real implementation, this would use Google Pay API
       // For now, we'll simulate the process
-      console.log('Google Pay initiated for amount:', amount);
-      
+      console.log("Google Pay initiated for amount:", amount);
+
       // Simulate payment method creation
       const mockPaymentMethod = {
-        id: 'pm_google_pay_mock',
-        type: 'google_pay',
+        id: "pm_google_pay_mock",
+        type: "google_pay",
         card: {
-          brand: 'mastercard',
-          last4: '5555'
-        }
+          brand: "mastercard",
+          last4: "5555",
+        },
       };
-      
+
       onSuccess(mockPaymentMethod);
     } catch (error) {
       onError(error);
@@ -77,13 +77,13 @@ export default function ApplePayButton({
   const getButtonText = () => {
     if (amount === 0) {
       return {
-        apple: 'Set up with Apple Pay',
-        google: 'Set up with Google Pay'
+        apple: "Set up with Apple Pay",
+        google: "Set up with Google Pay",
       };
     }
     return {
-      apple: 'Pay with Apple Pay',
-      google: 'Pay with Google Pay'
+      apple: "Pay with Apple Pay",
+      google: "Pay with Google Pay",
     };
   };
 
@@ -103,7 +103,7 @@ export default function ApplePayButton({
           {buttonText.apple}
         </Button>
       )}
-      
+
       {isAndroidDevice && (
         <Button
           onClick={handleGooglePay}
@@ -114,7 +114,7 @@ export default function ApplePayButton({
           {buttonText.google}
         </Button>
       )}
-      
+
       {(isAppleDevice || isAndroidDevice) && (
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
@@ -122,7 +122,7 @@ export default function ApplePayButton({
           </div>
           <div className="relative flex justify-center text-sm">
             <span className="bg-white px-2 text-gray-500">
-              {amount === 0 ? 'or enter card details' : 'or pay with card'}
+              {amount === 0 ? "or enter card details" : "or pay with card"}
             </span>
           </div>
         </div>
