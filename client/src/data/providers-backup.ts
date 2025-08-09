@@ -6,7 +6,9 @@ import {
   Dog,
   Zap,
   Gift,
+  HandHeart,
   MessageCircle,
+  Snowflake,
   PenTool,
   Droplet,
   Gamepad2,
@@ -25,8 +27,7 @@ import {
   UserCheck,
   Dumbbell,
   Flower,
-  HandHeart,
-  Snowflake,
+  HandHeartIcon,
 } from "lucide-react";
 
 export interface Provider {
@@ -80,7 +81,7 @@ const goingThroughSomethingProviders: Provider[] = [
     videoUrl: "https://player.vimeo.com/video/947608166",
     socialCredential: "I'm anonymous — you won't find me anywhere 🤫",
     whyRecommended:
-      "Sometimes you just need to talk to someone who doesn’t know you — but actually *gets* you.",
+      "Sometimes you just need to talk to someone who doesn't know you — but actually *gets* you.",
     reason: "going-through-something",
   },
   {
@@ -101,7 +102,7 @@ const goingThroughSomethingProviders: Provider[] = [
     imageUrl: "/preview-relationship-coach.png",
     socialCredential: "200K+ followers | Seen on TikTok",
     whyRecommended:
-      "Sometimes what you need most isn’t advice — it’s someone who truly *understands the ending*.",
+      "Sometimes what you need most isn't advice — it's someone who truly *understands the ending*.",
     reason: "going-through-something",
   },
   {
@@ -160,7 +161,7 @@ const goingThroughSomethingProviders: Provider[] = [
       "https://www.tiktok.com/@graffikgallery.1/video/7516207938701184278?is_from_webapp=1&sender_device=pc&web_id=7530658099657737750",
     socialCredential: "17k+ likes on TikTok",
     whyRecommended:
-      " Suit up in a classic “Breaking Bad”-style boiler suit and dust mask, and unleash your inner artist.",
+      "Suit up in a classic Breaking Bad-style boiler suit and dust mask, and unleash your inner artist.",
     reason: "going-through-something",
   },
   {
@@ -173,7 +174,7 @@ const goingThroughSomethingProviders: Provider[] = [
     location: "Your phone (no camera required)",
     availability: "Available this week",
     price: "Free with our membership 💖",
-    icon: HandHeart,
+    icon: HandHeartIcon,
     color: "from-sky-500 to-indigo-600",
     image: "🧭",
     videoUrl: "https://player.vimeo.com/video/948112198",
@@ -218,7 +219,7 @@ const goingThroughSomethingProviders: Provider[] = [
       "https://www.tiktok.com/@samirayasmin295/video/7521842237760720150?is_from_webapp=1&sender_device=pc&web_id=7530658099657737750",
     socialCredential: "25k videos on TikTok. For a good reason.",
     whyRecommended:
-      "Be grateful for life’s small wonders. Because sometimes, healing starts with a little magic.",
+      "Be grateful for life's small wonders. Because sometimes, healing starts with a little magic.",
     reason: "going-through-something",
   },
 ];
@@ -288,14 +289,14 @@ const justCuriousProviders: Provider[] = [
     title: "Weekly Journaling Prompt",
     name: "The Curiosity Diary",
     description:
-      "This week’s question: What would your life look like if you didn’t care what people think?",
+      "This week's question: What would your life look like if you didn't care what people think?",
     location: "In your notebook",
     availability: "Now",
     price: "Free with our membership 💖",
     icon: PenTool,
     color: "from-stone-400 to-stone-600",
     image: "📓",
-    socialCredential: "From TikTok’s journal girlies",
+    socialCredential: "From TikTok's journal girlies",
     whyRecommended: "Because curiosity + reflection = subtle transformation.",
     reason: "just-curious",
   },
@@ -386,7 +387,7 @@ const mainCharacterResetProviders: Provider[] = [
     title: "Faith-Based Care",
     name: "Jesus Glow, Muslim Peace, Ancestral Wisdom",
     description:
-      "Find a spiritual care guide who shares your faith or philosophy. Christian, Muslim, Indigenous, or just curious — you’re covered.",
+      "Find a spiritual care guide who shares your faith or philosophy. Christian, Muslim, Indigenous, or just curious — you're covered.",
     location: "Online & In-Person",
     availability: "Limited slots weekly",
     price: "Free with our membership 💖",
@@ -395,7 +396,7 @@ const mainCharacterResetProviders: Provider[] = [
     image: "🛐",
     videoUrl: "https://player.vimeo.com/video/948230001",
     socialCredential:
-      "Respectfully diverse | TikTok’s ‘Jesus Glow’ certified 🌟",
+      "Respectfully diverse | TikTok's 'Jesus Glow' certified 🌟",
     whyRecommended:
       "Your reset might begin with prayer, a reading, or reconnecting with something deeper.",
     reason: "spiritual-glow-up",
@@ -433,7 +434,7 @@ const mainCharacterResetProviders: Provider[] = [
     color: "from-amber-400 to-fuchsia-600",
     image: "💇🏾‍♀️",
     videoUrl: "https://player.vimeo.com/video/948230088",
-    socialCredential: "TikTok trend: ‘therapy at the salon’",
+    socialCredential: "TikTok trend: 'therapy at the salon'",
     whyRecommended:
       "Sometimes your healing starts with your hair — and the person touching your crown.",
     reason: "spiritual-glow-up",
@@ -444,7 +445,7 @@ const mainCharacterResetProviders: Provider[] = [
     title: "Mirror Coaching Session",
     name: "Talk to Your Higher Self",
     description:
-      "A guided session to help you connect with the you that’s already thriving. Identity check-in + reset clarity.",
+      "A guided session to help you connect with the you that's already thriving. Identity check-in + reset clarity.",
     location: "Online only",
     availability: "Slots open weekly",
     price: "Free with our membership 💖",
@@ -452,9 +453,9 @@ const mainCharacterResetProviders: Provider[] = [
     color: "from-blue-400 to-cyan-500",
     image: "🪞",
     videoUrl: "https://player.vimeo.com/video/948230144",
-    socialCredential: "Featured in ‘Becoming Her’ playlists",
+    socialCredential: "Featured in 'Becoming Her' playlists",
     whyRecommended:
-      "Because the most powerful glow-up is the one that’s already inside you.",
+      "Because the most powerful glow-up is the one that's already inside you.",
     reason: "spiritual-glow-up",
   },
   {
@@ -473,7 +474,7 @@ const mainCharacterResetProviders: Provider[] = [
     videoUrl: "https://player.vimeo.com/video/948230199",
     socialCredential: "IG & TikTok: #MainCharacterMorning",
     whyRecommended:
-      "You’re not just waking up — you’re rising into a softer, wiser version of you.",
+      "You're not just waking up — you're rising into a softer, wiser version of you.",
     reason: "spiritual-glow-up",
   },
   {
@@ -492,7 +493,7 @@ const mainCharacterResetProviders: Provider[] = [
     videoUrl: "https://player.vimeo.com/video/948230266",
     socialCredential: "Verified spiritual readers on Holding Health",
     whyRecommended:
-      "Whether or not you believe in fate — sometimes guidance just hits different when it’s cosmic.",
+      "Whether or not you believe in fate — sometimes guidance just hits different when it's cosmic.",
     reason: "spiritual-glow-up",
   },
   {
@@ -519,7 +520,7 @@ const mainCharacterResetProviders: Provider[] = [
     title: "Makeover for the Soul",
     name: "Therapy Meets Glam",
     description:
-      "What if self-care was a combo of therapy, nails, hair, and confidence coaching? That’s this.",
+      "What if self-care was a combo of therapy, nails, hair, and confidence coaching? That's this.",
     location: "London & Online",
     availability: "Available monthly (limited bundle)",
     price: "Free with our membership 💖",
@@ -529,7 +530,7 @@ const mainCharacterResetProviders: Provider[] = [
     videoUrl: "https://player.vimeo.com/video/948230362",
     socialCredential: "Coming soon on Holding Health 💖",
     whyRecommended:
-      "You’re not vain — you’re claiming yourself. And that deserves celebration.",
+      "You're not vain — you're claiming yourself. And that deserves celebration.",
     reason: "spiritual-glow-up",
   },
 ];
@@ -570,7 +571,7 @@ const hereForChickenProviders: Provider[] = [
     image: "🌊",
     socialCredential: "Trauma-informed peer listener",
     whyRecommended:
-      "Stress isn't just mental — it’s physical. Talking to someone who *gets it* can regulate your whole system.",
+      "Stress isn't just mental — it's physical. Talking to someone who *gets it* can regulate your whole system.",
     reason: "here-for-chicken",
   },
   {
@@ -607,7 +608,7 @@ const hereForChickenProviders: Provider[] = [
     image: "🫙",
     socialCredential: "HH hosted creative therapy experience",
     whyRecommended:
-      "Art can lower cortisol and bring joy — plus you’ll walk away with something you made!",
+      "Art can lower cortisol and bring joy — plus you'll walk away with something you made!",
     reason: "here-for-chicken",
   },
   {
@@ -616,7 +617,7 @@ const hereForChickenProviders: Provider[] = [
     title: "Nutrition Check-In",
     name: "Holistic Nutritionist",
     description:
-      "A free 30-min discovery call with a qualified nutritional therapist. You’ll feel heard *and* helped.",
+      "A free 30-min discovery call with a qualified nutritional therapist. You'll feel heard *and* helped.",
     location: "Phone or video call",
     availability: "Book anytime",
     price: "Free with our membership 💖",
@@ -625,7 +626,7 @@ const hereForChickenProviders: Provider[] = [
     image: "🥄",
     socialCredential: "Registered nutritional therapist, POC-owned clinic",
     whyRecommended:
-      "Great nutrition advice starts with a real convo. This one’s judgement-free and personalised.",
+      "Great nutrition advice starts with a real convo. This one's judgement-free and personalised.",
     reason: "here-for-chicken",
   },
   {
@@ -634,7 +635,7 @@ const hereForChickenProviders: Provider[] = [
     title: "Therapy Taster Call",
     name: "Qualified HH Therapist",
     description:
-      "Book a free intro call with a certified therapist (yep — for real). Talk about your needs and see if it’s a match.",
+      "Book a free intro call with a certified therapist (yep — for real). Talk about your needs and see if it's a match.",
     location: "Phone or video call",
     availability: "Evenings + weekends",
     price: "Free with our membership 💖",

@@ -45,17 +45,19 @@ export default function SwipeCards({
     providersByReason["going-through-something"];
   const currentProvider = providers[currentIndex];
 
-  const handleSwipe = async (direction: "left" | "right") => {
+  const handleSwipe = (direction: "left" | "right") => {
     let newSelectedProviders = selectedProviders;
 
-    // Track swipe action
+    // Track swipe action asynchronously (don't wait for it)
     if (userEmail) {
-      await analytics.trackSwipeAction({
+      analytics.trackSwipeAction({
         email: userEmail,
         providerId: currentProvider.id,
         providerName: currentProvider.name,
         providerType: currentProvider.type,
         action: direction === "left" ? "swipe_left" : "swipe_right",
+      }).catch(error => {
+        console.error("Analytics tracking failed:", error);
       });
     }
 
