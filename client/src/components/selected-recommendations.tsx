@@ -16,6 +16,7 @@ import { type Provider } from "../data/providers";
 interface SelectedRecommendationsProps {
   providers: Provider[];
   onStartOver: () => void;
+  onJoinWaitlist: () => void;
 }
 
 // Dynamic spots remaining calculation
@@ -39,11 +40,6 @@ const getDynamicSpotsRemaining = (): number => {
   // Ensure we stay within realistic bounds
   return Math.max(5, Math.min(26, finalSpots));
 };
-
-interface SelectedRecommendationsProps {
-  providers: Provider[];
-  onStartOver: () => void;
-}
 
 // Helper functions for pricing
 const getOriginalMarketPrice = (provider: Provider): number => {
@@ -96,6 +92,7 @@ const calculateTotalSavings = (
 export default function SelectedRecommendations({
   providers,
   onStartOver,
+  onJoinWaitlist,
 }: SelectedRecommendationsProps) {
   const [, setLocation] = useLocation();
   const totalSavings = calculateTotalSavings(providers);
@@ -194,7 +191,7 @@ export default function SelectedRecommendations({
                       <ArrowRight className="h-3 w-3" />
                     </motion.button>
                     <motion.button
-                      onClick={() => setLocation("/waitlist")}
+                      onClick={onJoinWaitlist}
                       className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center justify-center space-x-1"
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}

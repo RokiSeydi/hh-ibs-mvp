@@ -228,7 +228,7 @@ export default function SwipeCards({
             {/* Card content */}
             <div className="p-6 h-full flex flex-col">
               {/* 1. Media block (video or image placeholder) */}
-                            <div className="relative mb-4 h-48 bg-gray-100 rounded-xl overflow-hidden">
+              <div className="relative mb-4 h-48 bg-gray-100 rounded-xl overflow-hidden">
                 {currentProvider.imageUrl ? (
                   <img
                     src={currentProvider.imageUrl}
@@ -236,26 +236,28 @@ export default function SwipeCards({
                     className="w-full h-full object-cover"
                     onError={(e) => {
                       // Fallback to gradient if image fails to load
-                      e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                      e.currentTarget.style.display = "none";
+                      e.currentTarget.nextElementSibling?.classList.remove(
+                        "hidden"
+                      );
                     }}
                   />
                 ) : currentProvider.videoUrl ? (
-                  currentProvider.videoUrl.includes('tiktok.com') ? (
+                  currentProvider.videoUrl.includes("tiktok.com") ? (
                     <div className="w-full h-full">
-                      <TikTokEmbed 
-                        url={currentProvider.videoUrl} 
+                      <TikTokEmbed
+                        url={currentProvider.videoUrl}
                         className="w-full h-full"
                       />
                     </div>
-                  ) : currentProvider.videoUrl.includes('instagram.com') ? (
+                  ) : currentProvider.videoUrl.includes("instagram.com") ? (
                     <div className="w-full h-full">
-                      <InstagramEmbed 
-                        url={currentProvider.videoUrl} 
+                      <InstagramEmbed
+                        url={currentProvider.videoUrl}
                         className="w-full h-full"
                       />
                     </div>
-                  ) : currentProvider.videoUrl.includes('vimeo.com') ? (
+                  ) : currentProvider.videoUrl.includes("vimeo.com") ? (
                     <iframe
                       src={currentProvider.videoUrl}
                       className="w-full h-full"
@@ -281,7 +283,7 @@ export default function SwipeCards({
                     <IconComponent className="h-20 w-20 text-white" />
                   </div>
                 )}
-                
+
                 {/* Hidden fallback gradient (shown if image fails to load) */}
                 {currentProvider.imageUrl && (
                   <div

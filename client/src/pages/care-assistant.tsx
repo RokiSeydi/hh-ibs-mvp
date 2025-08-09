@@ -4,6 +4,7 @@ import { Heart } from "lucide-react";
 import SwipeCards from "../components/swipe-cards";
 import SelectedRecommendations from "../components/selected-recommendations";
 import IntakeForm from "../components/intake-form";
+import ThankYou from "./thank-you";
 import { type Provider } from "../data/providers";
 
 interface IntakeFormData {
@@ -34,7 +35,7 @@ const getResponseMessage = (reason: string): string => {
 export default function CareAssistant() {
   const [formData, setFormData] = useState<IntakeFormData | null>(null);
   const [currentStep, setCurrentStep] = useState<
-    "input" | "response" | "swiping" | "results"
+    "input" | "response" | "swiping" | "results" | "thank-you"
   >("input");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
@@ -69,6 +70,14 @@ export default function CareAssistant() {
     setCurrentStep("input");
     setSelectedProviders([]);
     setIsSubmitting(false);
+  };
+
+  const handleJoinWaitlist = () => {
+    setCurrentStep("thank-you");
+  };
+
+  const handleBackFromThankYou = () => {
+    setCurrentStep("results");
   };
 
   return (
@@ -175,7 +184,23 @@ export default function CareAssistant() {
             <SelectedRecommendations
               providers={selectedProviders}
               onStartOver={handleStartOver}
+              onJoinWaitlist={handleJoinWaitlist}
             />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Thank You Page */}
+      <AnimatePresence>
+        {currentStep === "thank-you" && (
+          <motion.div
+            className="w-full"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <ThankYou onBack={handleBackFromThankYou} />
           </motion.div>
         )}
       </AnimatePresence>
