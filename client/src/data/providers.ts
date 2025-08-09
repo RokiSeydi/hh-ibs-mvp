@@ -118,6 +118,7 @@ const goingThroughSomethingProviders: Provider[] = [
     color: "from-yellow-400 to-amber-500",
     image: "🌝",
     videoUrl: "https://www.instagram.com/reel/DKeynPRC1oz/",
+    imageUrl: "/preview-yoga-workshop.png", // TODO: Add yoga workshop screenshot
     socialCredential: "Yoga never goes out of style",
     whyRecommended:
       "each 50-minute session offers a powerful reset for mind and body, for energy traffic, recalibrating your nervous system, and muscle relaxation.",
@@ -138,6 +139,7 @@ const goingThroughSomethingProviders: Provider[] = [
     image: "💆🏾‍♀️",
     videoUrl:
       "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
+    imageUrl: "/preview-layana-massage.png", // TODO: Add LAYANA massage screenshot
     socialCredential: "4.7-star from 2000+ clients",
     whyRecommended:
       "Because healing often starts with touch — and this one feels like a hug from your fave auntie.",
@@ -158,6 +160,7 @@ const goingThroughSomethingProviders: Provider[] = [
     image: "💥",
     videoUrl:
       "https://www.tiktok.com/@graffikgallery.1/video/7516207938701184278?is_from_webapp=1&sender_device=pc&web_id=7530658099657737750",
+    imageUrl: "/preview-graffiti-workshop.png", // TODO: Add graffiti workshop screenshot
     socialCredential: "17k+ likes on TikTok",
     whyRecommended:
       " Suit up in a classic “Breaking Bad”-style boiler suit and dust mask, and unleash your inner artist.",
@@ -196,6 +199,7 @@ const goingThroughSomethingProviders: Provider[] = [
     color: "from-brown-400 to-amber-500",
     image: "🏺",
     videoUrl: "https://www.instagram.com/p/DIvUm_rs0CY/",
+    imageUrl: "/preview-pottery-class.png", // TODO: Add pottery class screenshot
     socialCredential: "IG: 58k followers @artplaylondon",
     whyRecommended:
       "Reconnect with your creative side. Because sometimes, healing is just making something with your hands.",
@@ -216,6 +220,7 @@ const goingThroughSomethingProviders: Provider[] = [
     image: "🦋",
     videoUrl:
       "https://www.tiktok.com/@samirayasmin295/video/7521842237760720150?is_from_webapp=1&sender_device=pc&web_id=7530658099657737750",
+    imageUrl: "/preview-butterfly-garden.png", // TODO: Add butterfly garden screenshot
     socialCredential: "25k videos on TikTok. For a good reason.",
     whyRecommended:
       "Be grateful for life’s small wonders. Because sometimes, healing starts with a little magic.",

@@ -50,15 +50,17 @@ export default function SwipeCards({
 
     // Track swipe action asynchronously (don't wait for it)
     if (userEmail) {
-      analytics.trackSwipeAction({
-        email: userEmail,
-        providerId: currentProvider.id,
-        providerName: currentProvider.name,
-        providerType: currentProvider.type,
-        action: direction === "left" ? "swipe_left" : "swipe_right",
-      }).catch(error => {
-        console.error("Analytics tracking failed:", error);
-      });
+      analytics
+        .trackSwipeAction({
+          email: userEmail,
+          providerId: currentProvider.id,
+          providerName: currentProvider.name,
+          providerType: currentProvider.type,
+          action: direction === "left" ? "swipe_left" : "swipe_right",
+        })
+        .catch((error) => {
+          console.error("Analytics tracking failed:", error);
+        });
     }
 
     if (direction === "right" && selectedProviders.length < 4) {
@@ -245,7 +247,31 @@ export default function SwipeCards({
             <div className="p-6 h-full flex flex-col">
               {/* 1. Media block (video or image placeholder) */}
               <div className="relative mb-4 h-48 bg-gray-100 rounded-xl overflow-hidden">
-                {currentProvider.imageUrl ? (
+                {currentProvider.imageUrl && currentProvider.videoUrl ? (
+                  // Show image with play button overlay when both are available
+                  <div
+                    className="relative w-full h-full cursor-pointer group"
+                    onClick={() => {
+                      if (currentProvider.videoUrl) {
+                        window.open(currentProvider.videoUrl, "_blank");
+                      }
+                    }}
+                  >
+                    <img
+                      src={currentProvider.imageUrl}
+                      alt={currentProvider.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                    <div className="absolute inset-0 flex items-center justify-center z-20 opacity-80 group-hover:opacity-100 transition-opacity">
+                      <div className="text-white text-center">
+                        <div className="w-12 h-12 border-2 border-white rounded-full flex items-center justify-center group-hover:bg-white/20 transition-colors">
+                          ▶
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ) : currentProvider.imageUrl ? (
                   <img
                     src={currentProvider.imageUrl}
                     alt={currentProvider.title}
