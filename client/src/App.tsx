@@ -4,13 +4,15 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
+import LandingPage from "@/pages/landing-page";
 import CareAssistant from "@/pages/care-assistant";
 import Confirmation from "@/pages/confirmation";
 
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={CareAssistant} />
+      <Route path="/" component={LandingPage} />
+      <Route path="/get-started" component={CareAssistant} />
       <Route path="/confirmation" component={Confirmation} />
       <Route component={NotFound} />
     </Switch>

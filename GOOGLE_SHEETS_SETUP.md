@@ -87,6 +87,9 @@ function doPost(e) {
       case "tier_selection":
         handleTierSelection(sheet, params);
         break;
+      case "landing_page_interaction":
+        handleLandingPageInteraction(sheet, params);
+        break;
       case "ambassador_application":
         handleAmbassadorApplication(sheet, params);
         break;
@@ -154,6 +157,18 @@ function handleTierSelection(spreadsheet, params) {
     params.tier || "",
     params.selectedProvidersCount || "",
     params.providerNames || ""
+  ]);
+}
+
+function handleLandingPageInteraction(spreadsheet, params) {
+  const sheet = getOrCreateSheet(spreadsheet, "Landing Page Interactions",
+    ["Timestamp", "Action", "Location", "User Agent"]);
+
+  sheet.appendRow([
+    params.timestamp || new Date().toISOString(),
+    params.action || "",
+    params.location || "",
+    params.userAgent || ""
   ]);
 }
 

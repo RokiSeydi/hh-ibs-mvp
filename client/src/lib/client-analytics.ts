@@ -37,6 +37,35 @@ export const analytics = {
     }
   },
 
+  trackLandingPageInteraction: async (interactionData: {
+    action:
+      | "hero_cta_click"
+      | "learn_more_click"
+      | "navigation_cta_click"
+      | "footer_cta_click";
+    location?: string;
+  }) => {
+    try {
+      const params = new URLSearchParams({
+        eventType: "landing_page_interaction",
+        timestamp: new Date().toISOString(),
+        action: interactionData.action,
+        location: interactionData.location || "",
+      });
+
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params,
+      });
+
+      const result = await response.text();
+      console.log("✅ Analytics: Landing page interaction tracked", result);
+    } catch (error) {
+      console.error("❌ Analytics tracking failed:", error);
+    }
+  },
+
   trackSwipeAction: async (swipeData: {
     email: string;
     providerId: number;
