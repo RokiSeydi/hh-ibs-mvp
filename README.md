@@ -61,6 +61,7 @@ npm run start
 This project is automatically deployed to Vercel when pushing to the main branch.
 
 ### Manual Deploy
+
 ```bash
 # Deploy to production
 vercel --prod
@@ -69,7 +70,7 @@ vercel --prod
 ## 🎨 Design Philosophy
 
 - **Gen Z/Millennial First**: Built for digital natives who value their time
-- **Inclusive**: Culturally competent providers from diverse backgrounds  
+- **Inclusive**: Culturally competent providers from diverse backgrounds
 - **Accessible**: Free healthcare without financial barriers
 - **Personal**: Care that sees mind, body, and soul
 - **Modern**: Social media integration and contemporary UX
@@ -77,7 +78,7 @@ vercel --prod
 ## 📊 Provider Categories
 
 - **Coaches**: Relationship, life, fitness specialists
-- **Wellness**: Massage, beauty, spiritual services  
+- **Wellness**: Massage, beauty, spiritual services
 - **Activities**: Art therapy, nature experiences, workshops
 - **Support**: Anonymous calls, peer counseling
 - **Therapy**: Mental health professionals (coming soon)
@@ -92,4 +93,4 @@ This is a private MVP project. For questions or collaboration inquiries, please 
 
 ---
 
-*Because you shouldn't have to wait months when you're in crisis. Because money shouldn't be the barrier to seeing the provider who truly gets you.*
+_Because you shouldn't have to wait months when you're in crisis. Because money shouldn't be the barrier to seeing the provider who truly gets you._

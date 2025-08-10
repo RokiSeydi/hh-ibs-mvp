@@ -78,6 +78,7 @@ const goingThroughSomethingProviders: Provider[] = [
     color: "from-rose-500 to-pink-600",
     image: "💗",
     videoUrl: "https://player.vimeo.com/video/947608166",
+    imageUrl: "/preview-anonymous-support.png",
     socialCredential: "I'm anonymous — you won't find me anywhere 🤫",
     whyRecommended:
       "Sometimes you just need to talk to someone who doesn’t know you — but actually *gets* you.",
@@ -110,7 +111,7 @@ const goingThroughSomethingProviders: Provider[] = [
     title: "Taster Yoga Workshops (In person)",
     name: "Sprouts From Soil",
     description:
-      "Power-packed mini workshops. 50 minutes per session, in-person. 8 choices available, choose your vibe.",
+      "Power-packed mini workshops. 50 minutes per session, in-person. 3 choices available, choose your vibe.",
     location: "New Cross, London",
     availability: "Selected weekdays only",
     price: "Free with our membership 💖",
@@ -232,37 +233,41 @@ const goingThroughSomethingProviders: Provider[] = [
 const justCuriousProviders: Provider[] = [
   {
     id: 9,
-    type: "support",
-    title: "Anonymous Curiosity Call",
-    name: "Your Mystery Bestie",
+    type: "activity",
+    title: "One-Hour Boat Rental For Two",
+    name: "Richmond Rowing Boat Hire",
     description:
-      "Feeling curious, confused, or just want to chat anonymously with someone smart and kind? I got you.",
-    location: "Anywhere you are",
-    availability: "Available today",
+      "Two adventure seekers can enjoy a self-drive boat ride; includes a 15-minute instruction session and safety equipme",
+    location: "south London - Richmond",
+    availability: "everyday depending on weather. Booking required",
     price: "Free with our membership 💖",
     icon: MessageCircle,
     color: "from-purple-500 to-indigo-600",
     image: "🌀",
-    socialCredential: "Totally off the grid — that's the point 🤫",
+    socialCredential: "Totally off the grid — that's the point 🤫", // change
+    videoUrl: "https://player.vimeo.com/video/947608166", // change
+    imageUrl: "/preview-anonymous-support.png", // change
     whyRecommended:
-      "Because sometimes curiosity feels better when no one knows you're asking.",
+      " Whether you're seeking a solo escape, a romantic outing, or a fun group experience, you'll surely enjoy the tranquility of the river.ss",
     reason: "just-curious",
   },
 
   {
     id: 10,
     type: "wellness",
-    title: "The Glow-Up Checklist",
-    name: "Mini Ritual, Major Shift",
+    title: "Hydrating or Spa Facial + Massage",
+    name: "HAUTIQUE SKIN AESTHETIC",
     description:
-      "A 15-minute spiritual and self-care reset you can do at home. From mirror talk to tea rituals.",
-    location: "At home, in your vibe zone",
-    availability: "Now",
+      "Refresh your skin and restore your glow with a luxurious 60-minute facial experience that includes a soothing massage.",
+    location: "London WC2H 9AJ",
+    availability: "Monday to Saturday, 12.30PM - 8PM",
     price: "Free with our membership 💖",
     icon: Sparkles,
     color: "from-pink-400 to-yellow-300",
     image: "🌞",
-    socialCredential: "Inspired by the 'that girl' and 'Jesus glow' trends",
+    socialCredential: "Jump on that trend. Be 'that girl' (or boy).",
+    videoUrl: "https://www.instagram.com/p/DMZ5ghSsxYf/",
+    imageUrl: "/preview-anonymous-support.png",
     whyRecommended:
       "Sometimes your glow just needs a little nudge — and this is your nudge.",
     reason: "just-curious",
@@ -271,55 +276,63 @@ const justCuriousProviders: Provider[] = [
   {
     id: 11,
     type: "wellness",
-    title: "Try TikTok's Ice Rolling Trend",
-    name: "Facial Reset Hack",
+    title: "30 Minute Thai Back Massage",
+    name: "LAYANA Medispa",
     description:
-      "Use a face roller or a cold spoon to reset your nervous system and look awake AF.",
-    location: "Home / bathroom / wherever",
-    availability: "Now",
+      "LAYANA Medispa is a massage' centre that looks to provide an exquisite relaxing experience away from day to day stresses",
+    location: "London N3 2DL",
+    availability: "Everyday 10 AM - 9 PM",
     price: "Free with our membership 💖",
-    icon: Snowflake,
-    color: "from-blue-400 to-cyan-500",
-    image: "🧊",
-    socialCredential: "Trending on #skintok",
+    icon: Sparkles,
+    color: "from-lime-600 to-emerald-500",
+    image: "💆🏾‍♀️",
+    videoUrl:
+      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
+    imageUrl: "/preview-layana-massage.png", // TODO: Add LAYANA massage screenshot
+    socialCredential: "4.7-star from 2000+ clients",
     whyRecommended:
-      "Because wellness can be fun, cheap, and weirdly effective.",
-    reason: "just-curious",
+      "Because healing often starts with touch — and this one feels like a hug from your fave auntie.",
+    reason: "going-through-something",
   },
 
   {
     id: 12,
     type: "wellness",
-    title: "Weekly Journaling Prompt",
-    name: "The Curiosity Diary",
+    title: "Crêpes & Shakes",
+    name: "Crêpeaffaire",
     description:
-      "This week’s question: What would your life look like if you didn’t care what people think?",
-    location: "In your notebook",
-    availability: "Now",
+      "Choose from a menu full of freshly made crêpes, sweet, savoury & breakfast, gluten free & vegan range",
+    location: "Nationwide - London Islington",
+    availability: "Anytime",
     price: "Free with our membership 💖",
     icon: PenTool,
     color: "from-stone-400 to-stone-600",
     image: "📓",
-    socialCredential: "From TikTok’s journal girlies",
-    whyRecommended: "Because curiosity + reflection = subtle transformation.",
+    videoUrl:
+      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
+    imageUrl: "/preview-layana-massage.png", // TODO: Add CREPES  screenshot
+    socialCredential: "Favourite on Instagram - 14.5k followers",
+    whyRecommended:
+      "Food is the universal language for connection and care. Also you can never go wrong with crêpes.",
     reason: "just-curious",
   },
-
-  // This week's PAID PICKS (Free w/ HH Membership)
   {
     id: 13,
     type: "activity",
     title: "Dinner with Strangers",
-    name: "Hosted by The Nomadic Table",
+    name: "Timeleft",
     description:
-      "Break bread with new faces. It's £13 to join but included in HH for members!",
+      "Break bread with new faces. We cover the joining fee, you just bring your appetite and curiosity.",
     location: "Various London venues",
-    availability: "Next Friday",
+    availability: "Every Wednesday",
     price: "Free with our membership 💖",
     icon: Users,
     color: "from-orange-400 to-red-500",
     image: "🍽️",
-    socialCredential: "Popular Gen Z meet-up format",
+    socialCredential: "1.1M followers on Instagram. Clearly a vibe.",
+    videoUrl:
+      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
+    imageUrl: "/preview-layana-massage.png",
     whyRecommended:
       "For the socially curious who want connection but hate awkward networking.",
     reason: "just-curious",
@@ -328,17 +341,20 @@ const justCuriousProviders: Provider[] = [
   {
     id: 14,
     type: "wellness",
-    title: "Sauna & Wellness Studio Day",
-    name: "Glowhaus London",
+    title: "30 Minutes: Sports Massage",
+    name: "MotionWorks Therapy",
     description:
-      "Spend a day in infrared saunas, herbal steam rooms, and tea lounges. Yes, really.",
-    location: "South London",
-    availability: "Weekdays only",
+      " Experience expert sports therapy, focusing on muscle tension relief and performance improvement",
+    location: "Soho or Liverpool Street - London",
+    availability: "Everyday, by appointment",
     price: "Free with our membership 💖",
     icon: Droplet,
     color: "from-green-400 to-lime-500",
     image: "🧖",
     socialCredential: "TikTok-approved chill zone",
+    videoUrl:
+      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
+    imageUrl: "/preview-layana-massage.png",
     whyRecommended:
       "Curiosity is healing too — and this one feels like a luxury reset.",
     reason: "just-curious",
@@ -347,22 +363,24 @@ const justCuriousProviders: Provider[] = [
   {
     id: 15,
     type: "activity",
-    title: "Squid Game: The Experience",
-    name: "London Pop-Up",
+    title: "Friday Jazz Night with Any Main Course and a Glass of Wine",
+    name: "Atrium Bar & Restaurant",
     description:
-      "Try your luck at Squid Game IRL (without dying, promise). Includes games, prizes, and snacks.",
-    location: "London",
-    availability: "Weekend only",
+      "Enjoy Friday Jazz Night with live bands and choose any main course paired with a glass of wine in an Art Deco ambiance",
+    location: "London WC1B 5BA - Imperial London Hotel",
+    availability: "7pm onwards every day. Live music starts at 9pm",
     price: "Free with our membership 💖",
     icon: Gamepad2,
     color: "from-red-500 to-black",
     image: "🦑",
-    socialCredential: "Viral on TikTok & Instagram",
+    socialCredential: "Viral on TikTok & Instagram", // TODO: Add Atrium Bar social credential
+    videoUrl:
+      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501", // TODO: Add Atrium Bar video URL
+    imageUrl: "/preview-layana-massage.png", // TODO: Add Atrium Bar screenshot
     whyRecommended:
       "For the thrill-seekers and social lurkers who want to experience the hype themselves.",
     reason: "just-curious",
   },
-
   {
     id: 16,
     type: "activity",
@@ -376,10 +394,12 @@ const justCuriousProviders: Provider[] = [
     icon: Palette,
     color: "from-brown-400 to-amber-500",
     image: "🏺",
-    socialCredential: "Spotted all over IG stories",
+    videoUrl: "https://www.instagram.com/p/DIvUm_rs0CY/",
+    imageUrl: "/preview-pottery-class.png", // TODO: Add pottery class screenshot
+    socialCredential: "IG: 58k followers @artplaylondon",
     whyRecommended:
-      "Curiosity in its most creative form. Also a great way to flirt if you bring someone 😉",
-    reason: "just-curious",
+      "Reconnect with your creative side. Because sometimes, healing is just making something with your hands.",
+    reason: "going-through-something",
   },
 ];
 
@@ -387,90 +407,92 @@ const justCuriousProviders: Provider[] = [
 const mainCharacterResetProviders: Provider[] = [
   {
     id: 17,
-    type: "spiritual",
-    title: "Faith-Based Care",
-    name: "Jesus Glow, Muslim Peace, Ancestral Wisdom",
+    type: "wellness",
+    title: "Express Gel Manicure",
+    name: "Beauté and Browź Clinic",
     description:
-      "Find a spiritual care guide who shares your faith or philosophy. Christian, Muslim, Indigenous, or just curious — you’re covered.",
-    location: "Online & In-Person",
-    availability: "Limited slots weekly",
+      "Whether you're after a quick refresh or an indulgent hand treatment, these manicure options are ideal for prepping for special occasions or simply maintaining polished hands.",
+    location: " London, Paddington W2 2HR",
+    availability: "Everyday 11 AM - 8 PM. Sundays 12 PM - 6 PM",
     price: "Free with our membership 💖",
     icon: Sparkle,
     color: "from-yellow-300 to-rose-400",
     image: "🛐",
     videoUrl: "https://player.vimeo.com/video/948230001",
-    socialCredential:
-      "Respectfully diverse | TikTok’s ‘Jesus Glow’ certified 🌟",
-    whyRecommended:
-      "Your reset might begin with prayer, a reading, or reconnecting with something deeper.",
+    imageUrl: "/preview-anonymous-support.png",
+    socialCredential: "5.0 stars from 30+ happy clients on Treatwell 🌟",
+    whyRecommended: "Your reset might start by getting your nails done first.",
     reason: "spiritual-glow-up",
   },
   {
     id: 18,
-    type: "spiritual",
-    title: "Spiritual Glow-Up Kit",
-    name: "Align Your Energy",
+    type: "activity",
+    title: "Friday Jazz Night with Any Main Course and a Glass of Wine",
+    name: "Atrium Bar & Restaurant",
     description:
-      "Breathwork, sound baths, chakra realignment — choose your glow-up ritual and let it flow.",
-    location: "Online + London studios",
-    availability: "Available this week",
+      "Enjoy Friday Jazz Night with live bands and choose any main course paired with a glass of wine in an Art Deco ambiance",
+    location: "London WC1B 5BA - Imperial London Hotel",
+    availability: "7pm onwards every day. Live music starts at 9pm",
     price: "Free with our membership 💖",
-    icon: Star,
-    color: "from-violet-500 to-indigo-600",
-    image: "✨",
-    videoUrl: "https://player.vimeo.com/video/948230045",
-    socialCredential: "Seen in #SpiritualGlowUp with over 3M views",
-    whyRecommended:
-      "Not everything needs fixing. Some things just need realignment — with breath, music, and stillness.",
+    icon: Gamepad2,
+    color: "from-red-500 to-black",
+    image: "🦑",
+    socialCredential: "Viral on TikTok & Instagram", // TODO: Add Atrium Bar social credential
+    videoUrl:
+      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501", // TODO: Add Atrium Bar video URL
+    imageUrl: "/preview-layana-massage.png", // TODO: Add Atrium Bar screenshot
+    whyRecommended: "Good food, good music, good vibes.",
     reason: "spiritual-glow-up",
   },
   {
     id: 19,
-    type: "wellness",
-    title: "Crown Reset: Braids + Vibes",
-    name: "Talk & Twist Session",
+    type: "activity",
+    title: "One-Hour Boat Rental For Two",
+    name: "Richmond Rowing Boat Hire",
     description:
-      "Get your hair done and your mind untangled. Quiet option available — or chat with someone who gets it.",
-    location: "South & East London",
-    availability: "Available next week",
+      "Two adventure seekers can enjoy a self-drive boat ride; includes a 15-minute instruction session and safety equipme",
+    location: "south London - Richmond",
+    availability: "everyday depending on weather. Booking required",
     price: "Free with our membership 💖",
-    icon: Scissors,
-    color: "from-amber-400 to-fuchsia-600",
-    image: "💇🏾‍♀️",
-    videoUrl: "https://player.vimeo.com/video/948230088",
-    socialCredential: "TikTok trend: ‘therapy at the salon’",
+    icon: MessageCircle,
+    color: "from-purple-500 to-indigo-600",
+    image: "🌀",
+    socialCredential: "Totally off the grid — that's the point 🤫", // change
+    videoUrl: "https://player.vimeo.com/video/947608166", // change
+    imageUrl: "/preview-anonymous-support.png", // change
     whyRecommended:
-      "Sometimes your healing starts with your hair — and the person touching your crown.",
+      "Whether you're seeking a solo escape, a romantic outing, or a fun group experience, you'll surely enjoy the tranquility of the river.",
     reason: "spiritual-glow-up",
   },
   {
     id: 20,
-    type: "coach",
-    title: "Mirror Coaching Session",
-    name: "Talk to Your Higher Self",
+    type: "wellness",
+    title: "Hydrating or Spa Facial + Massage",
+    name: "HAUTIQUE SKIN AESTHETIC",
     description:
-      "A guided session to help you connect with the you that’s already thriving. Identity check-in + reset clarity.",
-    location: "Online only",
-    availability: "Slots open weekly",
+      "Refresh your skin and restore your glow with a luxurious 60-minute facial experience that includes a soothing massage.",
+    location: "London WC2H 9AJ",
+    availability: "Monday to Saturday, 12.30PM - 8PM",
     price: "Free with our membership 💖",
-    icon: Eye,
-    color: "from-blue-400 to-cyan-500",
-    image: "🪞",
-    videoUrl: "https://player.vimeo.com/video/948230144",
-    socialCredential: "Featured in ‘Becoming Her’ playlists",
+    icon: Sparkles,
+    color: "from-pink-400 to-yellow-300",
+    image: "🌞",
+    socialCredential: "Jump on that trend. Be 'that girl' (or boy).",
+    videoUrl: "https://www.instagram.com/p/DMZ5ghSsxYf/",
+    imageUrl: "/preview-anonymous-support.png",
     whyRecommended:
-      "Because the most powerful glow-up is the one that’s already inside you.",
+      "Sometimes your glow just needs a little nudge — and this is your nudge.",
     reason: "spiritual-glow-up",
   },
   {
     id: 21,
     type: "activity",
-    title: "Sunrise Walk + Audio Reset",
-    name: "Main Character Mornings",
+    title: "Adventure & Relaxation: Climbing and Sauna Day Pass Combo",
+    name: "BlocFit",
     description:
-      "Solo or group sunrise walk with our soft affirmations playlist. Your inner peace era starts at 6am.",
-    location: "Greenwich Park + Local Recommendations",
-    availability: "Every Saturday & self-guided anytime",
+      "Dive into a full day of climbing topped off with a revitalizing sauna and ice bath experience!",
+    location: "London Brixton SW9 8RR",
+    availability: "Everyday 6am-10pm, weekends 10am-6pm",
     price: "Free with our membership 💖",
     icon: Sun,
     color: "from-orange-300 to-yellow-500",
@@ -478,26 +500,28 @@ const mainCharacterResetProviders: Provider[] = [
     videoUrl: "https://player.vimeo.com/video/948230199",
     socialCredential: "IG & TikTok: #MainCharacterMorning",
     whyRecommended:
-      "You’re not just waking up — you’re rising into a softer, wiser version of you.",
+      "The deal includes limitless access to BlocFit's impressive climbing facilities paired with an hour-long indulgence in their serene sauna and refreshing ice baths. Whether seeking thrill or tranquility post-climb, this offer covers it all.",
     reason: "spiritual-glow-up",
   },
   {
     id: 22,
-    type: "spiritual",
-    title: "Tarot or Birth Chart Reading",
-    name: "Clarity from the Cosmos",
+    type: "activity",
+    title: "5 Reformer Pilates Classes",
+    name: "Pilates HQ",
     description:
-      "You pick: astrology, tarot, or oracle. Get your questions read by someone who takes it seriously (not scammy).",
-    location: "Online",
-    availability: "Slots limited (book early)",
+      "High-energy classes designed for all levels. They help build strength and flexibility while offering a break from the busy city life.",
+    location: "London Islington N1 9TP",
+    availability: "Weekends only",
     price: "Free with our membership 💖",
-    icon: Moon,
-    color: "from-indigo-700 to-purple-500",
-    image: "🔮",
-    videoUrl: "https://player.vimeo.com/video/948230266",
-    socialCredential: "Verified spiritual readers on Holding Health",
+    icon: Hand,
+    color: "from-amber-300 to-rose-400",
+    image: "💆🏾",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-pilates-classes.png", //change
+    socialCredential:
+      "Ever wanted to try out the pilates princess routine? Now’s your chance.",
     whyRecommended:
-      "Whether or not you believe in fate — sometimes guidance just hits different when it’s cosmic.",
+      "Pilates is gentle on the body but tough on stress. It’s like a reset button for your muscles and mind.",
     reason: "spiritual-glow-up",
   },
   {
@@ -507,110 +531,118 @@ const mainCharacterResetProviders: Provider[] = [
     name: "Soft Power Sessions",
     description:
       "Not a hype coach. Not a pick-me. Just someone to help you find your voice, your power, your glow.",
-    location: "Online",
+    location: "Your phone (no camera required)",
     availability: "Available this week",
     price: "Free with our membership 💖",
-    icon: Sparkles,
-    color: "from-rose-500 to-yellow-400",
-    image: "💁🏽‍♀️",
-    videoUrl: "https://player.vimeo.com/video/948230313",
-    socialCredential: "Black woman coach featured on IG Lives & panels",
+    icon: HandHeart,
+    color: "from-sky-500 to-indigo-600",
+    image: "🧭",
+    // videoUrl: "https://player.vimeo.com/video/948112198",
+    imageUrl: "/preview-anonymous-support.png",
+    socialCredential: "Anonymous and judgement free",
     whyRecommended: "You already have it — they just help you *see it louder*.",
     reason: "spiritual-glow-up",
   },
   {
     id: 24,
-    type: "selfcare",
-    title: "Makeover for the Soul",
-    name: "Therapy Meets Glam",
+    type: "activity",
+    title: "Five Course Taster Menu with Cocktails",
+    name: "Inamo Covent Garden & Inamo Soho",
     description:
-      "What if self-care was a combo of therapy, nails, hair, and confidence coaching? That’s this.",
-    location: "London & Online",
-    availability: "Available monthly (limited bundle)",
+      "Engage in a one-of-a-kind dining experience packed with interactive games and award-winning Asian fusion cuisine",
+    location: "London, Inamo Covent Garden & Inamo Soho",
+    availability: "Mon- Weds all day at all times, Thurs & Fri 12-5pm",
     price: "Free with our membership 💖",
     icon: Heart,
     color: "from-pink-500 to-fuchsia-600",
     image: "💅",
-    videoUrl: "https://player.vimeo.com/video/948230362",
-    socialCredential: "Coming soon on Holding Health 💖",
+    videoUrl: "https://player.vimeo.com/video/948230362", // change
+    imageUrl: "/preview-inamo-dining.png", //change
+    socialCredential: "4.3 stars from 5,000+ diners",
     whyRecommended:
-      "You’re not vain — you’re claiming yourself. And that deserves celebration.",
+      "Get on a culinary journey on your way to levelling up your taste buds.",
     reason: "spiritual-glow-up",
   },
 ];
 
-// Providers for "I'm only here for the chicken 😭" (fun/food-related wellness)
+// UPDATE THIS TO CHRONIC CONDITION FOCUSED
 const hereForChickenProviders: Provider[] = [
   {
     id: 25,
-    type: "wellness",
-    title: "Sound Bath on Demand",
-    name: "Soothing Soundscapes",
+    type: "selfcare",
+    title: "Discover Food Sensitivities with Precision",
+    name: "Check My Body Health",
     description:
-      "Listen to a healing audio sound bath curated to support nervous system rest and body repair.",
-    location: "Online audio",
-    availability: "Listen anytime",
+      "This test evaluates your reactivity to 600 common food and non-food items, helping to identify the sources of your sensitivity symptoms.",
+    location: "At home test kit",
+    availability: "Anytime",
     price: "Free with our membership 💖",
     icon: Music,
     color: "from-violet-500 to-purple-600",
     image: "🔊",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-food-sensitivity-test.png",
     socialCredential:
       "Created by a certified music therapist + Black wellness creator",
     whyRecommended:
-      "Nervous system healing can start with 10 mins of calm. Music is a science-backed healing tool.",
+      "Our bodies are unique and we react to different foods and substances differently. This test helps you understand yours better — so you can feel your best.",
     reason: "here-for-chicken",
   },
   {
     id: 26,
     type: "therapy",
-    title: "1:1 Calm Call",
-    name: "Certified Chill Friend™",
+    title: "Intro Therapy Session",
+    name: "Isabella Carey - Counsellor",
     description:
-      "Book a short call with someone trained in stress support and real-life empathy. Think hotline, but softer.",
-    location: "Phone call",
-    availability: "Evenings + weekends",
+      "Book an intro 20 minutes call with someone trained in stress support and real-life empathy. Think hotline, but softer.",
+    location: "Online or offline",
+    availability: "Weekdays",
     price: "Free with our membership 💖",
     icon: Phone,
     color: "from-teal-500 to-cyan-500",
     image: "🌊",
     socialCredential: "Trauma-informed peer listener",
     whyRecommended:
-      "Stress isn't just mental — it’s physical. Talking to someone who *gets it* can regulate your whole system.",
+      "This session is centered around curiosity and self-discovery, and it explores how the social, political, and cultural contexts influence lived experiences.",
     reason: "here-for-chicken",
   },
   {
     id: 27,
-    type: "selfcare",
-    title: "Chronic Care Massage",
-    name: "Compassionate Touch Therapist",
+    type: "activity",
+    title: "5 Reformer Pilates Classes",
+    name: "Pilates HQ",
     description:
-      "30-min massage with a therapist trained in chronic conditions. Yes, they *actually* get it.",
-    location: "London-based studio",
-    availability: "Book this week",
+      "High-energy classes designed for all levels. They help build strength and flexibility while offering a break from the busy city life.",
+    location: "London Islington N1 9TP",
+    availability: "Weekends only",
     price: "Free with our membership 💖",
     icon: Hand,
     color: "from-amber-300 to-rose-400",
     image: "💆🏾",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-pilates-classes.png", //change
     socialCredential:
-      "Certified massage therapist with chronic pain experience",
+      "Ever wanted to try out the pilates princess routine? Now’s your chance.",
     whyRecommended:
-      "Physical touch can release pain, improve sleep, and calm the nervous system. Especially powerful with chronic flare-ups.",
+      "Pilates is gentle on the body but tough on stress. It’s like a reset button for your muscles and mind.",
     reason: "here-for-chicken",
   },
   {
     id: 28,
     type: "activity",
-    title: "Sip & Sculpt Art Therapy",
-    name: "Clay, Chat & Chill Host",
+    title: "Dive Into Modern Art at Moco Museum London",
+    name: "Moco Museum London",
     description:
-      "Pottery and conversation to boost mood and reduce stress. Clay is good for the soul.",
-    location: "Liverpool Street, London",
-    availability: "Wednesdays + Fridays",
+      "A unique collection of over 100 modern, contemporary, digital and immersive works of art from the likes of Banksy, Kusama, and more.",
+    location: "London, Marble Arch W2 2UH",
+    availability: "Everyday 10 AM - 6 PM (7 PM Fri/Sat)",
     price: "Free with our membership 💖",
     icon: Paintbrush,
     color: "from-rose-400 to-amber-500",
     image: "🫙",
-    socialCredential: "HH hosted creative therapy experience",
+    socialCredential: "6M+ visitors globally | 4.6 stars by 120K visitors",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-art-therapy.png", //change
     whyRecommended:
       "Art can lower cortisol and bring joy — plus you’ll walk away with something you made!",
     reason: "here-for-chicken",
@@ -618,75 +650,82 @@ const hereForChickenProviders: Provider[] = [
   {
     id: 29,
     type: "coach",
-    title: "Nutrition Check-In",
-    name: "Holistic Nutritionist",
+    title: "Health & Wellness Coaching Intro Call",
+    name: "Willow Woolf - integrative Health",
     description:
-      "A free 30-min discovery call with a qualified nutritional therapist. You’ll feel heard *and* helped.",
+      "A free 30-min discovery call with a qualified nutritional therapist. Whether you're struggling with emotional eating, chronic symptoms, or simply seeking support to feel more balanced.",
     location: "Phone or video call",
-    availability: "Book anytime",
+    availability: "Weekdays",
     price: "Free with our membership 💖",
     icon: Utensils,
     color: "from-lime-500 to-emerald-600",
     image: "🥄",
-    socialCredential: "Registered nutritional therapist, POC-owned clinic",
+    socialCredential: "Registered health coach, women-owned clinic",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-health-coaching.png", //change
     whyRecommended:
       "Great nutrition advice starts with a real convo. This one’s judgement-free and personalised.",
     reason: "here-for-chicken",
   },
   {
     id: 30,
-    type: "therapy",
-    title: "Therapy Taster Call",
-    name: "Qualified HH Therapist",
+    type: "wellness",
+    title: "Two Osteopathy Treatments & Consultation",
+    name: "London Health Hub",
     description:
-      "Book a free intro call with a certified therapist (yep — for real). Talk about your needs and see if it’s a match.",
-    location: "Phone or video call",
-    availability: "Evenings + weekends",
+      "If you're experiencing pain, stiffness or postural imbalances, expert osteopathy in Central London can help restore natural movement and long-term comfort.",
+    location: "London Bridge SE1 1YP",
+    availability: "Everyday by appointment",
     price: "Free with our membership 💖",
     icon: UserCheck,
     color: "from-purple-500 to-indigo-600",
     image: "🧠",
-    socialCredential:
-      "HCPC-registered therapist, just launched private practice",
+    socialCredential: "4.3 star rating from 300+ clients",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-therapy-taster.png", //change
     whyRecommended:
-      "Finding a good therapist is hard. This free session helps you explore the vibe without pressure.",
+      "The gym isn’t the only place to find relief. This session helps you address the root causes deep into your body's structure and function.",
     reason: "here-for-chicken",
   },
   {
     id: 31,
     type: "coach",
-    title: "Movement Meet & Greet",
-    name: "Friendly PT",
+    title: "30 Minute Intro Call with a PT",
+    name: "Adam Milner - Personal Trainer",
     description:
       "A free 30-min chat with a PT who gets chronic pain. Talk goals, flares, and feel-good movement.",
-    location: "Phone or video call",
+    location: "Phone call",
     availability: "Weekdays only",
     price: "Free with our membership 💖",
     icon: Dumbbell,
     color: "from-orange-500 to-yellow-500",
     image: "🧍🏾‍♂️",
     socialCredential: "Certified PT with inclusive and adaptive training",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-pt-call.png", //change
     whyRecommended:
       "Sometimes you just need to talk it out before you commit. This call helps you feel safe and seen.",
     reason: "here-for-chicken",
   },
   {
     id: 32,
-    type: "spiritual",
-    title: "Spiritual Self Check-In",
-    name: "HH-Aligned Wellness Guide",
+    type: "coach",
+    title: "45 min Intro Call with Life And Career Coach",
+    name: "Leanne Lindsey - Life Coach",
     description:
-      "Explore what spirituality means to you — no religion required. Just space to reflect, reconnect, and breathe.",
+      "You might be at a turning point in your life where you want to do something meaningful, or  feel stuck, lost and frustrated. This session is designed to help you find clarity and direction.",
     location: "Phone call or voice note exchange",
     availability: "Flexible schedule",
     price: "Free with our membership 💖",
     icon: Flower,
     color: "from-blue-400 to-violet-500",
     image: "🌌",
+    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    imageUrl: "/preview-life-coach.png", //change
     socialCredential:
       "Spiritual guide + energy practitioner with cultural humility",
     whyRecommended:
-      "Spiritual health is often overlooked, but for many it's core to resilience and self-care. This session helps you realign.",
+      "Health is also about setting healthy boundaries, creating self care routines and reconnecting to what matters to you. This session helps you realign.",
     reason: "here-for-chicken",
   },
 ];
