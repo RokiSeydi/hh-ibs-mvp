@@ -12,6 +12,7 @@ import {
 import { Link } from "wouter";
 import { analytics } from "@/lib/client-analytics";
 import { motion } from "framer-motion";
+import WaitlistSignup from "@/components/waitlist-signup";
 
 export default function LandingPage() {
   const handleCTAClick = (
@@ -42,10 +43,10 @@ export default function LandingPage() {
             </div>
             <Link href="/get-started">
               <Button
-                className="bg-blue-600 hover:bg-blue-700"
+                className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-6"
                 onClick={() => handleCTAClick("navigation_cta_click")}
               >
-                Get Started
+                Start Swiping
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>
@@ -58,43 +59,41 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <Badge className="mb-6 bg-blue-100 text-blue-800 border-blue-200">
-              🚀 Launching Soon - Join the Waitlist
+              🚀 Launching Soon - Swipe for your matches
             </Badge>
             <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
-              Build the care you need,
+              Swipe right on your next
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {" "}
-                for free.
+                care package
               </span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              We’re bringing justice to healthcare. <br /> Because you shouldn’t
-              have to wait months when you’re in crisis. <br />
-              Because money shouldn’t be the barrier to seeing the provider who
-              truly gets you. <br /> Because healthcare should respect the whole
-              of you — mind, body, and soul.
+              From breakups to burnout, haircare to back pain — find the care
+              that gets you. <br /> No financial worries. No waiting lists.
+              <br /> Just you, matched to what you need, when you need it.
+              <br /> Forever free with us.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/get-started">
-                <Button
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6"
-                  onClick={() =>
-                    handleCTAClick("hero_cta_click", "hero-primary")
-                  }
-                >
-                  Try it
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-6"
-                onClick={handleLearnMoreClick}
-              >
-                Join the Waitlist
-              </Button>
+            <div className="flex flex-col gap-6 items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/get-started">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-6"
+                    onClick={() =>
+                      handleCTAClick("hero_cta_click", "hero-primary")
+                    }
+                  >
+                    Start swiping
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Waitlist Signup */}
+              <div className="w-full max-w-md">
+                <WaitlistSignup variant="hero" />
+              </div>
             </div>
 
             {/* Social Proof */}
@@ -135,7 +134,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               From nails to nutrition, therapy to medical care (coming soon) —
-              build your care your way. It’s always on us.
+              match to care that fits your needs. <br /> It’s on us.
             </p>
           </div>
 
@@ -151,8 +150,11 @@ export default function LandingPage() {
                   🧠
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Relationship Coach</h3>
-                  <p className="text-sm text-gray-500">200k TikTok followers</p>
+                  <h3 className="font-semibold text-lg">Heartbreak recovery</h3>
+                  <p className="text-sm text-gray-500">
+                    {" "}
+                    Get real advice from a certified relationship expert
+                  </p>
                 </div>
               </div>
               <div
@@ -172,9 +174,9 @@ export default function LandingPage() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white z-20">
-                  <p className="text-sm font-medium">
+                  {/* <p className="text-sm font-medium">
                     "Breakup recovery in your pocket."
-                  </p>
+                  </p> */}
                 </div>
                 <div className="absolute inset-0 flex items-center justify-center z-20 opacity-80 hover:opacity-100 transition-opacity">
                   <div className="text-white text-center">
@@ -185,7 +187,7 @@ export default function LandingPage() {
                 </div>
               </div>
               <p className="text-gray-600 text-sm">
-                1-on-1 sessions, group workshops, and 24/7 chat support
+                Trusted by 200k TikTok followers
               </p>
             </motion.div>
 
@@ -200,32 +202,44 @@ export default function LandingPage() {
                   🏋️
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Adaptive Fitness PT</h3>
+                  <h3 className="font-semibold text-lg">
+                    Osteopath for chronic pain
+                  </h3>
                   <p className="text-sm text-gray-500">
-                    Chronic conditions specialist
+                    Restore natural movement and long-term comfort
                   </p>
                 </div>
               </div>
-              <div className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden">
-                {/* TODO: Replace with actual Instagram Reel embed - Add your video URL here: */}
-                {/* <iframe className="w-full h-full" src="https://www.instagram.com/reel/YOUR_REEL_ID/embed" allow="autoplay; encrypted-media" allowFullScreen></iframe> */}
+              <div
+                className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden cursor-pointer"
+                onClick={() =>
+                  window.open(
+                    "https://www.instagram.com/reel/C-Ix8TLop95/",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="/preview-osteopathy.png"
+                  alt="Osteopathy treatment preview"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white z-20">
-                  <p className="text-sm font-medium">
+                  {/* <p className="text-sm font-medium">
                     "Workouts that work with your body, not against it."
-                  </p>
+                  </p> */}
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-500/20 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-400/20 to-cyan-500/20 flex items-center justify-center z-20 opacity-80 hover:opacity-100 transition-opacity">
                   <div className="text-white text-center">
-                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center mb-2">
+                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                       ▶
                     </div>
-                    <p className="text-xs">IG Reel Preview</p>
                   </div>
                 </div>
               </div>
               <p className="text-gray-600 text-sm">
-                Personalized programs for chronic pain, fatigue, and mobility
+                4.3 star rating from 300+ clients
               </p>
             </motion.div>
 
@@ -243,29 +257,41 @@ export default function LandingPage() {
                   <h3 className="font-semibold text-lg">
                     Art Therapy Workshop
                   </h3>
-                  <p className="text-sm text-gray-500">Local creative studio</p>
-                </div>
-              </div>
-              <div className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden">
-                {/* TODO: Replace with actual video - Add your YouTube Short or custom video URL here: */}
-                {/* <iframe className="w-full h-full" src="https://www.youtube.com/embed/YOUR_VIDEO_ID" allow="autoplay; encrypted-media" allowFullScreen></iframe> */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-                <div className="absolute bottom-4 left-4 right-4 text-white z-20">
-                  <p className="text-sm font-medium">
-                    "Switch off, create, and unwind."
+                  <p className="text-sm text-gray-500">
+                    Take care of your mental health in a creative way
                   </p>
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-yellow-500/20 flex items-center justify-center">
+              </div>
+              <div
+                className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden cursor-pointer"
+                onClick={() =>
+                  window.open(
+                    "https://www.instagram.com/p/DMYItpfNJOM/",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="/preview-art.png"
+                  alt="Art therapy workshop preview"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
+                <div className="absolute bottom-4 left-4 right-4 text-white z-20">
+                  {/* <p className="text-sm font-medium">
+                    "Switch off, create, and unwind."
+                  </p> */}
+                </div>
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-400/20 to-yellow-500/20 flex items-center justify-center z-20 opacity-80 hover:opacity-100 transition-opacity">
                   <div className="text-white text-center">
-                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center mb-2">
+                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                       ▶
                     </div>
-                    <p className="text-xs">Video Preview</p>
                   </div>
                 </div>
               </div>
               <p className="text-gray-600 text-sm">
-                Weekly sessions, materials included, small groups
+                Trusted by 58k followers on Instagram
               </p>
             </motion.div>
 
@@ -288,24 +314,34 @@ export default function LandingPage() {
                   </p>
                 </div>
               </div>
-              <div className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden">
-                {/* TODO: Replace with actual video - Add your experience video URL here: */}
-                {/* <video className="w-full h-full object-cover" src="/path/to/your/butterfly-garden-video.mp4" autoPlay muted loop></video> */}
+              <div
+                className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden cursor-pointer"
+                onClick={() =>
+                  window.open(
+                    "https://www.tiktok.com/@samirayasmin295/video/7521842237760720150",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="/preview-butterfly-garden.png"
+                  alt="Butterfly garden experience preview"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
-                <div className="absolute bottom-4 left-4 right-4 text-white z-20">
+                {/* <div className="absolute bottom-4 left-4 right-4 text-white z-20">
                   <p className="text-sm font-medium">"Your Sunday escape."</p>
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-500/20 flex items-center justify-center">
+                </div> */}
+                <div className="absolute inset-0 bg-gradient-to-br from-green-400/20 to-emerald-500/20 flex items-center justify-center z-20 opacity-80 hover:opacity-100 transition-opacity">
                   <div className="text-white text-center">
-                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center mb-2">
+                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                       ▶
                     </div>
-                    <p className="text-xs">Experience Preview</p>
                   </div>
                 </div>
               </div>
               <p className="text-gray-600 text-sm">
-                Guided tours, meditation sessions, photography workshops
+                25k videos on TikTok. For a good reason.
               </p>
             </motion.div>
 
@@ -322,58 +358,72 @@ export default function LandingPage() {
                 <div>
                   <h3 className="font-semibold text-lg">Thai Back Massage</h3>
                   <p className="text-sm text-gray-500">
-                    Certified wellness center
+                    Because healing often starts with touch
                   </p>
                 </div>
               </div>
-              <div className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden">
-                {/* TODO: Replace with actual video - Add your clinic video URL here: */}
-                {/* <video className="w-full h-full object-cover" src="/path/to/your/massage-clinic-video.mp4" autoPlay muted loop></video> */}
+              <div
+                className="bg-black rounded-xl aspect-[9/16] mb-4 relative overflow-hidden cursor-pointer"
+                onClick={() =>
+                  window.open(
+                    "https://www.tiktok.com/@layana.uk/video/7461406876878621985",
+                    "_blank"
+                  )
+                }
+              >
+                <img
+                  src="/preview-thai-massage.png"
+                  alt="Thai massage treatment preview"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white z-20">
-                  <p className="text-sm font-medium">
+                  {/* <p className="text-sm font-medium">
                     "Relaxation, fully covered."
-                  </p>
+                  </p> */}
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-400/20 to-purple-500/20 flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-indigo-400/20 to-purple-500/20 flex items-center justify-center z-20 opacity-80 hover:opacity-100 transition-opacity">
                   <div className="text-white text-center">
-                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center mb-2">
+                    <div className="w-16 h-16 border-2 border-white rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                       ▶
                     </div>
-                    <p className="text-xs">Clinic Preview</p>
                   </div>
                 </div>
               </div>
               <p className="text-gray-600 text-sm">
-                60-90 min sessions, flexible booking, luxury setting
+                4.7-star from 2000+ clients
               </p>
             </motion.div>
 
-            {/* CTA Card */}
-            <motion.div
-              className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white flex flex-col justify-center items-center text-center"
-              whileHover={{ scale: 1.02, y: -5 }}
-              transition={{ duration: 0.2 }}
-            >
-              <h3 className="text-xl font-bold mb-4">
-                Ready to discover your matches?
-              </h3>
-              <p className="mb-6 opacity-90 text-sm">
-                Join thousands already building their perfect care routine
-              </p>
-              <Link href="/get-started">
-                <Button
-                  size="lg"
-                  className="bg-white text-blue-600 hover:bg-gray-100 w-full"
-                  onClick={() =>
-                    handleCTAClick("footer_cta_click", "provider-showcase")
-                  }
-                >
-                  Start Swiping
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-            </motion.div>
+            {/* CTA Section */}
+            <div className="lg:col-span-3 md:col-span-2 flex justify-center mt-8">
+              <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl p-6 text-white text-center max-w-md w-full">
+                <h3 className="text-xl font-bold mb-3">
+                  Ready to discover your matches?
+                </h3>
+                <p className="mb-6 opacity-90 text-sm">
+                  Join thousands already building their perfect care routine
+                </p>
+                <Link href="/get-started">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Button
+                      size="lg"
+                      className="bg-white text-blue-600 hover:bg-gray-100 text-lg px-8 py-3 shadow-lg hover:shadow-xl transition-shadow w-full"
+                      onClick={() =>
+                        handleCTAClick("footer_cta_click", "provider-showcase")
+                      }
+                    >
+                      Start Swiping
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </motion.div>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -383,13 +433,11 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Not a boring booking app. Not the NHS. Not overpriced private
-              care.
+              From “ugh” to “oh wow” in three swipes.
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-              For the Gen Z and millennials who live online, value their time,
-              and expect care to meet them where they are. Here, your membership
-              covers what matters most to your mind, body, and soul.
+              We made getting care feel like discovering a new favorite
+              playlist. Fun. Fast. And always about you.
             </p>
             <h3 className="text-2xl font-semibold text-gray-800 mb-8">
               Here's how it works:
@@ -404,8 +452,8 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Swipe</h3>
               <p className="text-gray-600">
-                Pick your vibe — life is lifing, you're curious, you're
-                levelling up your health, or you just want to try something new.
+                Tell us what's going on — feeling low, leveling up, curious, or
+                craving change — and start swiping.
               </p>
             </div>
 
@@ -415,8 +463,8 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Match</h3>
               <p className="text-gray-600">
-                From social media-famous therapists to hidden wellness gems, see
-                what fits you today.
+                From viral TikTok therapists to local hidden gems — see what
+                fits you today.
               </p>
             </div>
 
@@ -426,21 +474,108 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Enjoy</h3>
               <p className="text-gray-600">
-                Your membership covers the cost. Or join our waitlist for
-                free/half-price access by sharing about us online or with
-                friends.
+                Your membership covers it. Or join our waitlist for
+                free/half-price access by sharing with friends.
               </p>
             </div>
           </div>
 
           {/* What Makes Us Different */}
-          <div className="text-center mb-12">
+          {/* <div className="text-center mb-12">
             <h3 className="text-2xl font-semibold text-gray-800 mb-8">
               What makes us different:
             </h3>
+          </div> */}
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+                Meet your care matches 💘
+              </h3>
+              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+                If Tinder, Pret a Manger, and the NHS had a baby — it’d look
+                like this.
+              </p>
+            </div>
+
+            {/* Tinder-style cards */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {/* Card 1 */}
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white">
+                <CardContent className="p-8 text-center">
+                  <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white text-3xl">
+                    💸
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    No Price Stress
+                  </h3>
+                  <p className="text-gray-600 italic">
+                    “My love language? Picking up the bill.”
+                  </p>
+                  <p className="mt-4 text-gray-600">
+                    Your membership covers what matters — no surprise charges,
+                    no panic at checkout.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Card 2 */}
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white">
+                <CardContent className="p-8 text-center">
+                  <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-pink-400 to-red-500 flex items-center justify-center text-white text-3xl">
+                    ❤️
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Personalised Matches
+                  </h3>
+                  <p className="text-gray-600 italic">
+                    “I get you — mind, body, and soul.”
+                  </p>
+                  <p className="mt-4 text-gray-600">
+                    Swipe into care that actually fits your vibe, not just your
+                    symptoms.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Card 3 */}
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white">
+                <CardContent className="p-8 text-center">
+                  <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-green-400 to-teal-500 flex items-center justify-center text-white text-3xl">
+                    🌍
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">
+                    Cultural + Credible
+                  </h3>
+                  <p className="text-gray-600 italic">
+                    “I speak your language… and your memes.”
+                  </p>
+                  <p className="mt-4 text-gray-600">
+                    Providers who understand your culture, your language, and
+                    your real life.
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Card 4 */}
+              <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white">
+                <CardContent className="p-8 text-center">
+                  <div className="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 flex items-center justify-center text-white text-3xl">
+                    ⏳
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Always There</h3>
+                  <p className="text-gray-600 italic">
+                    “Here for your glow-ups and your glow-downs.”
+                  </p>
+                  <p className="mt-4 text-gray-600">
+                    From breakups to promotions to bad Tuesdays — we’ve got you.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="border-none shadow-lg hover:shadow-xl transition-shadow bg-white">
               <CardContent className="p-8 text-center">
                 <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -493,7 +628,7 @@ export default function LandingPage() {
                 </p>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
         </div>
       </section>
 
@@ -502,33 +637,31 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-6">
-              Because we care about your care
+              Ready to see your matches?
             </h2>
             <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-              From comedy nights to therapy sessions, gym passes to glow-ups —
-              <br /> if it makes you feel good, it’s on us.
+              Start swiping today — your vibe, your care, your way.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Link href="/get-started">
-                <Button
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-6"
-                  onClick={() =>
-                    handleCTAClick("footer_cta_click", "final-cta")
-                  }
-                >
-                  Try it
-                  <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Button
-                variant="outline"
-                size="lg"
-                className="text-lg px-8 py-6"
-                onClick={handleLearnMoreClick}
-              >
-                Join the Waitlist
-              </Button>
+            <div className="flex flex-col gap-6 items-center">
+              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <Link href="/get-started">
+                  <Button
+                    size="lg"
+                    className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-lg px-8 py-6"
+                    onClick={() =>
+                      handleCTAClick("footer_cta_click", "final-cta")
+                    }
+                  >
+                    Start swiping
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Waitlist Signup */}
+              <div className="w-full max-w-md">
+                <WaitlistSignup variant="hero" />
+              </div>
             </div>
           </div>
         </div>
@@ -548,7 +681,7 @@ export default function LandingPage() {
                 <span className="text-xl font-bold">Holding Health</span>
               </div>
               <p className="text-gray-400 mb-6 max-w-md">
-                Create the care you need, the way you need it.
+                your vibe, your care, your way.
               </p>
               <div className="text-sm text-gray-500">
                 © 2025 Holding Health. All rights reserved.

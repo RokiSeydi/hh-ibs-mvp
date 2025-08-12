@@ -75,7 +75,7 @@ export default function Confirmation() {
           </Link>
 
           <p className="text-sm text-gray-500">
-            Create the care you need, the way you need it.
+            your vibe, your care, your way.
           </p>
         </motion.div>
       </motion.div>

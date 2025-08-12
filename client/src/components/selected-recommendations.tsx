@@ -79,8 +79,10 @@ const calculateTotalSavings = (
   const discountedTotal = 0; // Everything is free with HH
 
   providers.forEach((provider) => {
-    const marketPrice = getOriginalMarketPrice(provider);
-    originalTotal += marketPrice;
+    // Use the actual retailPrice from the provider data
+    const retailPriceString = provider.retailPrice;
+    const retailPriceNumber = parseFloat(retailPriceString.replace("£", ""));
+    originalTotal += retailPriceNumber;
   });
 
   return {
@@ -181,25 +183,16 @@ export default function SelectedRecommendations({
                     </div>
                   </div>
 
-                  {/* CTA buttons */}
-                  <div className="flex space-x-2 mt-4">
+                  {/* CTA button */}
+                  <div className="mt-4">
                     <motion.button
                       onClick={() => onBuyMembership("ambassador")}
-                      className={`flex-1 bg-gradient-to-r ${provider.color} text-white py-2 px-3 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-1`}
+                      className={`w-full bg-gradient-to-r ${provider.color} text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2`}
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <span>Try it With Us</span>
-                      <ArrowRight className="h-3 w-3" />
-                    </motion.button>
-                    <motion.button
-                      onClick={onJoinWaitlist}
-                      className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded-xl text-sm font-medium transition-all duration-300 flex items-center justify-center space-x-1"
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Users className="h-3 w-3" />
-                      <span>Join Waitlist</span>
+                      <ArrowRight className="h-4 w-4" />
                     </motion.button>
                   </div>
                 </div>
@@ -275,13 +268,13 @@ export default function SelectedRecommendations({
               </div>
               <p className="text-sm opacity-90 mb-4">
                 Share your HH journey online and get full access to everything -
-                no membership fee!
+                free for the first 3 months!
               </p>
-              <div className="bg-white/10 rounded-lg p-2 mb-3">
+              {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
                 <p className="text-xs font-semibold">
                   You'll post 1-2 times/month about your wellness journey
                 </p>
-              </div>
+              </div> */}
               <motion.button
                 className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors"
                 whileHover={{ scale: 1.05 }}
@@ -311,11 +304,11 @@ export default function SelectedRecommendations({
                 Pay half price and help us improve by sharing private feedback
                 after sessions
               </p>
-              <div className="bg-white/10 rounded-lg p-2 mb-3">
+              {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
                 <p className="text-xs font-semibold">
                   Quick 2-min feedback after each session
                 </p>
-              </div>
+              </div> */}
               <motion.button
                 className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
                 whileHover={{ scale: 1.05 }}
@@ -344,11 +337,11 @@ export default function SelectedRecommendations({
                 Share with 10 friends who join the waitlist = free month when we
                 open next!
               </p>
-              <div className="bg-white/10 rounded-lg p-2 mb-3">
+              {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
                 <p className="text-xs font-semibold">
                   Skip the queue + earn free months
                 </p>
-              </div>
+              </div> */}
               <motion.button
                 className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors"
                 whileHover={{ scale: 1.05 }}

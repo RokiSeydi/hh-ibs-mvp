@@ -12,10 +12,6 @@ import {
   Gamepad2,
   Palette,
   Sparkle,
-  Star,
-  Scissors,
-  Eye,
-  Moon,
   Sun,
   Music,
   Phone,
@@ -26,7 +22,6 @@ import {
   Dumbbell,
   Flower,
   HandHeart,
-  Snowflake,
 } from "lucide-react";
 
 export interface Provider {
@@ -47,6 +42,7 @@ export interface Provider {
   location: string;
   availability: string;
   price: string;
+  retailPrice: string; // Actual retail price of the service
   // specialties: string[];
   icon: any;
   color: string;
@@ -72,13 +68,14 @@ const goingThroughSomethingProviders: Provider[] = [
     description:
       "No pressure. No forms. Just a call with someone who listens like a bestie but thinks like a coach.",
     location: "On the other side of your phone",
-    availability: "Available today",
+    availability: "Available when you need me",
     price: "Free with our membership 💖",
+    retailPrice: "£85",
     icon: Heart,
     color: "from-rose-500 to-pink-600",
     image: "💗",
-    videoUrl: "https://player.vimeo.com/video/947608166",
-    imageUrl: "/preview-anonymous-support.png",
+    // videoUrl: "https://player.vimeo.com/video/947608166",
+    imageUrl: "/preview-anon.jpg",
     socialCredential: "I'm anonymous — you won't find me anywhere 🤫",
     whyRecommended:
       "Sometimes you just need to talk to someone who doesn’t know you — but actually *gets* you.",
@@ -94,6 +91,7 @@ const goingThroughSomethingProviders: Provider[] = [
     location: "Online",
     availability: "When you need it",
     price: "Free with our membership 💖",
+    retailPrice: "£120",
     icon: HeartCrack,
     color: "from-fuchsia-600 to-rose-500",
     image: "💔",
@@ -109,17 +107,18 @@ const goingThroughSomethingProviders: Provider[] = [
     id: 3,
     type: "activity",
     title: "Taster Yoga Workshops (In person)",
-    name: "Sprouts From Soil",
+    name: "Luv",
     description:
       "Power-packed mini workshops. 50 minutes per session, in-person. 3 choices available, choose your vibe.",
     location: "New Cross, London",
     availability: "Selected weekdays only",
     price: "Free with our membership 💖",
+    retailPrice: "£30",
     icon: Dog,
     color: "from-yellow-400 to-amber-500",
     image: "🌝",
     videoUrl: "https://www.instagram.com/reel/DKeynPRC1oz/",
-    imageUrl: "/preview-yoga-workshop.png", // TODO: Add yoga workshop screenshot
+    imageUrl: "/preview-yoga-workshop.png",
     socialCredential: "Yoga never goes out of style",
     whyRecommended:
       "each 50-minute session offers a powerful reset for mind and body, for energy traffic, recalibrating your nervous system, and muscle relaxation.",
@@ -135,12 +134,13 @@ const goingThroughSomethingProviders: Provider[] = [
     location: "London N3 2DL",
     availability: "Everyday 10 AM - 9 PM",
     price: "Free with our membership 💖",
+    retailPrice: "£40",
     icon: Sparkles,
     color: "from-lime-600 to-emerald-500",
     image: "💆🏾‍♀️",
     videoUrl:
       "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
-    imageUrl: "/preview-layana-massage.png", // TODO: Add LAYANA massage screenshot
+    imageUrl: "/preview-thai-massage.png",
     socialCredential: "4.7-star from 2000+ clients",
     whyRecommended:
       "Because healing often starts with touch — and this one feels like a hug from your fave auntie.",
@@ -156,12 +156,13 @@ const goingThroughSomethingProviders: Provider[] = [
     location: "LONDON W10 5TE",
     availability: "Saturdays only at 1PM",
     price: "Free with our membership 💖",
+    retailPrice: "£60",
     icon: Zap,
     color: "from-orange-600 to-red-500",
     image: "💥",
     videoUrl:
       "https://www.tiktok.com/@graffikgallery.1/video/7516207938701184278?is_from_webapp=1&sender_device=pc&web_id=7530658099657737750",
-    imageUrl: "/preview-graffiti-workshop.png", // TODO: Add graffiti workshop screenshot
+    imageUrl: "/preview-graffiti.png", // TODO: Add graffiti workshop screenshot
     socialCredential: "17k+ likes on TikTok",
     whyRecommended:
       " Suit up in a classic “Breaking Bad”-style boiler suit and dust mask, and unleash your inner artist.",
@@ -177,10 +178,12 @@ const goingThroughSomethingProviders: Provider[] = [
     location: "Your phone (no camera required)",
     availability: "Available this week",
     price: "Free with our membership 💖",
+    retailPrice: "£95",
     icon: HandHeart,
     color: "from-sky-500 to-indigo-600",
     image: "🧭",
-    videoUrl: "https://player.vimeo.com/video/948112198",
+    // videoUrl: "https://player.vimeo.com/video/948112198",
+    imageUrl: "/preview-anon.jpg",
     socialCredential: "Anonymous, but probably wiser than your manager 😅",
     whyRecommended:
       "No scripts, no hustle talk. Just soft guidance from someone who sees your potential.",
@@ -199,8 +202,9 @@ const goingThroughSomethingProviders: Provider[] = [
     icon: Palette,
     color: "from-brown-400 to-amber-500",
     image: "🏺",
-    videoUrl: "https://www.instagram.com/p/DIvUm_rs0CY/",
-    imageUrl: "/preview-pottery-class.png", // TODO: Add pottery class screenshot
+    retailPrice: "£15",
+    videoUrl: "https://www.instagram.com/p/DMYItpfNJOM/",
+    imageUrl: "/preview-art.png",
     socialCredential: "IG: 58k followers @artplaylondon",
     whyRecommended:
       "Reconnect with your creative side. Because sometimes, healing is just making something with your hands.",
@@ -216,12 +220,13 @@ const goingThroughSomethingProviders: Provider[] = [
     location: "BEXLEY, KENT. DA5 1PQ",
     availability: "Everyday 10 AM - 5 PM",
     price: "Free with our membership 💖",
+    retailPrice: "£12",
     icon: Gift,
     color: "from-purple-500 to-pink-500",
     image: "🦋",
     videoUrl:
       "https://www.tiktok.com/@samirayasmin295/video/7521842237760720150?is_from_webapp=1&sender_device=pc&web_id=7530658099657737750",
-    imageUrl: "/preview-butterfly-garden.png", // TODO: Add butterfly garden screenshot
+    imageUrl: "/preview-butterfly-garden.png",
     socialCredential: "25k videos on TikTok. For a good reason.",
     whyRecommended:
       "Be grateful for life’s small wonders. Because sometimes, healing starts with a little magic.",
@@ -241,12 +246,13 @@ const justCuriousProviders: Provider[] = [
     location: "south London - Richmond",
     availability: "everyday depending on weather. Booking required",
     price: "Free with our membership 💖",
+    retailPrice: "£24",
     icon: MessageCircle,
     color: "from-purple-500 to-indigo-600",
     image: "🌀",
-    socialCredential: "Totally off the grid — that's the point 🤫", // change
-    videoUrl: "https://player.vimeo.com/video/947608166", // change
-    imageUrl: "/preview-anonymous-support.png", // change
+    socialCredential: "Popular activity around Richmond",
+    videoUrl: "https://www.instagram.com/p/CFT8eotHc1h/",
+    imageUrl: "/preview-richmond.png",
     whyRecommended:
       " Whether you're seeking a solo escape, a romantic outing, or a fun group experience, you'll surely enjoy the tranquility of the river.ss",
     reason: "just-curious",
@@ -262,12 +268,13 @@ const justCuriousProviders: Provider[] = [
     location: "London WC2H 9AJ",
     availability: "Monday to Saturday, 12.30PM - 8PM",
     price: "Free with our membership 💖",
+    retailPrice: "£50",
     icon: Sparkles,
     color: "from-pink-400 to-yellow-300",
     image: "🌞",
     socialCredential: "Jump on that trend. Be 'that girl' (or boy).",
     videoUrl: "https://www.instagram.com/p/DMZ5ghSsxYf/",
-    imageUrl: "/preview-anonymous-support.png",
+    imageUrl: "/preview-hautique.png",
     whyRecommended:
       "Sometimes your glow just needs a little nudge — and this is your nudge.",
     reason: "just-curious",
@@ -283,15 +290,16 @@ const justCuriousProviders: Provider[] = [
     location: "London N3 2DL",
     availability: "Everyday 10 AM - 9 PM",
     price: "Free with our membership 💖",
+    retailPrice: "£40",
     icon: Sparkles,
     color: "from-lime-600 to-emerald-500",
     image: "💆🏾‍♀️",
     videoUrl:
       "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
-    imageUrl: "/preview-layana-massage.png", // TODO: Add LAYANA massage screenshot
+    imageUrl: "/preview-thai-massage.png",
     socialCredential: "4.7-star from 2000+ clients",
     whyRecommended:
-      "Because healing often starts with touch — and this one feels like a hug from your fave auntie.",
+      "Because healing often starts with touch — and you can never go wrong with a massage.",
     reason: "going-through-something",
   },
 
@@ -305,12 +313,12 @@ const justCuriousProviders: Provider[] = [
     location: "Nationwide - London Islington",
     availability: "Anytime",
     price: "Free with our membership 💖",
+    retailPrice: "£15.95",
     icon: PenTool,
     color: "from-stone-400 to-stone-600",
     image: "📓",
-    videoUrl:
-      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
-    imageUrl: "/preview-layana-massage.png", // TODO: Add CREPES  screenshot
+    videoUrl: "https://www.instagram.com/p/DHqKPLQIV5l/",
+    imageUrl: "/preview-crepes.png",
     socialCredential: "Favourite on Instagram - 14.5k followers",
     whyRecommended:
       "Food is the universal language for connection and care. Also you can never go wrong with crêpes.",
@@ -326,13 +334,13 @@ const justCuriousProviders: Provider[] = [
     location: "Various London venues",
     availability: "Every Wednesday",
     price: "Free with our membership 💖",
+    retailPrice: "£13",
     icon: Users,
     color: "from-orange-400 to-red-500",
     image: "🍽️",
     socialCredential: "1.1M followers on Instagram. Clearly a vibe.",
-    videoUrl:
-      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
-    imageUrl: "/preview-layana-massage.png",
+    videoUrl: "https://www.instagram.com/p/DLH6IK7siIV/",
+    imageUrl: "/preview-timeleft.png",
     whyRecommended:
       "For the socially curious who want connection but hate awkward networking.",
     reason: "just-curious",
@@ -348,13 +356,13 @@ const justCuriousProviders: Provider[] = [
     location: "Soho or Liverpool Street - London",
     availability: "Everyday, by appointment",
     price: "Free with our membership 💖",
+    retailPrice: "£55",
     icon: Droplet,
     color: "from-green-400 to-lime-500",
     image: "🧖",
     socialCredential: "TikTok-approved chill zone",
-    videoUrl:
-      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
-    imageUrl: "/preview-layana-massage.png",
+    // videoUrl:"https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501",
+    imageUrl: "/preview-motionworks.png",
     whyRecommended:
       "Curiosity is healing too — and this one feels like a luxury reset.",
     reason: "just-curious",
@@ -373,12 +381,12 @@ const justCuriousProviders: Provider[] = [
     icon: Gamepad2,
     color: "from-red-500 to-black",
     image: "🦑",
+    retailPrice: "£28",
     socialCredential: "Viral on TikTok & Instagram", // TODO: Add Atrium Bar social credential
-    videoUrl:
-      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501", // TODO: Add Atrium Bar video URL
-    imageUrl: "/preview-layana-massage.png", // TODO: Add Atrium Bar screenshot
+    // videoUrl: "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501", // TODO: Add Atrium Bar video URL
+    imageUrl: "/preview-atrium.png", // TODO: Add Atrium Bar screenshot
     whyRecommended:
-      "For the thrill-seekers and social lurkers who want to experience the hype themselves.",
+      "located in Bloomsbury, it's a hidden gem for jazz and food lovers.",
     reason: "just-curious",
   },
   {
@@ -394,12 +402,13 @@ const justCuriousProviders: Provider[] = [
     icon: Palette,
     color: "from-brown-400 to-amber-500",
     image: "🏺",
-    videoUrl: "https://www.instagram.com/p/DIvUm_rs0CY/",
-    imageUrl: "/preview-pottery-class.png", // TODO: Add pottery class screenshot
+    retailPrice: "£15",
+    videoUrl: "https://www.instagram.com/p/DMYItpfNJOM/",
+    imageUrl: "/preview-art.png",
     socialCredential: "IG: 58k followers @artplaylondon",
     whyRecommended:
       "Reconnect with your creative side. Because sometimes, healing is just making something with your hands.",
-    reason: "going-through-something",
+    reason: "just-curious",
   },
 ];
 
@@ -415,11 +424,12 @@ const mainCharacterResetProviders: Provider[] = [
     location: " London, Paddington W2 2HR",
     availability: "Everyday 11 AM - 8 PM. Sundays 12 PM - 6 PM",
     price: "Free with our membership 💖",
+    retailPrice: "£25",
     icon: Sparkle,
     color: "from-yellow-300 to-rose-400",
     image: "🛐",
-    videoUrl: "https://player.vimeo.com/video/948230001",
-    imageUrl: "/preview-anonymous-support.png",
+    videoUrl: "https://www.tiktok.com/@beaute_browz/video/7513986060238572822",
+    imageUrl: "/preview-nails.png",
     socialCredential: "5.0 stars from 30+ happy clients on Treatwell 🌟",
     whyRecommended: "Your reset might start by getting your nails done first.",
     reason: "spiritual-glow-up",
@@ -437,10 +447,10 @@ const mainCharacterResetProviders: Provider[] = [
     icon: Gamepad2,
     color: "from-red-500 to-black",
     image: "🦑",
+    retailPrice: "£28",
     socialCredential: "Viral on TikTok & Instagram", // TODO: Add Atrium Bar social credential
-    videoUrl:
-      "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501", // TODO: Add Atrium Bar video URL
-    imageUrl: "/preview-layana-massage.png", // TODO: Add Atrium Bar screenshot
+    // videoUrl: "https://www.tiktok.com/@layana.uk/video/7461406876878621985?is_from_webapp=1&sender_device=pc&web_id=75306580996577377501", // TODO: Add Atrium Bar video URL
+    imageUrl: "/preview-atrium.png",
     whyRecommended: "Good food, good music, good vibes.",
     reason: "spiritual-glow-up",
   },
@@ -457,9 +467,10 @@ const mainCharacterResetProviders: Provider[] = [
     icon: MessageCircle,
     color: "from-purple-500 to-indigo-600",
     image: "🌀",
+    retailPrice: "£24",
     socialCredential: "Totally off the grid — that's the point 🤫", // change
-    videoUrl: "https://player.vimeo.com/video/947608166", // change
-    imageUrl: "/preview-anonymous-support.png", // change
+    videoUrl: "https://www.instagram.com/p/CFT8eotHc1h/",
+    imageUrl: "/preview-richmond.png",
     whyRecommended:
       "Whether you're seeking a solo escape, a romantic outing, or a fun group experience, you'll surely enjoy the tranquility of the river.",
     reason: "spiritual-glow-up",
@@ -477,9 +488,10 @@ const mainCharacterResetProviders: Provider[] = [
     icon: Sparkles,
     color: "from-pink-400 to-yellow-300",
     image: "🌞",
+    retailPrice: "£50",
     socialCredential: "Jump on that trend. Be 'that girl' (or boy).",
     videoUrl: "https://www.instagram.com/p/DMZ5ghSsxYf/",
-    imageUrl: "/preview-anonymous-support.png",
+    imageUrl: "/preview-hautique.png",
     whyRecommended:
       "Sometimes your glow just needs a little nudge — and this is your nudge.",
     reason: "spiritual-glow-up",
@@ -494,11 +506,13 @@ const mainCharacterResetProviders: Provider[] = [
     location: "London Brixton SW9 8RR",
     availability: "Everyday 6am-10pm, weekends 10am-6pm",
     price: "Free with our membership 💖",
+    retailPrice: "£19",
     icon: Sun,
     color: "from-orange-300 to-yellow-500",
     image: "🌅",
-    videoUrl: "https://player.vimeo.com/video/948230199",
-    socialCredential: "IG & TikTok: #MainCharacterMorning",
+    videoUrl: "https://www.instagram.com/p/DMivLpptgZR/",
+    imageUrl: "/preview-blocfit.png",
+    socialCredential: "loved by 6000+ climbers on Instagram",
     whyRecommended:
       "The deal includes limitless access to BlocFit's impressive climbing facilities paired with an hour-long indulgence in their serene sauna and refreshing ice baths. Whether seeking thrill or tranquility post-climb, this offer covers it all.",
     reason: "spiritual-glow-up",
@@ -513,11 +527,12 @@ const mainCharacterResetProviders: Provider[] = [
     location: "London Islington N1 9TP",
     availability: "Weekends only",
     price: "Free with our membership 💖",
+    retailPrice: "£120",
     icon: Hand,
     color: "from-amber-300 to-rose-400",
     image: "💆🏾",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-pilates-classes.png", //change
+    // videoUrl: "https://player.vimeo.com/video/948230362",
+    imageUrl: "/preview-pilates.png",
     socialCredential:
       "Ever wanted to try out the pilates princess routine? Now’s your chance.",
     whyRecommended:
@@ -534,11 +549,12 @@ const mainCharacterResetProviders: Provider[] = [
     location: "Your phone (no camera required)",
     availability: "Available this week",
     price: "Free with our membership 💖",
+    retailPrice: "£95",
     icon: HandHeart,
     color: "from-sky-500 to-indigo-600",
     image: "🧭",
     // videoUrl: "https://player.vimeo.com/video/948112198",
-    imageUrl: "/preview-anonymous-support.png",
+    imageUrl: "/preview-anon.jpg",
     socialCredential: "Anonymous and judgement free",
     whyRecommended: "You already have it — they just help you *see it louder*.",
     reason: "spiritual-glow-up",
@@ -553,11 +569,12 @@ const mainCharacterResetProviders: Provider[] = [
     location: "London, Inamo Covent Garden & Inamo Soho",
     availability: "Mon- Weds all day at all times, Thurs & Fri 12-5pm",
     price: "Free with our membership 💖",
+    retailPrice: "£69.20",
     icon: Heart,
     color: "from-pink-500 to-fuchsia-600",
     image: "💅",
-    videoUrl: "https://player.vimeo.com/video/948230362", // change
-    imageUrl: "/preview-inamo-dining.png", //change
+    videoUrl: "https://www.instagram.com/p/DFbB-SNNhBZ/",
+    imageUrl: "/preview-inamo.png",
     socialCredential: "4.3 stars from 5,000+ diners",
     whyRecommended:
       "Get on a culinary journey on your way to levelling up your taste buds.",
@@ -580,10 +597,10 @@ const hereForChickenProviders: Provider[] = [
     icon: Music,
     color: "from-violet-500 to-purple-600",
     image: "🔊",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
+    retailPrice: "£99",
+    videoUrl: "https://www.instagram.com/p/DM-PmW9NU1f/", //change
     imageUrl: "/preview-food-sensitivity-test.png",
-    socialCredential:
-      "Created by a certified music therapist + Black wellness creator",
+    socialCredential: "Approved by 14k+ customers on Instagram",
     whyRecommended:
       "Our bodies are unique and we react to different foods and substances differently. This test helps you understand yours better — so you can feel your best.",
     reason: "here-for-chicken",
@@ -598,9 +615,11 @@ const hereForChickenProviders: Provider[] = [
     location: "Online or offline",
     availability: "Weekdays",
     price: "Free with our membership 💖",
+    retailPrice: "£50",
     icon: Phone,
     color: "from-teal-500 to-cyan-500",
     image: "🌊",
+    imageUrl: "/preview-therapy.png",
     socialCredential: "Trauma-informed peer listener",
     whyRecommended:
       "This session is centered around curiosity and self-discovery, and it explores how the social, political, and cultural contexts influence lived experiences.",
@@ -616,11 +635,12 @@ const hereForChickenProviders: Provider[] = [
     location: "London Islington N1 9TP",
     availability: "Weekends only",
     price: "Free with our membership 💖",
+    retailPrice: "£120",
     icon: Hand,
     color: "from-amber-300 to-rose-400",
     image: "💆🏾",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-pilates-classes.png", //change
+    // videoUrl: "https://player.vimeo.com/video/948230362",
+    imageUrl: "/preview-pilates.png",
     socialCredential:
       "Ever wanted to try out the pilates princess routine? Now’s your chance.",
     whyRecommended:
@@ -637,12 +657,13 @@ const hereForChickenProviders: Provider[] = [
     location: "London, Marble Arch W2 2UH",
     availability: "Everyday 10 AM - 6 PM (7 PM Fri/Sat)",
     price: "Free with our membership 💖",
+    retailPrice: "£18.90",
     icon: Paintbrush,
     color: "from-rose-400 to-amber-500",
     image: "🫙",
     socialCredential: "6M+ visitors globally | 4.6 stars by 120K visitors",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-art-therapy.png", //change
+    videoUrl: "https://www.instagram.com/p/DMc7vN4yBvS/", //change
+    imageUrl: "/preview-moco.png", //change
     whyRecommended:
       "Art can lower cortisol and bring joy — plus you’ll walk away with something you made!",
     reason: "here-for-chicken",
@@ -657,12 +678,13 @@ const hereForChickenProviders: Provider[] = [
     location: "Phone or video call",
     availability: "Weekdays",
     price: "Free with our membership 💖",
+    retailPrice: "£80",
     icon: Utensils,
     color: "from-lime-500 to-emerald-600",
     image: "🥄",
     socialCredential: "Registered health coach, women-owned clinic",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-health-coaching.png", //change
+    videoUrl: "https://www.instagram.com/reel/DHtMpU1Nyh0/",
+    imageUrl: "/preview-health-coaching.png",
     whyRecommended:
       "Great nutrition advice starts with a real convo. This one’s judgement-free and personalised.",
     reason: "here-for-chicken",
@@ -677,12 +699,13 @@ const hereForChickenProviders: Provider[] = [
     location: "London Bridge SE1 1YP",
     availability: "Everyday by appointment",
     price: "Free with our membership 💖",
+    retailPrice: "£198",
     icon: UserCheck,
     color: "from-purple-500 to-indigo-600",
     image: "🧠",
     socialCredential: "4.3 star rating from 300+ clients",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-therapy-taster.png", //change
+    videoUrl: "https://www.instagram.com/reel/C-Ix8TLop95/",
+    imageUrl: "/preview-osteopathy.png",
     whyRecommended:
       "The gym isn’t the only place to find relief. This session helps you address the root causes deep into your body's structure and function.",
     reason: "here-for-chicken",
@@ -697,12 +720,13 @@ const hereForChickenProviders: Provider[] = [
     location: "Phone call",
     availability: "Weekdays only",
     price: "Free with our membership 💖",
+    retailPrice: "£75",
     icon: Dumbbell,
     color: "from-orange-500 to-yellow-500",
     image: "🧍🏾‍♂️",
     socialCredential: "Certified PT with inclusive and adaptive training",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-pt-call.png", //change
+    videoUrl: "https://www.instagram.com/p/DG01dpcIVg5/",
+    imageUrl: "/preview-pt.png",
     whyRecommended:
       "Sometimes you just need to talk it out before you commit. This call helps you feel safe and seen.",
     reason: "here-for-chicken",
@@ -717,13 +741,13 @@ const hereForChickenProviders: Provider[] = [
     location: "Phone call or voice note exchange",
     availability: "Flexible schedule",
     price: "Free with our membership 💖",
+    retailPrice: "£95",
     icon: Flower,
     color: "from-blue-400 to-violet-500",
     image: "🌌",
-    videoUrl: "https://player.vimeo.com/video/948230362", //change
-    imageUrl: "/preview-life-coach.png", //change
-    socialCredential:
-      "Spiritual guide + energy practitioner with cultural humility",
+    videoUrl: "https://www.instagram.com/p/CheS7GOox1p/",
+    imageUrl: "/preview-life-coach.png",
+    socialCredential: "Life guide + energy practitioner with cultural humility",
     whyRecommended:
       "Health is also about setting healthy boundaries, creating self care routines and reconnecting to what matters to you. This session helps you realign.",
     reason: "here-for-chicken",

@@ -404,7 +404,7 @@ export default function SwipeCards({
               </div>
 
               {/* 6. Remove-the-fear reassurance */}
-              <div className="mb-6">
+              <div className="mb-4">
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <div className="flex items-center space-x-2">
                     <Heart className="h-4 w-4 text-blue-500" />
@@ -418,30 +418,30 @@ export default function SwipeCards({
                 </div>
               </div>
 
-              {/* 7. Action buttons */}
-              {/* <div className="mt-auto">
+              {/* 7. Action buttons - Now inside the card */}
+              <div className="mt-auto">
                 <div className="flex items-center justify-between space-x-4">
                   <button
                     onClick={() => handleSwipe("left")}
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 py-3 px-4 rounded-xl font-medium transition-colors duration-200 flex items-center justify-center"
+                    className="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 px-4 rounded-xl font-medium transition-colors duration-200 flex items-center justify-center"
                   >
                     <X className="h-5 w-5" />
                   </button>
                   <button
                     onClick={() => handleSwipe("right")}
-                    className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center"
+                    className="flex-1 bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200 flex items-center justify-center"
                   >
                     <Heart className="h-5 w-5" />
                   </button>
                 </div>
-              </div> */}
+              </div>
             </div>
           </motion.div>
         </AnimatePresence>
       </div>
 
       {/* Show Continue button if 4 selections reached */}
-      {selectedProviders.length >= 4 ? (
+      {selectedProviders.length >= 4 && (
         <div className="mt-8 text-center">
           <motion.button
             onClick={handleContinueToDashboard}
@@ -456,29 +456,6 @@ export default function SwipeCards({
             see your personalized plan!
           </p>
         </div>
-      ) : (
-        <>
-          {/* Action buttons */}
-          <div className="flex justify-center space-x-8 mt-8">
-            <motion.button
-              className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-red-200 hover:border-red-400 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => handleSwipe("left")}
-            >
-              <X className="h-8 w-8 text-red-500" />
-            </motion.button>
-
-            <motion.button
-              className="w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center border-2 border-green-200 hover:border-green-400 transition-colors"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={() => handleSwipe("right")}
-            >
-              <Heart className="h-8 w-8 text-green-500" />
-            </motion.button>
-          </div>
-        </>
       )}
     </div>
   );

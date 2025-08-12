@@ -161,9 +161,9 @@ export default function IntakeForm({
           <h2 className="text-2xl font-semibold text-gray-800 mb-2">
             Tell us about yourself
           </h2>
-          <p className="text-gray-600">
+          {/* <p className="text-gray-600">
             Help us provide you with the best care recommendations
-          </p>
+          </p> */}
         </div>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6">
@@ -290,12 +290,12 @@ export default function IntakeForm({
               {isFormSubmitting ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin mr-2" />
-                  Getting your care plan ready...
+                  Getting your matches ready...
                 </>
               ) : (
                 <>
                   <Send className="h-5 w-5 mr-2" />
-                  Get My Care Recommendations
+                  Get My Matches
                 </>
               )}
             </Button>

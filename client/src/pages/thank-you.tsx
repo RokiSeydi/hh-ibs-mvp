@@ -69,7 +69,7 @@ export default function ThankYou({ onBack, userEmail }: ThankYouProps) {
 
   const shareOnSocial = (platform: string) => {
     const text =
-      "Create the care you need — we’ll cover the cost 🫶 Join Holding Health.";
+      "Match with the care you need — we’ll cover the cost 🫶 Join Holding Health.";
 
     const urls = {
       twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(

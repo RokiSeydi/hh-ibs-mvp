@@ -200,7 +200,7 @@ export default function CareAssistant() {
           </h1>
         </div>
         <p className="text-gray-600 font-light">
-          create the care you need, the way you need it
+          your vibe, your care, your way.
         </p>
       </motion.div>
 
