@@ -12,6 +12,7 @@ import PaymentSuccessPage from "@/pages/payment-success";
 import StripeSuccessPage from "@/pages/stripe-success";
 import PaymentCancelledPage from "@/pages/payment-cancelled";
 import WalletTestPage from "@/pages/wallet-test";
+import ApplePayDebugPage from "@/pages/apple-pay-debug";
 
 function Router() {
   return (
@@ -22,7 +23,8 @@ function Router() {
       <Route path="/subscribe" component={SubscriptionPage} />
       <Route path="/payment/success" component={StripeSuccessPage} />
       <Route path="/payment/cancelled" component={PaymentCancelledPage} />
-      <Route path="/test-wallets" component={WalletTestPage} />
+      <Route path="/wallet-test" component={WalletTestPage} />
+      <Route path="/apple-pay-debug" component={ApplePayDebugPage} />
       <Route component={NotFound} />
     </Switch>
   );
