@@ -13,6 +13,7 @@ import {
 import {
   ArrowLeft,
   Star,
+  Loader2,
   Users,
   Heart,
   CreditCard,
@@ -287,8 +288,16 @@ export default function AmbassadorSignup({
                     type="submit"
                     className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700"
                     size="lg"
+                    disabled={isLoading}
                   >
-                    Continue to Payment Setup
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing...
+                      </div>
+                    ) : (
+                      "Continue to Payment Setup"
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -432,9 +441,14 @@ export default function AmbassadorSignup({
                     size="lg"
                     disabled={isLoading}
                   >
-                    {isLoading
-                      ? "Saving Card..."
-                      : "Save Card & Complete Application"}
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Saving Card...
+                      </div>
+                    ) : (
+                      "Save Card & Complete Application"
+                    )}
                   </Button>
                 </form>
               </CardContent>

@@ -13,6 +13,7 @@ import {
 import {
   ArrowLeft,
   MessageCircle,
+  Loader2,
   Star,
   DollarSign,
   CreditCard,
@@ -331,8 +332,16 @@ export default function FeedbackSignup({
                     type="submit"
                     className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700"
                     size="lg"
+                    disabled={isLoading}
                   >
-                    Continue to Payment
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing...
+                      </div>
+                    ) : (
+                      "Continue to Payment"
+                    )}
                   </Button>
                 </form>
               </CardContent>
@@ -479,9 +488,14 @@ export default function FeedbackSignup({
                     size="lg"
                     disabled={isLoading}
                   >
-                    {isLoading
-                      ? "Processing Payment..."
-                      : "Complete Subscription - £15"}
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Processing Payment...
+                      </div>
+                    ) : (
+                      "Complete Subscription - £15"
+                    )}
                   </Button>
                 </form>
               </CardContent>
