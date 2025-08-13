@@ -1,9 +1,23 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { ArrowLeft, CreditCard, Shield, CheckCircle, Zap } from "lucide-react";
+import {
+  ArrowLeft,
+  CreditCard,
+  Shield,
+  CheckCircle,
+  Zap,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import stripePromise from "@/lib/stripe";
+import { Input } from "@/components/ui/input";
+import { loadStripe } from "@stripe/stripe-js";
+
+const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+const stripePromise =
+  publishableKey && publishableKey.startsWith("pk_")
+    ? loadStripe(publishableKey)
+    : null;
 
 interface PaymentPageProps {
   onBack: () => void;
@@ -21,26 +35,52 @@ export default function PaymentPage({
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
 
-  // For MVP, we'll use a simple form + Stripe Checkout redirect
-  // This removes ALL friction while still being secure
+  // Real Stripe Checkout integration
   const handlePayment = async () => {
     if (!email || !email.includes("@")) {
       alert("Please enter a valid email address");
       return;
     }
 
+    if (!stripePromise) {
+      alert("Stripe is not properly configured");
+      return;
+    }
+
     setIsLoading(true);
 
     try {
-      // In a real app, you'd call your backend to create a Stripe Checkout session
-      // For now, let's simulate the payment flow
+      // Create checkout session
+      const response = await fetch("/api/stripe/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          plan: "basic",
+          customerEmail: email,
+        }),
+      });
 
-      // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      if (!response.ok) {
+        throw new Error("Failed to create checkout session");
+      }
 
-      // For demo purposes, we'll redirect to success immediately
-      // In production, this would redirect to Stripe Checkout
-      onSuccess();
+      const { sessionId } = await response.json();
+      const stripe = await stripePromise;
+
+      if (!stripe) {
+        throw new Error("Stripe failed to load");
+      }
+
+      // Redirect to Stripe Checkout
+      const { error } = await stripe.redirectToCheckout({
+        sessionId,
+      });
+
+      if (error) {
+        throw error;
+      }
     } catch (error) {
       console.error("Payment failed:", error);
       alert("Payment failed. Please try again.");
@@ -136,12 +176,12 @@ export default function PaymentPage({
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Address
                 </label>
-                <input
+                <Input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                  className="w-full px-4 py-3"
                   required
                 />
                 <p className="text-xs text-gray-500 mt-1">
@@ -177,13 +217,21 @@ export default function PaymentPage({
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    Processing...
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Creating secure checkout...
                   </div>
-                ) : (
+                ) : stripePromise ? (
                   `Pay £${membershipPrice}/month - Start Today`
+                ) : (
+                  "Demo Mode - Add Stripe Keys to Enable Payment"
                 )}
               </Button>
+
+              {!stripePromise && (
+                <p className="text-sm text-gray-500 text-center mt-2">
+                  Add your Stripe keys to .env.local to enable real payments
+                </p>
+              )}
 
               {/* Security Notice */}
               <div className="flex items-center justify-center gap-2 mt-4 text-sm text-gray-500">

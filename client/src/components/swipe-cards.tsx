@@ -143,6 +143,24 @@ export default function SwipeCards({
         </div>
       </div>
 
+      {/* Show Continue button if 4 selections reached - moved to top for visibility */}
+      {selectedProviders.length >= 4 && (
+        <div className="mb-6 text-center">
+          <p className="text-gray-600 text-sm mb-4">
+            You've selected {selectedProviders.length} care options. Ready to
+            see your personalized plan!
+          </p>
+          <motion.button
+            onClick={handleContinueToDashboard}
+            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Continue to Your Care Dashboard →
+          </motion.button>
+        </div>
+      )}
+
       {/* Card stack */}
       <div className="relative">
         <AnimatePresence>
@@ -439,24 +457,6 @@ export default function SwipeCards({
           </motion.div>
         </AnimatePresence>
       </div>
-
-      {/* Show Continue button if 4 selections reached */}
-      {selectedProviders.length >= 4 && (
-        <div className="mt-8 text-center">
-          <motion.button
-            onClick={handleContinueToDashboard}
-            className="bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-8 py-4 rounded-2xl font-semibold text-lg shadow-lg hover:from-blue-600 hover:to-indigo-700 transition-colors"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Continue to Your Care Dashboard →
-          </motion.button>
-          <p className="text-gray-600 text-sm mt-4">
-            You've selected {selectedProviders.length} care options. Ready to
-            see your personalized plan!
-          </p>
-        </div>
-      )}
     </div>
   );
 }

@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { CheckCircle, Calendar, Mail, ArrowRight } from "lucide-react";
+import { CheckCircle, Calendar, Mail, ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -12,6 +13,29 @@ export default function PaymentSuccess({
   onStartOver,
   selectedProviders,
 }: PaymentSuccessProps) {
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Get session ID from URL params if this is a real Stripe redirect
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionIdParam = urlParams.get("session_id");
+
+    if (sessionIdParam) {
+      setSessionId(sessionIdParam);
+      // You could verify the session with your backend here
+    }
+
+    setLoading(false);
+  }, []);
+
+  if (loading && sessionId) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 p-4">
       <div className="max-w-2xl mx-auto py-8">

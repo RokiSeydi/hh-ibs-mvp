@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useState } from "react";
 import {
   Calendar,
   Play,
@@ -9,6 +10,7 @@ import {
   Clock,
   ArrowRight,
   ShoppingCart,
+  Loader2,
 } from "lucide-react";
 import { useLocation } from "wouter";
 import { type Provider } from "../data/providers";
@@ -16,8 +18,8 @@ import { type Provider } from "../data/providers";
 interface SelectedRecommendationsProps {
   providers: Provider[];
   onStartOver: () => void;
-  onJoinWaitlist: () => void;
-  onBuyMembership: (type?: "ambassador" | "feedback" | "viral") => void;
+  onJoinWaitlist: () => Promise<void> | void;
+  onBuyMembership: (type?: "ambassador" | "feedback" | "viral") => Promise<void> | void;
 }
 
 // Dynamic spots remaining calculation
@@ -99,8 +101,27 @@ export default function SelectedRecommendations({
   onBuyMembership,
 }: SelectedRecommendationsProps) {
   const [, setLocation] = useLocation();
+  const [loadingType, setLoadingType] = useState<string | null>(null);
   const totalSavings = calculateTotalSavings(providers);
   const spotsRemaining = getDynamicSpotsRemaining();
+
+  const handleMembershipClick = async (type: "ambassador" | "feedback" | "viral") => {
+    setLoadingType(type);
+    try {
+      await onBuyMembership(type);
+    } finally {
+      setLoadingType(null);
+    }
+  };
+
+  const handleWaitlistClick = async () => {
+    setLoadingType("waitlist");
+    try {
+      await onJoinWaitlist();
+    } finally {
+      setLoadingType(null);
+    }
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -182,19 +203,6 @@ export default function SelectedRecommendations({
                       </div>
                     </div>
                   </div>
-
-                  {/* CTA button */}
-                  <div className="mt-4">
-                    <motion.button
-                      onClick={() => onBuyMembership("ambassador")}
-                      className={`w-full bg-gradient-to-r ${provider.color} text-white py-3 px-4 rounded-xl text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center space-x-2`}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <span>Try it With Us</span>
-                      <ArrowRight className="h-4 w-4" />
-                    </motion.button>
-                  </div>
                 </div>
               </div>
             </motion.div>
@@ -250,6 +258,48 @@ export default function SelectedRecommendations({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
+        {/* Explanation section */}
+        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
+          <div className="text-center mb-4">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              How to Access Your £{totalSavings.savings} Care Plan
+            </h3>
+            <p className="text-gray-600 leading-relaxed">
+              Your personalized recommendations are worth{" "}
+              <strong>£{totalSavings.original}</strong> if you booked them
+              individually. Choose how you'd like to access them through Holding
+              Health:
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-4 text-sm">
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="text-purple-600 font-semibold mb-2">
+                🌟 Share Your Journey As An Ambassador
+              </div>
+              <p className="text-gray-600">
+                Help others by sharing your wellness experience on social media
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="text-blue-600 font-semibold mb-2">
+                💬 Give Feedback For Half Price
+              </div>
+              <p className="text-gray-600">
+                Help us improve by sharing private feedback after your sessions
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-4 border border-blue-100">
+              <div className="text-orange-600 font-semibold mb-2">
+                ⏳ Wait for Next Cohort While on the Waitlist
+              </div>
+              <p className="text-gray-600">
+                Join our waitlist and help us grow through referrals
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Three Main Options */}
         <div className="grid md:grid-cols-3 gap-4">
           {/* Option 1: Ambassador Program */}
@@ -257,18 +307,20 @@ export default function SelectedRecommendations({
             className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-purple-400"
             whileHover={{ y: -4, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onBuyMembership("ambassador")}
+            onClick={() => handleMembershipClick("ambassador")}
           >
             <div className="text-center">
               <div className="text-3xl mb-3">✨</div>
-              <h3 className="text-lg font-bold mb-2">Become an Ambassador</h3>
+              <h3 className="text-lg font-bold mb-2">Ambassador Access</h3>
               <div className="bg-white/20 rounded-lg p-3 mb-4">
                 <p className="text-2xl font-bold">FREE</p>
-                <p className="text-sm opacity-90">for 3 months</p>
+                <p className="text-sm opacity-90">
+                  Access your £{totalSavings.original} care plan
+                </p>
               </div>
               <p className="text-sm opacity-90 mb-4">
-                Share your HH journey online and get full access to everything -
-                free for the first 3 months!
+                Get full access to all {providers.length} of your
+                recommendations by sharing your wellness journey online
               </p>
               {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
                 <p className="text-xs font-semibold">
@@ -276,11 +328,21 @@ export default function SelectedRecommendations({
                 </p>
               </div> */}
               <motion.button
-                className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors"
+                className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={loadingType === "ambassador"}
               >
-                I'm In! ✨
+                {loadingType === "ambassador" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Setting up...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>I'm In! ✨</span>
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>
@@ -290,19 +352,21 @@ export default function SelectedRecommendations({
             className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-blue-400"
             whileHover={{ y: -4, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => onBuyMembership("feedback")}
+            onClick={() => handleMembershipClick("feedback")}
           >
             <div className="text-center">
               <div className="text-3xl mb-3">💙</div>
-              <h3 className="text-lg font-bold mb-2">VIP Feedback Member</h3>
+              <h3 className="text-lg font-bold mb-2">Feedback Member</h3>
               <div className="bg-white/20 rounded-lg p-3 mb-4">
-                <p className="text-sm opacity-75 line-through">£30/month</p>
+                <p className="text-sm opacity-75 line-through">
+                  £{totalSavings.original}
+                </p>
                 <p className="text-2xl font-bold">£15/month</p>
-                <p className="text-sm opacity-90">first 3 months</p>
+                {/* <p className="text-sm opacity-90">97% discount on your plan</p> */}
               </div>
               <p className="text-sm opacity-90 mb-4">
-                Pay half price and help us improve by sharing private feedback
-                after sessions
+                Access all {providers.length} of your recommendations for just
+                £15/month by providing quick feedback after sessions
               </p>
               {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
                 <p className="text-xs font-semibold">
@@ -310,11 +374,21 @@ export default function SelectedRecommendations({
                 </p>
               </div> */}
               <motion.button
-                className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors"
+                className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={loadingType === "feedback"}
               >
-                Start VIP Access 💙
+                {loadingType === "feedback" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Processing...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Start VIP Access 💙</span>
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>
@@ -324,18 +398,20 @@ export default function SelectedRecommendations({
             className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-orange-400"
             whileHover={{ y: -4, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={onJoinWaitlist}
+            onClick={handleWaitlistClick}
           >
             <div className="text-center">
               <div className="text-3xl mb-3">🎯</div>
-              <h3 className="text-lg font-bold mb-2">Waitlist VIP</h3>
+              <h3 className="text-lg font-bold mb-2">Waitlist Priority</h3>
               <div className="bg-white/20 rounded-lg p-3 mb-4">
                 <p className="text-2xl font-bold">FREE</p>
-                <p className="text-sm opacity-90">guaranteed spot next drop</p>
+                <p className="text-sm opacity-90">
+                  your £{totalSavings.original} plan reserved
+                </p>
               </div>
               <p className="text-sm opacity-90 mb-4">
-                Share with 10 friends who join the waitlist = free month when we
-                open next!
+                We'll hold your {providers.length} recommendations and notify
+                you when the next cohort opens. Refer 10 friends = free month!
               </p>
               {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
                 <p className="text-xs font-semibold">
@@ -343,11 +419,21 @@ export default function SelectedRecommendations({
                 </p>
               </div> */}
               <motion.button
-                className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors"
+                className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors flex items-center justify-center space-x-2"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                disabled={loadingType === "waitlist"}
               >
-                Join Waitlist 🎯
+                {loadingType === "waitlist" ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <span>Joining...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Join Waitlist 🎯</span>
+                  </>
+                )}
               </motion.button>
             </div>
           </motion.div>

@@ -673,11 +673,11 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="col-span-2">
               <div className="flex items-center space-x-2 mb-4">
-                <img
+                {/* <img
                   src="/logo.png"
                   alt="Holding Health Logo"
                   className="h-16 w-auto object-contain"
-                />
+                /> */}
                 <span className="text-xl font-bold">Holding Health</span>
               </div>
               <p className="text-gray-400 mb-6 max-w-md">

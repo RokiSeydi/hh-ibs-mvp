@@ -316,7 +316,7 @@ const justCuriousProviders: Provider[] = [
     retailPrice: "£15.95",
     icon: PenTool,
     color: "from-stone-400 to-stone-600",
-    image: "📓",
+    image: "🥞",
     videoUrl: "https://www.instagram.com/p/DHqKPLQIV5l/",
     imageUrl: "/preview-crepes.png",
     socialCredential: "Favourite on Instagram - 14.5k followers",

@@ -7,6 +7,11 @@ import NotFound from "@/pages/not-found";
 import LandingPage from "@/pages/landing-page";
 import CareAssistant from "@/pages/care-assistant";
 import Confirmation from "@/pages/confirmation";
+import SubscriptionPage from "@/pages/subscribe";
+import PaymentSuccessPage from "@/pages/payment-success";
+import StripeSuccessPage from "@/pages/stripe-success";
+import PaymentCancelledPage from "@/pages/payment-cancelled";
+import WalletTestPage from "@/pages/wallet-test";
 
 function Router() {
   return (
@@ -14,6 +19,10 @@ function Router() {
       <Route path="/" component={LandingPage} />
       <Route path="/get-started" component={CareAssistant} />
       <Route path="/confirmation" component={Confirmation} />
+      <Route path="/subscribe" component={SubscriptionPage} />
+      <Route path="/payment/success" component={StripeSuccessPage} />
+      <Route path="/payment/cancelled" component={PaymentCancelledPage} />
+      <Route path="/test-wallets" component={WalletTestPage} />
       <Route component={NotFound} />
     </Switch>
   );

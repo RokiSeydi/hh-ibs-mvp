@@ -2,9 +2,13 @@ import { loadStripe } from "@stripe/stripe-js";
 
 // This is your test publishable API key.
 // In production, replace with your live publishable key
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "pk_test_51ABC123..." // Replace with your actual test key
-);
+const publishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+
+// Only load Stripe if we have a real publishable key
+const stripePromise =
+  publishableKey && publishableKey.startsWith("pk_")
+    ? loadStripe(publishableKey)
+    : null;
 
 export default stripePromise;
 
@@ -13,15 +17,65 @@ export const isApplePayAvailable = async () => {
   const stripe = await stripePromise;
   if (!stripe) return false;
 
-  return stripe
-    .paymentRequest({
+  try {
+    const paymentRequest = stripe.paymentRequest({
       country: "GB",
       currency: "gbp",
       total: { label: "Test", amount: 100 },
       requestPayerName: true,
       requestPayerEmail: true,
-    })
-    .canMakePayment();
+    });
+
+    const result = await paymentRequest.canMakePayment();
+    return result && result.applePay;
+  } catch (error) {
+    console.log("Apple Pay check failed:", error);
+    return false;
+  }
+};
+
+// Check if Google Pay is available
+export const isGooglePayAvailable = async () => {
+  const stripe = await stripePromise;
+  if (!stripe) return false;
+
+  try {
+    const paymentRequest = stripe.paymentRequest({
+      country: "GB",
+      currency: "gbp",
+      total: { label: "Test", amount: 100 },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    });
+
+    const result = await paymentRequest.canMakePayment();
+    return result && result.googlePay;
+  } catch (error) {
+    console.log("Google Pay check failed:", error);
+    return false;
+  }
+};
+
+// Check if any digital wallet is available
+export const isDigitalWalletAvailable = async () => {
+  const stripe = await stripePromise;
+  if (!stripe) return false;
+
+  try {
+    const paymentRequest = stripe.paymentRequest({
+      country: "GB",
+      currency: "gbp",
+      total: { label: "Test", amount: 100 },
+      requestPayerName: true,
+      requestPayerEmail: true,
+    });
+
+    const result = await paymentRequest.canMakePayment();
+    return !!result;
+  } catch (error) {
+    console.log("Digital wallet check failed:", error);
+    return false;
+  }
 };
 
 // Create payment request for Apple Pay / Google Pay
