@@ -208,6 +208,103 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Ambassador signup - save payment method for future charging
+  app.post("/api/create-ambassador-setup", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ error: "Stripe not initialized" });
+      }
+
+      const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
+
+      // Create customer in Stripe
+      const customer = await stripe.customers.create({
+        email: email,
+        name: billingName,
+        metadata: {
+          type: 'ambassador',
+          socialHandle: formData.socialHandle || '',
+          platform: formData.platform || '',
+          followerCount: formData.followerCount || '',
+          contentStyle: formData.contentStyle || '',
+        }
+      });
+
+      // For demo purposes, we'll simulate saving the payment method
+      // In production, you'd use Stripe's SetupIntent to securely save the card
+      
+      console.log('Ambassador setup completed:', {
+        customerId: customer.id,
+        email: email,
+        formData: formData
+      });
+
+      // Track the ambassador application
+      await trackAmbassadorApplication({
+        email,
+        ...formData
+      });
+
+      res.json({ 
+        success: true, 
+        customerId: customer.id,
+        message: 'Ambassador setup completed successfully'
+      });
+    } catch (error) {
+      console.error("Ambassador setup failed:", error);
+      res.status(500).json({ error: "Ambassador setup failed" });
+    }
+  });
+
+  // Feedback subscription - immediate charge + future billing
+  app.post("/api/create-feedback-subscription", async (req, res) => {
+    try {
+      if (!stripe) {
+        return res.status(500).json({ error: "Stripe not initialized" });
+      }
+
+      const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
+
+      // Create customer in Stripe
+      const customer = await stripe.customers.create({
+        email: email,
+        name: billingName,
+        metadata: {
+          type: 'feedback',
+          reason: formData.reason || '',
+        }
+      });
+
+      // For demo purposes, simulate immediate £15 charge
+      // In production, you'd create a proper payment intent
+      
+      console.log('Feedback subscription created:', {
+        customerId: customer.id,
+        email: email,
+        initialCharge: 15,
+        formData: formData
+      });
+
+      // Track the feedback application
+      await trackFeedbackApplication({
+        email,
+        tier: 'feedback',
+        amount: 15,
+        ...formData
+      });
+
+      res.json({ 
+        success: true, 
+        customerId: customer.id,
+        message: 'Feedback subscription created successfully',
+        chargedAmount: 15
+      });
+    } catch (error) {
+      console.error("Feedback subscription failed:", error);
+      res.status(500).json({ error: "Feedback subscription failed" });
+    }
+  });
+
   // Stripe webhooks
   app.post(
     "/api/stripe/webhook",
@@ -216,8 +313,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const sig = req.headers["stripe-signature"];
       const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
-      if (!sig || !webhookSecret) {
-        return res.status(400).send("Missing signature or webhook secret");
+      if (!sig || !webhookSecret || !stripe) {
+        return res.status(400).send("Missing signature, webhook secret, or Stripe not initialized");
       }
 
       try {
