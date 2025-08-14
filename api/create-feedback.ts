@@ -1,6 +1,7 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
+import { stripe, createFeedbackSubscription } from "../server/stripe";
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Set CORS headers
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST,PUT");
@@ -45,14 +46,36 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       return;
     }
 
-    // Success response for demo
-    res.status(200).json({
-      success: true,
-      subscriptionId: "demo_sub_" + Date.now(),
-      customerId: "demo_customer_" + Date.now(),
-      message: "Feedback subscription created successfully",
-      chargedAmount: 15,
-    });
+    // Create Stripe customer and feedback subscription
+    if (stripe) {
+      // Create customer
+      const customer = await stripe.customers.create({
+        email,
+        name: billingName,
+        metadata: {
+          type: 'feedback',
+        },
+      });
+
+      // Create feedback subscription (£15/month for 3 months, then £30/month)
+      const subscription = await createFeedbackSubscription(customer.id);
+
+      res.status(200).json({
+        success: true,
+        customerId: customer.id,
+        subscriptionId: subscription.id,
+        clientSecret: (subscription.latest_invoice as any)?.payment_intent?.client_secret,
+        message: "Feedback subscription created - £15/month for 3 months, then £30/month",
+        promoEnd: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days from now
+      });
+    } else {
+      // Fallback for demo/development
+      res.status(200).json({
+        success: true,
+        customerId: "demo_customer_" + Date.now(),
+        message: "Feedback subscription created successfully (demo mode)",
+      });
+    }
   } catch (error) {
     console.error("Feedback subscription error:", error);
     res.status(500).json({

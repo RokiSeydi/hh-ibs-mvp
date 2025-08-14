@@ -23,9 +23,56 @@ export const stripe =
 
 // Subscription plans
 export const SUBSCRIPTION_PLANS = {
-  basic: {
-    name: "Holding Health Membership",
-    price: 2999, // £29.99 in pence
+  // Ambassador: Free for 3 months, then £30/month (setup payment method but charge later)
+  ambassador: {
+    name: "Ambassador Access",
+    freeTrialMonths: 3,
+    regularPrice: 3000, // £30 in pence (what they pay after trial)
+    interval: "month" as const,
+    currency: "gbp",
+    description: "Free access for 3 months by sharing your wellness journey, then £30/month",
+    features: [
+      "Free access for 3 months",
+      "Share your wellness journey",
+      "Full access to all providers",
+      "Then £30/month after trial",
+    ],
+  },
+  
+  // Feedback: £15/month for 3 months, then £30/month
+  feedback: {
+    name: "Feedback Member",
+    promoPrice: 1500, // £15 in pence
+    promoMonths: 3,
+    regularPrice: 3000, // £30 in pence (same as ambassador after promo)
+    interval: "month" as const,
+    currency: "gbp",
+    description: "50% off for 3 months by providing feedback, then £30/month",
+    features: [
+      "£15/month for first 3 months",
+      "Provide quick feedback after sessions",
+      "Full access to all providers",
+      "Then £30/month after discount period",
+    ],
+  },
+  
+  // Waitlist: Completely FREE (no payment required)
+  waitlist: {
+    name: "Waitlist Priority",
+    price: 0, // FREE
+    description: "Join our waitlist for the next cohort - completely free",
+    features: [
+      "Priority access to next cohort",
+      "No payment required",
+      "Referral rewards program",
+      "Early notifications",
+    ],
+  },
+  
+  // Regular price (for after promotions - both ambassador and feedback convert to this)
+  regular: {
+    name: "Holding Health Membership", 
+    price: 3000, // £30 in pence
     interval: "month" as const,
     currency: "gbp",
     description: "Full access to all providers, unlimited bookings",
@@ -44,65 +91,145 @@ export async function ensureStripeProducts() {
     // If no real Stripe key, return mock data for development
     if (!stripe) {
       return {
-        productId: "prod_mock_basic",
-        priceId: "price_mock_basic",
+        regularProductId: "prod_mock_regular",
+        regularPriceId: "price_mock_regular",
+        feedbackPromoProductId: "prod_mock_feedback",
+        feedbackPromoPriceId: "price_mock_feedback",
       };
     }
 
     // Check if products already exist
-    const products = await stripe.products.list();
-    const existingProduct = products.data.find(
-      (p) => p.metadata.plan === "basic"
+    const products = await stripe.products.list({ limit: 10 });
+    const prices = await stripe.prices.list({ limit: 10 });
+
+    // Look for existing regular price (£30)
+    let regularProduct = products.data.find(p => p.name === SUBSCRIPTION_PLANS.regular.name);
+    let regularPrice = prices.data.find(p => 
+      p.unit_amount === SUBSCRIPTION_PLANS.regular.price &&
+      p.currency === SUBSCRIPTION_PLANS.regular.currency &&
+      p.recurring?.interval === SUBSCRIPTION_PLANS.regular.interval
     );
 
-    let productId: string;
+    // Create regular product if it doesn't exist
+    if (!regularProduct) {
+      regularProduct = await stripe.products.create({
+        name: SUBSCRIPTION_PLANS.regular.name,
+        description: SUBSCRIPTION_PLANS.regular.description,
+      });
+    }
 
-    if (existingProduct) {
-      productId = existingProduct.id;
-    } else {
-      // Create the product
-      const product = await stripe.products.create({
-        name: SUBSCRIPTION_PLANS.basic.name,
-        description: SUBSCRIPTION_PLANS.basic.description,
-        metadata: {
-          plan: "basic",
+    // Create regular price if it doesn't exist
+    if (!regularPrice) {
+      regularPrice = await stripe.prices.create({
+        product: regularProduct.id,
+        unit_amount: SUBSCRIPTION_PLANS.regular.price,
+        currency: SUBSCRIPTION_PLANS.regular.currency,
+        recurring: {
+          interval: SUBSCRIPTION_PLANS.regular.interval,
         },
       });
-      productId = product.id;
     }
 
-    // Check if price exists
-    const prices = await stripe.prices.list({
-      product: productId,
-      active: true,
-    });
-
-    const existingPrice = prices.data.find(
-      (p) =>
-        p.unit_amount === SUBSCRIPTION_PLANS.basic.price &&
-        p.currency === SUBSCRIPTION_PLANS.basic.currency &&
-        p.recurring?.interval === SUBSCRIPTION_PLANS.basic.interval
+    // Look for existing feedback promo price (£15)
+    let feedbackPromoProduct = products.data.find(p => p.name === SUBSCRIPTION_PLANS.feedback.name);
+    let feedbackPromoPrice = prices.data.find(p => 
+      p.unit_amount === SUBSCRIPTION_PLANS.feedback.promoPrice &&
+      p.currency === SUBSCRIPTION_PLANS.feedback.currency &&
+      p.recurring?.interval === SUBSCRIPTION_PLANS.feedback.interval
     );
 
-    if (existingPrice) {
-      return { productId, priceId: existingPrice.id };
+    // Create feedback promo product if it doesn't exist
+    if (!feedbackPromoProduct) {
+      feedbackPromoProduct = await stripe.products.create({
+        name: SUBSCRIPTION_PLANS.feedback.name,
+        description: SUBSCRIPTION_PLANS.feedback.description,
+      });
     }
 
-    // Create the price
-    const price = await stripe.prices.create({
-      product: productId,
-      unit_amount: SUBSCRIPTION_PLANS.basic.price,
-      currency: SUBSCRIPTION_PLANS.basic.currency,
-      recurring: {
-        interval: SUBSCRIPTION_PLANS.basic.interval,
-      },
-    });
+    // Create feedback promo price if it doesn't exist
+    if (!feedbackPromoPrice) {
+      feedbackPromoPrice = await stripe.prices.create({
+        product: feedbackPromoProduct.id,
+        unit_amount: SUBSCRIPTION_PLANS.feedback.promoPrice,
+        currency: SUBSCRIPTION_PLANS.feedback.currency,
+        recurring: {
+          interval: SUBSCRIPTION_PLANS.feedback.interval,
+        },
+      });
+    }
 
-    return { productId, priceId: price.id };
+    return {
+      regularProductId: regularProduct.id,
+      regularPriceId: regularPrice.id,
+      feedbackPromoProductId: feedbackPromoProduct.id,
+      feedbackPromoPriceId: feedbackPromoPrice.id,
+    };
   } catch (error) {
     console.error("Error ensuring Stripe products:", error);
     throw error;
   }
+}
+
+// Create ambassador subscription (setup payment method but don't charge for 3 months)
+export async function createAmbassadorSubscription(customerId: string) {
+  if (!stripe) {
+    throw new Error("Stripe not initialized");
+  }
+
+  const { regularPriceId } = await ensureStripeProducts();
+  
+  // Create subscription with 3-month trial
+  const subscription = await stripe.subscriptions.create({
+    customer: customerId,
+    items: [{ price: regularPriceId }],
+    trial_period_days: 90, // 3 months = ~90 days
+    payment_behavior: 'default_incomplete',
+    payment_settings: { save_default_payment_method: 'on_subscription' },
+    expand: ['latest_invoice.payment_intent'],
+    metadata: {
+      type: 'ambassador',
+    },
+  });
+
+  return subscription;
+}
+
+// Create feedback subscription (£15 for 3 months, then £30)
+export async function createFeedbackSubscription(customerId: string) {
+  if (!stripe) {
+    throw new Error("Stripe not initialized");
+  }
+
+  const { feedbackPromoPriceId, regularPriceId } = await ensureStripeProducts();
+  
+  // Create subscription starting with promo price
+  const subscription = await stripe.subscriptions.create({
+    customer: customerId,
+    items: [{ price: feedbackPromoPriceId }],
+    payment_behavior: 'default_incomplete',
+    payment_settings: { save_default_payment_method: 'on_subscription' },
+    expand: ['latest_invoice.payment_intent'],
+    metadata: {
+      type: 'feedback',
+      promo_months_remaining: '3',
+      regular_price_id: regularPriceId,
+    },
+  });
+
+  return subscription;
+}
+
+// Handle waitlist signup (no payment required)
+export async function createWaitlistEntry(email: string, name?: string) {
+  // No Stripe needed for waitlist - just collect contact info
+  // This could store in your database, send to email service, etc.
+  return {
+    type: 'waitlist',
+    email,
+    name,
+    status: 'active',
+    created: new Date().toISOString(),
+  };
 }
 
 // Create a checkout session
