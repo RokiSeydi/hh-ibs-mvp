@@ -262,9 +262,42 @@ export default function SelectedRecommendations({
         animate={{ opacity: 1 }}
         transition={{ delay: 0.8 }}
       >
-        {/* Explanation section */}
+        {/* Personal Touch Section */}
+        <motion.div
+          className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl p-6 mb-6 border border-violet-100"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.9 }}
+        >
+          <div className="text-center">
+            <h3 className="text-xl font-bold text-gray-800 mb-3">
+              Let's make this personal.
+            </h3>
+            <p className="text-gray-700 mb-4 leading-relaxed">
+              Hundreds have told us they don't feel heard. <br /> At Holding
+              Health, our healthcare founders want to sit down with you and
+              listen — no sales, just listening.
+            </p>
+            <motion.button
+              className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors duration-300 inline-flex items-center space-x-2"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() =>
+                window.open(
+                  "https://calendly.com/weatholdinghealth-info/30min",
+                  "_blank"
+                )
+              }
+            >
+              <span>Book a Call</span>
+              <ArrowRight className="h-4 w-4" />
+            </motion.button>
+          </div>
+        </motion.div>
+
+        {/* Combined Access Options */}
         <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
-          <div className="text-center mb-4">
+          <div className="text-center mb-6">
             <h3 className="text-xl font-bold text-gray-800 mb-2">
               How to Access Your £{totalSavings.savings} Care Plan
             </h3>
@@ -276,171 +309,127 @@ export default function SelectedRecommendations({
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-4 text-sm">
-            <div className="bg-white rounded-lg p-4 border border-blue-100">
-              <div className="text-purple-600 font-semibold mb-2">
-                🌟 Share Your Journey As An Ambassador
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Option 1: Ambassador Program */}
+            <motion.div
+              className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-purple-400"
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleMembershipClick("ambassador")}
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-3">✨</div>
+                <h3 className="text-lg font-bold mb-2">Ambassador Access</h3>
+                <div className="bg-white/20 rounded-lg p-3 mb-4">
+                  <p className="text-2xl font-bold">FREE</p>
+                  <p className="text-sm opacity-90">
+                    Access your £{totalSavings.original} care plan
+                  </p>
+                </div>
+                <p className="text-sm opacity-90 mb-4">
+                  Get full access to all {providers.length} of your
+                  recommendations by sharing your wellness journey online
+                </p>
+                <motion.button
+                  className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors flex items-center justify-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={loadingType === "ambassador"}
+                >
+                  {loadingType === "ambassador" ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Setting up...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>I'm In! ✨</span>
+                    </>
+                  )}
+                </motion.button>
               </div>
-              <p className="text-gray-600">
-                Help others by sharing your wellness experience on social media
-              </p>
-            </div>
-            <div className="bg-white rounded-lg p-4 border border-blue-100">
-              <div className="text-blue-600 font-semibold mb-2">
-                💬 Give Feedback For Half Price
+            </motion.div>
+
+            {/* Option 2: Feedback Program */}
+            <motion.div
+              className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-blue-400"
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => handleMembershipClick("feedback")}
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-3">💙</div>
+                <h3 className="text-lg font-bold mb-2">Feedback Member</h3>
+                <div className="bg-white/20 rounded-lg p-3 mb-4">
+                  <p className="text-sm opacity-75 line-through">
+                    £{totalSavings.original}
+                  </p>
+                  <p className="text-2xl font-bold">£15/month</p>
+                </div>
+                <p className="text-sm opacity-90 mb-4">
+                  Access all {providers.length} of your recommendations for just
+                  £15/month by providing quick feedback after sessions
+                </p>
+                <motion.button
+                  className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={loadingType === "feedback"}
+                >
+                  {loadingType === "feedback" ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Processing...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Start VIP Access 💙</span>
+                    </>
+                  )}
+                </motion.button>
               </div>
-              <p className="text-gray-600">
-                Help us improve by sharing private feedback after your sessions
-              </p>
-            </div>
-            <div className="bg-white rounded-lg p-4 border border-blue-100">
-              <div className="text-orange-600 font-semibold mb-2">
-                ⏳ Wait for Next Cohort While on the Waitlist
+            </motion.div>
+
+            {/* Option 3: Waitlist + Referral */}
+            <motion.div
+              className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-orange-400"
+              whileHover={{ y: -4, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleWaitlistClick}
+            >
+              <div className="text-center">
+                <div className="text-3xl mb-3">🎯</div>
+                <h3 className="text-lg font-bold mb-2">Waitlist Priority</h3>
+                <div className="bg-white/20 rounded-lg p-3 mb-4">
+                  <p className="text-2xl font-bold">FREE</p>
+                  <p className="text-sm opacity-90">
+                    your £{totalSavings.original} plan reserved
+                  </p>
+                </div>
+                <p className="text-sm opacity-90 mb-4">
+                  We'll hold your {providers.length} recommendations and notify
+                  you when the next cohort opens. Refer 10 friends = free month!
+                </p>
+                <motion.button
+                  className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors flex items-center justify-center space-x-2"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  disabled={loadingType === "waitlist"}
+                >
+                  {loadingType === "waitlist" ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>Joining...</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Join Waitlist 🎯</span>
+                    </>
+                  )}
+                </motion.button>
               </div>
-              <p className="text-gray-600">
-                Join our waitlist and help us grow through referrals
-              </p>
-            </div>
+            </motion.div>
           </div>
-        </div>
-
-        {/* Three Main Options */}
-        <div className="grid md:grid-cols-3 gap-4">
-          {/* Option 1: Ambassador Program */}
-          <motion.div
-            className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-purple-400"
-            whileHover={{ y: -4, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleMembershipClick("ambassador")}
-          >
-            <div className="text-center">
-              <div className="text-3xl mb-3">✨</div>
-              <h3 className="text-lg font-bold mb-2">Ambassador Access</h3>
-              <div className="bg-white/20 rounded-lg p-3 mb-4">
-                <p className="text-2xl font-bold">FREE</p>
-                <p className="text-sm opacity-90">
-                  Access your £{totalSavings.original} care plan
-                </p>
-              </div>
-              <p className="text-sm opacity-90 mb-4">
-                Get full access to all {providers.length} of your
-                recommendations by sharing your wellness journey online
-              </p>
-              {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
-                <p className="text-xs font-semibold">
-                  You'll post 1-2 times/month about your wellness journey
-                </p>
-              </div> */}
-              <motion.button
-                className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors flex items-center justify-center space-x-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                disabled={loadingType === "ambassador"}
-              >
-                {loadingType === "ambassador" ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Setting up...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>I'm In! ✨</span>
-                  </>
-                )}
-              </motion.button>
-            </div>
-          </motion.div>
-
-          {/* Option 2: Feedback Program */}
-          <motion.div
-            className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-blue-400"
-            whileHover={{ y: -4, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => handleMembershipClick("feedback")}
-          >
-            <div className="text-center">
-              <div className="text-3xl mb-3">💙</div>
-              <h3 className="text-lg font-bold mb-2">Feedback Member</h3>
-              <div className="bg-white/20 rounded-lg p-3 mb-4">
-                <p className="text-sm opacity-75 line-through">
-                  £{totalSavings.original}
-                </p>
-                <p className="text-2xl font-bold">£15/month</p>
-                {/* <p className="text-sm opacity-90">97% discount on your plan</p> */}
-              </div>
-              <p className="text-sm opacity-90 mb-4">
-                Access all {providers.length} of your recommendations for just
-                £15/month by providing quick feedback after sessions
-              </p>
-              {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
-                <p className="text-xs font-semibold">
-                  Quick 2-min feedback after each session
-                </p>
-              </div> */}
-              <motion.button
-                className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center space-x-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                disabled={loadingType === "feedback"}
-              >
-                {loadingType === "feedback" ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Processing...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Start VIP Access 💙</span>
-                  </>
-                )}
-              </motion.button>
-            </div>
-          </motion.div>
-
-          {/* Option 3: Waitlist + Referral */}
-          <motion.div
-            className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-orange-400"
-            whileHover={{ y: -4, scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleWaitlistClick}
-          >
-            <div className="text-center">
-              <div className="text-3xl mb-3">🎯</div>
-              <h3 className="text-lg font-bold mb-2">Waitlist Priority</h3>
-              <div className="bg-white/20 rounded-lg p-3 mb-4">
-                <p className="text-2xl font-bold">FREE</p>
-                <p className="text-sm opacity-90">
-                  your £{totalSavings.original} plan reserved
-                </p>
-              </div>
-              <p className="text-sm opacity-90 mb-4">
-                We'll hold your {providers.length} recommendations and notify
-                you when the next cohort opens. Refer 10 friends = free month!
-              </p>
-              {/* <div className="bg-white/10 rounded-lg p-2 mb-3">
-                <p className="text-xs font-semibold">
-                  Skip the queue + earn free months
-                </p>
-              </div> */}
-              <motion.button
-                className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors flex items-center justify-center space-x-2"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                disabled={loadingType === "waitlist"}
-              >
-                {loadingType === "waitlist" ? (
-                  <>
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>Joining...</span>
-                  </>
-                ) : (
-                  <>
-                    <span>Join Waitlist 🎯</span>
-                  </>
-                )}
-              </motion.button>
-            </div>
-          </motion.div>
         </div>
 
         {/* Urgency Message */}
