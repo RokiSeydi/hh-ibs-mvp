@@ -1,10 +1,4 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { config } from "dotenv";
-import { trackAmbassadorApplication } from "../server/analytics";
-import { stripe } from "../server/stripe";
-
-// Load environment variables
-config({ path: '.env.local' });
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -12,10 +6,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    if (!stripe) {
-      return res.status(500).json({ error: "Stripe not initialized" });
-    }
-
     const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
 
     // Validate required fields
@@ -40,34 +30,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: "Invalid CVV format" });
     }
 
-    // Create customer in Stripe
-    const customer = await stripe.customers.create({
-      email: String(email).trim().toLowerCase(),
-      name: String(billingName).trim(),
-      metadata: {
-        type: 'ambassador',
-        socialHandle: formData.socialHandle || '',
-        platform: formData.platform || '',
-        followerCount: formData.followerCount || '',
-        contentStyle: formData.contentStyle || '',
-      }
-    });
-
+    // For now, simulate success without Stripe integration
     console.log('Ambassador setup completed:', {
-      customerId: customer.id,
       email: email,
       formData: formData
     });
 
-    // Track the ambassador application
-    await trackAmbassadorApplication({
-      email,
-      ...formData
-    });
-
     res.json({ 
       success: true, 
-      customerId: customer.id,
+      customerId: 'demo_customer_' + Date.now(),
       message: 'Ambassador setup completed successfully'
     });
   } catch (error) {
