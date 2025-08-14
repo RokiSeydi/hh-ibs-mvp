@@ -70,6 +70,13 @@ export default function AmbassadorSignup({
     setIsLoading(true);
 
     try {
+      // Log for mobile debugging
+      console.log('Mobile payment attempt:', {
+        userAgent: navigator.userAgent,
+        formData: { ...formData, cardNumber: '****', cvv: '***' },
+        timestamp: new Date().toISOString()
+      });
+
       // Use the new Stripe helper for ambassador setup
       await createAmbassadorSetup(formData);
 
@@ -85,6 +92,11 @@ export default function AmbassadorSignup({
       onComplete();
     } catch (error) {
       console.error("Card save failed:", error);
+      console.error("Mobile error details:", {
+        error: error,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString()
+      });
       alert("Failed to save payment method. Please try again.");
     } finally {
       setIsLoading(false);
@@ -349,12 +361,14 @@ export default function AmbassadorSignup({
                     </label>
                     <Input
                       type="email"
+                      inputMode="email"
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
                       required
+                      autoComplete="email"
                     />
                   </div>
 
@@ -363,6 +377,7 @@ export default function AmbassadorSignup({
                       Cardholder Name
                     </label>
                     <Input
+                      type="text"
                       placeholder="Full name on card"
                       value={formData.billingName}
                       onChange={(e) =>
@@ -372,6 +387,7 @@ export default function AmbassadorSignup({
                         })
                       }
                       required
+                      autoComplete="cc-name"
                     />
                   </div>
 
@@ -380,12 +396,15 @@ export default function AmbassadorSignup({
                       Card Number
                     </label>
                     <Input
+                      type="tel"
+                      inputMode="numeric"
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
                       onChange={(e) =>
                         setFormData({ ...formData, cardNumber: e.target.value })
                       }
                       required
+                      autoComplete="cc-number"
                     />
                   </div>
 
@@ -395,6 +414,8 @@ export default function AmbassadorSignup({
                         Expiry Date
                       </label>
                       <Input
+                        type="tel"
+                        inputMode="numeric"
                         placeholder="MM/YY"
                         value={formData.expiryDate}
                         onChange={(e) =>
@@ -404,6 +425,7 @@ export default function AmbassadorSignup({
                           })
                         }
                         required
+                        autoComplete="cc-exp"
                       />
                     </div>
                     <div>
@@ -411,12 +433,15 @@ export default function AmbassadorSignup({
                         CVV
                       </label>
                       <Input
+                        type="tel"
+                        inputMode="numeric"
                         placeholder="123"
                         value={formData.cvv}
                         onChange={(e) =>
                           setFormData({ ...formData, cvv: e.target.value })
                         }
                         required
+                        autoComplete="cc-csc"
                       />
                     </div>
                   </div>

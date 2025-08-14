@@ -396,12 +396,14 @@ export default function FeedbackSignup({
                     </label>
                     <Input
                       type="email"
+                      inputMode="email"
                       placeholder="your@email.com"
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
                       required
+                      autoComplete="email"
                     />
                   </div>
 
@@ -410,6 +412,7 @@ export default function FeedbackSignup({
                       Cardholder Name
                     </label>
                     <Input
+                      type="text"
                       placeholder="Full name on card"
                       value={formData.billingName}
                       onChange={(e) =>
@@ -419,6 +422,7 @@ export default function FeedbackSignup({
                         })
                       }
                       required
+                      autoComplete="cc-name"
                     />
                   </div>
 
@@ -427,12 +431,15 @@ export default function FeedbackSignup({
                       Card Number
                     </label>
                     <Input
+                      type="tel"
+                      inputMode="numeric"
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
                       onChange={(e) =>
                         setFormData({ ...formData, cardNumber: e.target.value })
                       }
                       required
+                      autoComplete="cc-number"
                     />
                   </div>
 
@@ -442,6 +449,8 @@ export default function FeedbackSignup({
                         Expiry Date
                       </label>
                       <Input
+                        type="tel"
+                        inputMode="numeric"
                         placeholder="MM/YY"
                         value={formData.expiryDate}
                         onChange={(e) =>
@@ -451,6 +460,7 @@ export default function FeedbackSignup({
                           })
                         }
                         required
+                        autoComplete="cc-exp"
                       />
                     </div>
                     <div>
@@ -458,12 +468,15 @@ export default function FeedbackSignup({
                         CVV
                       </label>
                       <Input
+                        type="tel"
+                        inputMode="numeric"
                         placeholder="123"
                         value={formData.cvv}
                         onChange={(e) =>
                           setFormData({ ...formData, cvv: e.target.value })
                         }
                         required
+                        autoComplete="cc-csc"
                       />
                     </div>
                   </div>
