@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 
 // Load environment variables first, before any other imports
-config({ path: '.env.local' });
+config({ path: ".env.local" });
 
 import Stripe from "stripe";
 
@@ -14,11 +14,12 @@ if (!stripeSecretKey && !isDevelopment) {
 }
 
 // Only initialize Stripe if we have a real secret key
-export const stripe = stripeSecretKey && stripeSecretKey.startsWith('sk_')
-  ? new Stripe(stripeSecretKey, {
-      apiVersion: "2025-07-30.basil",
-    })
-  : null;
+export const stripe =
+  stripeSecretKey && stripeSecretKey.startsWith("sk_")
+    ? new Stripe(stripeSecretKey, {
+        apiVersion: "2025-07-30.basil",
+      })
+    : null;
 
 // Subscription plans
 export const SUBSCRIPTION_PLANS = {

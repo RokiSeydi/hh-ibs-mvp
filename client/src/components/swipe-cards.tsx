@@ -156,7 +156,7 @@ export default function SwipeCards({
 
       {/* Show Continue button after 4 selections with delay for smooth UX */}
       {showCTA && selectedProviders.length >= 4 && (
-        <motion.div 
+        <motion.div
           className="mb-6 text-center"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

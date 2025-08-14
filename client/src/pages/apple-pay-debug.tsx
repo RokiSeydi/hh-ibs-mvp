@@ -18,7 +18,7 @@ export default function ApplePayDebugPage() {
       const info: any = {
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
-        isHTTPS: window.location.protocol === 'https:',
+        isHTTPS: window.location.protocol === "https:",
         url: window.location.href,
         platform: navigator.platform,
         language: navigator.language,
@@ -37,9 +37,12 @@ export default function ApplePayDebugPage() {
         info.applePaySessionAvailable = true;
         info.applePayVersion = window.ApplePaySession.version;
         info.canMakePayments = window.ApplePaySession.canMakePayments();
-        
+
         try {
-          info.canMakePaymentsWithActiveCard = await window.ApplePaySession.canMakePaymentsWithActiveCard('merchant.com.example');
+          info.canMakePaymentsWithActiveCard =
+            await window.ApplePaySession.canMakePaymentsWithActiveCard(
+              "merchant.com.example"
+            );
         } catch (e) {
           info.canMakePaymentsWithActiveCard = `Error: ${e}`;
         }
@@ -59,7 +62,7 @@ export default function ApplePayDebugPage() {
         const stripe = await stripePromise;
         if (stripe) {
           setStripeStatus("✅ Stripe loaded successfully");
-          
+
           // Test Payment Request
           const pr = stripe.paymentRequest({
             country: "GB",
@@ -74,7 +77,7 @@ export default function ApplePayDebugPage() {
 
           const canMakePayment = await pr.canMakePayment();
           info.stripeCanMakePayment = canMakePayment;
-          
+
           if (canMakePayment) {
             info.supportedMethods = {
               applePay: canMakePayment.applePay || false,
@@ -99,7 +102,7 @@ export default function ApplePayDebugPage() {
   return (
     <div className="max-w-4xl mx-auto p-6">
       <h1 className="text-3xl font-bold mb-6">Apple Pay Debug Information</h1>
-      
+
       <div className="bg-gray-100 p-4 rounded-lg mb-6">
         <h2 className="text-xl font-semibold mb-2">Stripe Status</h2>
         <p className="font-mono text-sm">{stripeStatus}</p>
@@ -115,16 +118,35 @@ export default function ApplePayDebugPage() {
       <div className="mt-6 bg-blue-50 p-4 rounded-lg">
         <h3 className="font-semibold text-blue-800 mb-2">Quick Diagnosis:</h3>
         <ul className="text-blue-700 space-y-1 text-sm">
-          <li>• <strong>HTTPS Required:</strong> {debugInfo.isHTTPS ? '✅ Yes' : '❌ No (Apple Pay needs HTTPS)'}</li>
-          <li>• <strong>Apple Device:</strong> {debugInfo.isIOS || debugInfo.isMac ? '✅ Yes' : '❌ No'}</li>
-          <li>• <strong>Safari Browser:</strong> {debugInfo.isSafari ? '✅ Yes' : '❌ No (Apple Pay needs Safari)'}</li>
-          <li>• <strong>Apple Pay API:</strong> {debugInfo.applePaySessionAvailable ? '✅ Available' : '❌ Not Available'}</li>
-          <li>• <strong>Stripe Loaded:</strong> {stripeStatus.includes('✅') ? '✅ Yes' : '❌ No'}</li>
+          <li>
+            • <strong>HTTPS Required:</strong>{" "}
+            {debugInfo.isHTTPS ? "✅ Yes" : "❌ No (Apple Pay needs HTTPS)"}
+          </li>
+          <li>
+            • <strong>Apple Device:</strong>{" "}
+            {debugInfo.isIOS || debugInfo.isMac ? "✅ Yes" : "❌ No"}
+          </li>
+          <li>
+            • <strong>Safari Browser:</strong>{" "}
+            {debugInfo.isSafari ? "✅ Yes" : "❌ No (Apple Pay needs Safari)"}
+          </li>
+          <li>
+            • <strong>Apple Pay API:</strong>{" "}
+            {debugInfo.applePaySessionAvailable
+              ? "✅ Available"
+              : "❌ Not Available"}
+          </li>
+          <li>
+            • <strong>Stripe Loaded:</strong>{" "}
+            {stripeStatus.includes("✅") ? "✅ Yes" : "❌ No"}
+          </li>
         </ul>
       </div>
 
       <div className="mt-4 bg-yellow-50 p-4 rounded-lg">
-        <h3 className="font-semibold text-yellow-800 mb-2">Testing Apple Pay:</h3>
+        <h3 className="font-semibold text-yellow-800 mb-2">
+          Testing Apple Pay:
+        </h3>
         <p className="text-yellow-700 text-sm">
           To test Apple Pay properly, you need:
           <br />• Deploy to HTTPS (Vercel, Netlify, etc.)

@@ -4,7 +4,7 @@ import { config } from "dotenv";
 import { raw } from "express";
 
 // Load environment variables
-config({ path: '.env.local' });
+config({ path: ".env.local" });
 
 // Import analytics functions
 import {
@@ -140,10 +140,7 @@ app.post("/api/stripe/create-checkout-session", async (req, res) => {
   try {
     const { plan, customerEmail } = req.body;
 
-    if (
-      !plan ||
-      !SUBSCRIPTION_PLANS[plan as keyof typeof SUBSCRIPTION_PLANS]
-    ) {
+    if (!plan || !SUBSCRIPTION_PLANS[plan as keyof typeof SUBSCRIPTION_PLANS]) {
       return res.status(400).json({ error: "Invalid plan" });
     }
 
@@ -176,7 +173,8 @@ app.post("/api/create-ambassador-setup", async (req, res) => {
       return res.status(500).json({ error: "Stripe not initialized" });
     }
 
-    const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
+    const { email, billingName, cardNumber, expiryDate, cvv, ...formData } =
+      req.body;
 
     // Validate required fields
     if (!email || !billingName || !cardNumber || !expiryDate || !cvv) {
@@ -184,9 +182,9 @@ app.post("/api/create-ambassador-setup", async (req, res) => {
     }
 
     // Additional validation for Safari compatibility
-    const sanitizedCardNumber = String(cardNumber).replace(/\D/g, '');
-    const sanitizedExpiryDate = String(expiryDate).replace(/\D/g, '');
-    const sanitizedCvv = String(cvv).replace(/\D/g, '');
+    const sanitizedCardNumber = String(cardNumber).replace(/\D/g, "");
+    const sanitizedExpiryDate = String(expiryDate).replace(/\D/g, "");
+    const sanitizedCvv = String(cvv).replace(/\D/g, "");
 
     if (sanitizedCardNumber.length < 13 || sanitizedCardNumber.length > 19) {
       return res.status(400).json({ error: "Invalid card number format" });
@@ -205,39 +203,39 @@ app.post("/api/create-ambassador-setup", async (req, res) => {
       email: String(email).trim().toLowerCase(),
       name: String(billingName).trim(),
       metadata: {
-        type: 'ambassador',
-        socialHandle: formData.socialHandle || '',
-        platform: formData.platform || '',
-        followerCount: formData.followerCount || '',
-        contentStyle: formData.contentStyle || '',
-      }
+        type: "ambassador",
+        socialHandle: formData.socialHandle || "",
+        platform: formData.platform || "",
+        followerCount: formData.followerCount || "",
+        contentStyle: formData.contentStyle || "",
+      },
     });
 
     // For demo purposes, we'll simulate saving the payment method
     // In production, you'd use Stripe's SetupIntent to securely save the card
-    
-    console.log('Ambassador setup completed:', {
+
+    console.log("Ambassador setup completed:", {
       customerId: customer.id,
       email: email,
-      formData: formData
+      formData: formData,
     });
 
     // Track the ambassador application
     await trackAmbassadorApplication({
       email,
-      ...formData
+      ...formData,
     });
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       customerId: customer.id,
-      message: 'Ambassador setup completed successfully'
+      message: "Ambassador setup completed successfully",
     });
   } catch (error) {
     console.error("Ambassador setup failed:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Ambassador setup failed",
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 });
@@ -249,7 +247,8 @@ app.post("/api/create-feedback-subscription", async (req, res) => {
       return res.status(500).json({ error: "Stripe not initialized" });
     }
 
-    const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
+    const { email, billingName, cardNumber, expiryDate, cvv, ...formData } =
+      req.body;
 
     // Validate required fields
     if (!email || !billingName || !cardNumber || !expiryDate || !cvv) {
@@ -257,9 +256,9 @@ app.post("/api/create-feedback-subscription", async (req, res) => {
     }
 
     // Additional validation for Safari compatibility
-    const sanitizedCardNumber = String(cardNumber).replace(/\D/g, '');
-    const sanitizedExpiryDate = String(expiryDate).replace(/\D/g, '');
-    const sanitizedCvv = String(cvv).replace(/\D/g, '');
+    const sanitizedCardNumber = String(cardNumber).replace(/\D/g, "");
+    const sanitizedExpiryDate = String(expiryDate).replace(/\D/g, "");
+    const sanitizedCvv = String(cvv).replace(/\D/g, "");
 
     if (sanitizedCardNumber.length < 13 || sanitizedCardNumber.length > 19) {
       return res.status(400).json({ error: "Invalid card number format" });
@@ -278,40 +277,40 @@ app.post("/api/create-feedback-subscription", async (req, res) => {
       email: String(email).trim().toLowerCase(),
       name: String(billingName).trim(),
       metadata: {
-        type: 'feedback',
-        reason: formData.reason || '',
-      }
+        type: "feedback",
+        reason: formData.reason || "",
+      },
     });
 
     // For demo purposes, simulate immediate £15 charge
     // In production, you'd create a proper payment intent
-    
-    console.log('Feedback subscription created:', {
+
+    console.log("Feedback subscription created:", {
       customerId: customer.id,
       email: email,
       initialCharge: 15,
-      formData: formData
+      formData: formData,
     });
 
     // Track the feedback application
     await trackFeedbackApplication({
       email,
-      tier: 'feedback',
+      tier: "feedback",
       amount: 15,
-      ...formData
+      ...formData,
     });
 
-    res.json({ 
-      success: true, 
+    res.json({
+      success: true,
       customerId: customer.id,
-      message: 'Feedback subscription created successfully',
-      chargedAmount: 15
+      message: "Feedback subscription created successfully",
+      chargedAmount: 15,
     });
   } catch (error) {
     console.error("Feedback subscription failed:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Feedback subscription failed",
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 });
@@ -325,7 +324,9 @@ app.post(
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
     if (!sig || !webhookSecret || !stripe) {
-      return res.status(400).send("Missing signature, webhook secret, or Stripe not initialized");
+      return res
+        .status(400)
+        .send("Missing signature, webhook secret, or Stripe not initialized");
     }
 
     try {

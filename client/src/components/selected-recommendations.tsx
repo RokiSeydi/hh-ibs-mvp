@@ -19,7 +19,9 @@ interface SelectedRecommendationsProps {
   providers: Provider[];
   onStartOver: () => void;
   onJoinWaitlist: () => Promise<void> | void;
-  onBuyMembership: (type?: "ambassador" | "feedback" | "viral") => Promise<void> | void;
+  onBuyMembership: (
+    type?: "ambassador" | "feedback" | "viral"
+  ) => Promise<void> | void;
 }
 
 // Dynamic spots remaining calculation
@@ -105,7 +107,9 @@ export default function SelectedRecommendations({
   const totalSavings = calculateTotalSavings(providers);
   const spotsRemaining = getDynamicSpotsRemaining();
 
-  const handleMembershipClick = async (type: "ambassador" | "feedback" | "viral") => {
+  const handleMembershipClick = async (
+    type: "ambassador" | "feedback" | "viral"
+  ) => {
     setLoadingType(type);
     try {
       await onBuyMembership(type);

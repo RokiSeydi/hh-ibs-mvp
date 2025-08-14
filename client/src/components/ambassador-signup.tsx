@@ -71,27 +71,27 @@ export default function AmbassadorSignup({
 
     try {
       // Validate and format card data for Safari compatibility
-      const cardNumber = formData.cardNumber.replace(/\s/g, ''); // Remove spaces
-      const expiryDate = formData.expiryDate.replace(/\D/g, ''); // Keep only digits
-      const cvv = formData.cvv.replace(/\D/g, ''); // Keep only digits
+      const cardNumber = formData.cardNumber.replace(/\s/g, ""); // Remove spaces
+      const expiryDate = formData.expiryDate.replace(/\D/g, ""); // Keep only digits
+      const cvv = formData.cvv.replace(/\D/g, ""); // Keep only digits
 
       // Basic validation
       if (cardNumber.length < 13 || cardNumber.length > 19) {
-        throw new Error('Invalid card number length');
+        throw new Error("Invalid card number length");
       }
       if (expiryDate.length !== 4) {
-        throw new Error('Invalid expiry date format');
+        throw new Error("Invalid expiry date format");
       }
       if (cvv.length < 3 || cvv.length > 4) {
-        throw new Error('Invalid CVV length');
+        throw new Error("Invalid CVV length");
       }
 
       // Log for mobile debugging
-      console.log('Mobile payment attempt:', {
+      console.log("Mobile payment attempt:", {
         userAgent: navigator.userAgent,
-        formData: { ...formData, cardNumber: '****', cvv: '***' },
+        formData: { ...formData, cardNumber: "****", cvv: "***" },
         timestamp: new Date().toISOString(),
-        browser: navigator.userAgent.includes('Safari') ? 'Safari' : 'Other'
+        browser: navigator.userAgent.includes("Safari") ? "Safari" : "Other",
       });
 
       // Create sanitized form data
@@ -123,14 +123,21 @@ export default function AmbassadorSignup({
         error: error,
         userAgent: navigator.userAgent,
         timestamp: new Date().toISOString(),
-        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+        errorMessage: error instanceof Error ? error.message : "Unknown error",
       });
-      
+
       // More user-friendly error messages
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      if (errorMessage.includes('Invalid card') || errorMessage.includes('pattern')) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+      if (
+        errorMessage.includes("Invalid card") ||
+        errorMessage.includes("pattern")
+      ) {
         alert("Please check your card details and try again.");
-      } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+      } else if (
+        errorMessage.includes("network") ||
+        errorMessage.includes("fetch")
+      ) {
         alert("Network error. Please check your connection and try again.");
       } else {
         alert("Failed to save payment method. Please try again.");
@@ -439,9 +446,10 @@ export default function AmbassadorSignup({
                       value={formData.cardNumber}
                       onChange={(e) => {
                         // Format card number with spaces for better UX
-                        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-                        value = value.replace(/(\d{4})(?=\d)/g, '$1 '); // Add spaces every 4 digits
-                        if (value.length <= 19) { // Max length with spaces
+                        let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
+                        value = value.replace(/(\d{4})(?=\d)/g, "$1 "); // Add spaces every 4 digits
+                        if (value.length <= 19) {
+                          // Max length with spaces
                           setFormData({ ...formData, cardNumber: value });
                         }
                       }}
@@ -463,9 +471,12 @@ export default function AmbassadorSignup({
                         value={formData.expiryDate}
                         onChange={(e) => {
                           // Format expiry date
-                          let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                          let value = e.target.value.replace(/\D/g, ""); // Remove non-digits
                           if (value.length >= 2) {
-                            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                            value =
+                              value.substring(0, 2) +
+                              "/" +
+                              value.substring(2, 4);
                           }
                           if (value.length <= 5) {
                             setFormData({ ...formData, expiryDate: value });
@@ -487,7 +498,7 @@ export default function AmbassadorSignup({
                         value={formData.cvv}
                         onChange={(e) => {
                           // Only allow numeric input
-                          const value = e.target.value.replace(/\D/g, '');
+                          const value = e.target.value.replace(/\D/g, "");
                           if (value.length <= 4) {
                             setFormData({ ...formData, cvv: value });
                           }
