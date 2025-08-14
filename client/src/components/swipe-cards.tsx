@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import {
   Calendar,
@@ -37,6 +37,7 @@ export default function SwipeCards({
   );
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isRecommendationOpen, setIsRecommendationOpen] = useState(false);
+  const [showCTA, setShowCTA] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
   // Get providers based on user's reason
@@ -44,6 +45,13 @@ export default function SwipeCards({
     providersByReason[userReason as keyof typeof providersByReason] ||
     providersByReason["going-through-something"];
   const currentProvider = providers[currentIndex];
+
+  // Reset showCTA if selections drop below 4
+  useEffect(() => {
+    if (selectedProviders.length < 4) {
+      setShowCTA(false);
+    }
+  }, [selectedProviders.length]);
 
   const handleSwipe = (direction: "left" | "right") => {
     let newSelectedProviders = selectedProviders;
@@ -72,10 +80,13 @@ export default function SwipeCards({
     setIsVideoPlaying(false);
     setIsRecommendationOpen(false);
 
-    // If we've reached 4 selections, allow user to proceed immediately
+    // If we've reached 4 selections, show CTA after a delay to let card animation complete
     if (newSelectedProviders.length >= 4) {
-      // Don't automatically trigger - let user choose to continue
       setDragDirection(null);
+      // Show CTA after a brief delay to allow card swipe animation to complete
+      setTimeout(() => {
+        setShowCTA(true);
+      }, 600); // 600ms delay for smooth transition
       return;
     }
 
@@ -143,9 +154,14 @@ export default function SwipeCards({
         </div>
       </div>
 
-      {/* Show Continue button if 4 selections reached - moved to top for visibility */}
-      {selectedProviders.length >= 4 && (
-        <div className="mb-6 text-center">
+      {/* Show Continue button after 4 selections with delay for smooth UX */}
+      {showCTA && selectedProviders.length >= 4 && (
+        <motion.div 
+          className="mb-6 text-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4 }}
+        >
           <p className="text-gray-600 text-sm mb-4">
             You've selected {selectedProviders.length} care options. Ready to
             see your personalized plan!
@@ -158,7 +174,7 @@ export default function SwipeCards({
           >
             Continue to Your Care Dashboard →
           </motion.button>
-        </div>
+        </motion.div>
       )}
 
       {/* Card stack */}
