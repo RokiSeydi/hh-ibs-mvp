@@ -70,8 +70,42 @@ export default function FeedbackSignup({
     setIsLoading(true);
 
     try {
+      // Validate and format card data for Safari compatibility
+      const cardNumber = formData.cardNumber.replace(/\s/g, ''); // Remove spaces
+      const expiryDate = formData.expiryDate.replace(/\D/g, ''); // Keep only digits
+      const cvv = formData.cvv.replace(/\D/g, ''); // Keep only digits
+
+      // Basic validation
+      if (cardNumber.length < 13 || cardNumber.length > 19) {
+        throw new Error('Invalid card number length');
+      }
+      if (expiryDate.length !== 4) {
+        throw new Error('Invalid expiry date format');
+      }
+      if (cvv.length < 3 || cvv.length > 4) {
+        throw new Error('Invalid CVV length');
+      }
+
+      // Log for mobile debugging
+      console.log('Mobile payment attempt:', {
+        userAgent: navigator.userAgent,
+        formData: { ...formData, cardNumber: '****', cvv: '***' },
+        timestamp: new Date().toISOString(),
+        browser: navigator.userAgent.includes('Safari') ? 'Safari' : 'Other'
+      });
+
+      // Create sanitized form data
+      const sanitizedFormData = {
+        ...formData,
+        cardNumber: cardNumber,
+        expiryDate: expiryDate,
+        cvv: cvv,
+        billingName: formData.billingName.trim(),
+        email: formData.email.trim().toLowerCase(),
+      };
+
       // Use the new Stripe helper for feedback subscription
-      await createFeedbackSubscription(formData);
+      await createFeedbackSubscription(sanitizedFormData);
 
       // Track payment success
       await analytics.trackPaymentSuccess({
@@ -85,7 +119,22 @@ export default function FeedbackSignup({
       onComplete();
     } catch (error) {
       console.error("Payment failed:", error);
-      alert("Payment failed. Please try again.");
+      console.error("Mobile error details:", {
+        error: error,
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+        errorMessage: error instanceof Error ? error.message : 'Unknown error'
+      });
+      
+      // More user-friendly error messages
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      if (errorMessage.includes('Invalid card') || errorMessage.includes('pattern')) {
+        alert("Please check your card details and try again.");
+      } else if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
+        alert("Network error. Please check your connection and try again.");
+      } else {
+        alert("Payment failed. Please try again.");
+      }
     } finally {
       setIsLoading(false);
     }
@@ -435,11 +484,17 @@ export default function FeedbackSignup({
                       inputMode="numeric"
                       placeholder="1234 5678 9012 3456"
                       value={formData.cardNumber}
-                      onChange={(e) =>
-                        setFormData({ ...formData, cardNumber: e.target.value })
-                      }
+                      onChange={(e) => {
+                        // Format card number with spaces for better UX
+                        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                        value = value.replace(/(\d{4})(?=\d)/g, '$1 '); // Add spaces every 4 digits
+                        if (value.length <= 19) { // Max length with spaces
+                          setFormData({ ...formData, cardNumber: value });
+                        }
+                      }}
                       required
                       autoComplete="cc-number"
+                      maxLength={19}
                     />
                   </div>
 
@@ -453,14 +508,19 @@ export default function FeedbackSignup({
                         inputMode="numeric"
                         placeholder="MM/YY"
                         value={formData.expiryDate}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            expiryDate: e.target.value,
-                          })
-                        }
+                        onChange={(e) => {
+                          // Format expiry date
+                          let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+                          if (value.length >= 2) {
+                            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                          }
+                          if (value.length <= 5) {
+                            setFormData({ ...formData, expiryDate: value });
+                          }
+                        }}
                         required
                         autoComplete="cc-exp"
+                        maxLength={5}
                       />
                     </div>
                     <div>
@@ -472,11 +532,16 @@ export default function FeedbackSignup({
                         inputMode="numeric"
                         placeholder="123"
                         value={formData.cvv}
-                        onChange={(e) =>
-                          setFormData({ ...formData, cvv: e.target.value })
-                        }
+                        onChange={(e) => {
+                          // Only allow numeric input
+                          const value = e.target.value.replace(/\D/g, '');
+                          if (value.length <= 4) {
+                            setFormData({ ...formData, cvv: value });
+                          }
+                        }}
                         required
                         autoComplete="cc-csc"
+                        maxLength={4}
                       />
                     </div>
                   </div>

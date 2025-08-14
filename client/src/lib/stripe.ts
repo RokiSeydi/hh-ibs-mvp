@@ -113,10 +113,28 @@ export const createAmbassadorSetup = async (formData: any) => {
       }),
     });
 
-    return await response.json();
+    // Handle Safari-specific response parsing
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (parseError) {
+        // If JSON parsing fails (Safari issue), throw a generic error
+        throw new Error(`HTTP ${response.status}: Failed to process payment`);
+      }
+      throw new Error(errorData.error || errorData.details || 'Payment processing failed');
+    }
+
+    const result = await response.json();
+    return result;
   } catch (error) {
     console.error("Ambassador setup failed:", error);
-    throw error;
+    // Re-throw with a cleaner error message for Safari
+    if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error('Payment processing failed. Please try again.');
+    }
   }
 };
 
@@ -137,10 +155,28 @@ export const createFeedbackSubscription = async (formData: any) => {
       }),
     });
 
-    return await response.json();
+    // Handle Safari-specific response parsing
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+      } catch (parseError) {
+        // If JSON parsing fails (Safari issue), throw a generic error
+        throw new Error(`HTTP ${response.status}: Failed to process payment`);
+      }
+      throw new Error(errorData.error || errorData.details || 'Payment processing failed');
+    }
+
+    const result = await response.json();
+    return result;
   } catch (error) {
     console.error("Feedback subscription failed:", error);
-    throw error;
+    // Re-throw with a cleaner error message for Safari
+    if (error instanceof Error) {
+      throw error;
+    } else {
+      throw new Error('Payment processing failed. Please try again.');
+    }
   }
 };
 

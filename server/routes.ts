@@ -217,10 +217,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
 
+      // Validate required fields
+      if (!email || !billingName || !cardNumber || !expiryDate || !cvv) {
+        return res.status(400).json({ error: "Missing required payment fields" });
+      }
+
+      // Additional validation for Safari compatibility
+      const sanitizedCardNumber = String(cardNumber).replace(/\D/g, '');
+      const sanitizedExpiryDate = String(expiryDate).replace(/\D/g, '');
+      const sanitizedCvv = String(cvv).replace(/\D/g, '');
+
+      if (sanitizedCardNumber.length < 13 || sanitizedCardNumber.length > 19) {
+        return res.status(400).json({ error: "Invalid card number format" });
+      }
+
+      if (sanitizedExpiryDate.length !== 4) {
+        return res.status(400).json({ error: "Invalid expiry date format" });
+      }
+
+      if (sanitizedCvv.length < 3 || sanitizedCvv.length > 4) {
+        return res.status(400).json({ error: "Invalid CVV format" });
+      }
+
       // Create customer in Stripe
       const customer = await stripe.customers.create({
-        email: email,
-        name: billingName,
+        email: String(email).trim().toLowerCase(),
+        name: String(billingName).trim(),
         metadata: {
           type: 'ambassador',
           socialHandle: formData.socialHandle || '',
@@ -252,7 +274,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Ambassador setup failed:", error);
-      res.status(500).json({ error: "Ambassador setup failed" });
+      res.status(500).json({ 
+        error: "Ambassador setup failed",
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
@@ -265,10 +290,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const { email, billingName, cardNumber, expiryDate, cvv, ...formData } = req.body;
 
+      // Validate required fields
+      if (!email || !billingName || !cardNumber || !expiryDate || !cvv) {
+        return res.status(400).json({ error: "Missing required payment fields" });
+      }
+
+      // Additional validation for Safari compatibility
+      const sanitizedCardNumber = String(cardNumber).replace(/\D/g, '');
+      const sanitizedExpiryDate = String(expiryDate).replace(/\D/g, '');
+      const sanitizedCvv = String(cvv).replace(/\D/g, '');
+
+      if (sanitizedCardNumber.length < 13 || sanitizedCardNumber.length > 19) {
+        return res.status(400).json({ error: "Invalid card number format" });
+      }
+
+      if (sanitizedExpiryDate.length !== 4) {
+        return res.status(400).json({ error: "Invalid expiry date format" });
+      }
+
+      if (sanitizedCvv.length < 3 || sanitizedCvv.length > 4) {
+        return res.status(400).json({ error: "Invalid CVV format" });
+      }
+
       // Create customer in Stripe
       const customer = await stripe.customers.create({
-        email: email,
-        name: billingName,
+        email: String(email).trim().toLowerCase(),
+        name: String(billingName).trim(),
         metadata: {
           type: 'feedback',
           reason: formData.reason || '',
@@ -301,7 +348,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     } catch (error) {
       console.error("Feedback subscription failed:", error);
-      res.status(500).json({ error: "Feedback subscription failed" });
+      res.status(500).json({ 
+        error: "Feedback subscription failed",
+        details: error instanceof Error ? error.message : 'Unknown error'
+      });
     }
   });
 
