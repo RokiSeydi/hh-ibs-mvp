@@ -1,18 +1,30 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+export default function handler(req: VercelRequest, res: VercelResponse) {
+  console.log('Test API called:', {
+    method: req.method,
+    url: req.url,
+    headers: req.headers,
+    body: req.body,
+    timestamp: new Date().toISOString()
+  });
 
   try {
-    console.log('Test endpoint called with:', req.body);
-    
-    res.json({ 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+
+    res.status(200).json({ 
       success: true, 
       message: 'Test endpoint working',
+      method: req.method,
       timestamp: new Date().toISOString(),
-      body: req.body
+      body: req.body,
+      url: req.url
     });
   } catch (error) {
     console.error("Test endpoint failed:", error);
