@@ -1,7 +1,7 @@
-// API functions for payment processing
+import { loadStripe } from "@stripe/stripe-js";
 
-// For Apple Pay compatibility - we'll return null since we're using simple API calls
-const stripePromise = Promise.resolve(null);
+// Initialize Stripe with your publishable key
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
 export default stripePromise;
 
 // API function for ambassador setup

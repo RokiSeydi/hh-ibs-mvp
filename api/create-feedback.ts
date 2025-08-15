@@ -20,8 +20,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     const { email, billingName, cardNumber, expiryDate, cvv } = req.body;
 
+    console.log("Feedback subscription request received:", {
+      email,
+      billingName: billingName ? "provided" : "missing",
+      hasCardData: !!cardNumber,
+    });
+
     // Basic validation
     if (!email || !billingName || !cardNumber || !expiryDate || !cvv) {
+      console.log("Missing required fields");
       res.status(400).json({ error: "Missing required fields" });
       return;
     }
@@ -48,6 +55,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // Create Stripe customer and feedback subscription
     if (stripe) {
+      console.log("Creating Stripe customer and subscription...");
+      
       // Create customer
       const customer = await stripe.customers.create({
         email,
@@ -57,8 +66,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         },
       });
 
+      console.log("Customer created:", customer.id);
+
       // Create feedback subscription (£15/month for 3 months, then £30/month)
       const subscription = await createFeedbackSubscription(customer.id);
+
+      console.log("Subscription created:", subscription.id);
 
       res.status(200).json({
         success: true,
@@ -69,6 +82,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         promoEnd: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days from now
       });
     } else {
+      console.log("Stripe not available, returning demo response");
       // Fallback for demo/development
       res.status(200).json({
         success: true,
@@ -81,6 +95,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.status(500).json({
       error: "Internal server error",
       message: error instanceof Error ? error.message : "Unknown error",
+      details: error instanceof Error ? error.stack : undefined,
     });
   }
 }

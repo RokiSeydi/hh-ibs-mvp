@@ -85,6 +85,12 @@ export default function ApplePayButton({
 
         setIsApplePayAvailable(isAppleDevice);
         setIsGooglePayAvailable(isGoogleDevice && !isAppleDevice);
+        
+        // DEBUG: Force Apple Pay on for testing
+        if (isAppleDevice) {
+          setIsApplePayAvailable(true);
+          console.log("DEBUG: Forcing Apple Pay availability for testing");
+        }
       }
     };
 
