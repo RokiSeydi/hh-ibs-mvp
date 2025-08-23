@@ -1,481 +1,300 @@
+import React, { useState, useCallback, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useState } from "react";
-import {
-  Calendar,
-  Play,
-  Users,
-  Sparkles,
-  Star,
-  MapPin,
-  Clock,
-  ArrowRight,
-  ShoppingCart,
-  Loader2,
-} from "lucide-react";
+import { Sparkles } from "lucide-react";
+import ReactConfetti from "react-confetti";
+import { analytics } from "../lib/client-analytics";
 import { useLocation } from "wouter";
-import { type Provider } from "../data/providers";
+
+interface Provider {
+  id: number;
+  title: string;
+  description: string;
+  location: string;
+  availability: string;
+  image: string;
+  whyRecommended: string;
+}
 
 interface SelectedRecommendationsProps {
   providers: Provider[];
   onStartOver: () => void;
-  onJoinWaitlist: () => Promise<void> | void;
-  onBuyMembership: (
-    type?: "ambassador" | "feedback" | "viral"
-  ) => Promise<void> | void;
 }
 
-// Dynamic spots remaining calculation
-const getDynamicSpotsRemaining = (): number => {
-  const now = new Date();
-  const dayOfMonth = now.getDate();
-  const hourOfDay = now.getHours();
-  const minuteOfHour = now.getMinutes();
-
-  // Base number that changes throughout the month (starts high, goes low)
-  const baseSpots = Math.max(8, 26 - dayOfMonth * 0.8);
-
-  // Add some variation based on time of day (lower during peak hours)
-  const timeVariation = hourOfDay >= 9 && hourOfDay <= 17 ? -2 : 1;
-
-  // Add small random-seeming variation based on minutes (but deterministic)
-  const minuteVariation = Math.floor(minuteOfHour / 10) * 0.5;
-
-  const finalSpots = Math.floor(baseSpots + timeVariation + minuteVariation);
-
-  // Ensure we stay within realistic bounds
-  return Math.max(5, Math.min(26, finalSpots));
-};
-
-// Helper functions for pricing
-const getOriginalMarketPrice = (provider: Provider): number => {
-  // Since everything is "Free with HH", we need to estimate what users would pay elsewhere
-  // Based on provider type and quality indicators
-
-  if (provider.type === "therapy") return 80; // Therapy sessions typically £60-100
-  if (provider.type === "coach") return 60; // Coaching sessions typically £40-80
-  if (provider.type === "wellness" && provider.title.includes("Massage"))
-    return 70; // Massage £50-90
-  if (provider.type === "wellness" && provider.title.includes("Sauna"))
-    return 30; // Sauna day passes £20-40
-  if (provider.type === "spiritual" && provider.title.includes("Reading"))
-    return 45; // Tarot/astrology £30-60
-  if (provider.type === "spiritual" && provider.title.includes("Faith"))
-    return 50; // Spiritual guidance £40-60
-  if (provider.type === "activity" && provider.title.includes("Pottery"))
-    return 25; // Art classes £15-35
-  if (provider.type === "activity" && provider.title.includes("Dinner"))
-    return 15; // Social events £10-20
-  if (provider.type === "activity" && provider.title.includes("Puppy"))
-    return 15; // Animal therapy £10-20
-  if (provider.type === "activity" && provider.title.includes("Smash"))
-    return 20; // Rage rooms £15-25
-  if (provider.type === "selfcare") return 35; // Beauty/self-care £25-45
-  if (provider.type === "support") return 0; // Support materials often free
-  if (provider.type === "wellness") return 20; // General wellness £15-30
-
-  return 25; // Default fallback
-};
-
-const calculateTotalSavings = (
-  providers: Provider[]
-): { original: number; discounted: number; savings: number } => {
-  let originalTotal = 0;
-  const discountedTotal = 0; // Everything is free with HH
-
-  providers.forEach((provider) => {
-    // Use the actual retailPrice from the provider data
-    const retailPriceString = provider.retailPrice;
-    const retailPriceNumber = parseFloat(retailPriceString.replace("£", ""));
-    originalTotal += retailPriceNumber;
-  });
-
-  return {
-    original: originalTotal,
-    discounted: discountedTotal,
-    savings: originalTotal, // Full original total is the savings
-  };
-};
-
-export default function SelectedRecommendations({
+const SelectedRecommendations: React.FC<SelectedRecommendationsProps> = ({
   providers,
   onStartOver,
-  onJoinWaitlist,
-  onBuyMembership,
-}: SelectedRecommendationsProps) {
-  const [, setLocation] = useLocation();
-  const [loadingType, setLoadingType] = useState<string | null>(null);
-  const totalSavings = calculateTotalSavings(providers);
-  const spotsRemaining = getDynamicSpotsRemaining();
+}) => {
+  const [isRevealed, setIsRevealed] = useState(false);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailSubmitted, setEmailSubmitted] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 1200,
+    height: typeof window !== "undefined" ? window.innerHeight : 800,
+  });
 
-  const handleMembershipClick = async (
-    type: "ambassador" | "feedback" | "viral"
-  ) => {
-    setLoadingType(type);
-    try {
-      await onBuyMembership(type);
-    } finally {
-      setLoadingType(null);
-    }
-  };
+  const [freeSessionIndex] = useState(() => {
+    // Randomly select an activity to be free
+    return Math.floor(Math.random() * providers.length);
+  });
 
-  const handleWaitlistClick = async () => {
-    setLoadingType("waitlist");
-    try {
-      await onJoinWaitlist();
-    } finally {
-      setLoadingType(null);
-    }
-  };
+  // Update window size on resize
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Handle reveal with confetti
+  const handleReveal = useCallback(() => {
+    setIsRevealed(true);
+    setShowConfetti(true);
+    // Stop confetti after 12 seconds for a longer celebration
+    setTimeout(() => {
+      setShowConfetti(false);
+    }, 12000);
+  }, []);
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-8"
-      >
+    <div className="w-full max-w-4xl mx-auto relative">
+      {showConfetti && (
+        <ReactConfetti
+          width={windowSize.width}
+          height={windowSize.height}
+          numberOfPieces={500}
+          recycle={true}
+          colors={["#9333EA", "#2563EB", "#EC4899", "#8B5CF6"]}
+          gravity={0.07}
+          wind={0.08}
+          initialVelocityX={20}
+          initialVelocityY={-5}
+          friction={0.97}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: -1,
+            pointerEvents: "none",
+          }}
+          opacity={0.8}
+          drawShape={(ctx) => {
+            ctx.beginPath();
+            for (let i = 0; i < 6; i++) {
+              ctx.lineTo(
+                10 * Math.cos((2 * Math.PI * i) / 6),
+                10 * Math.sin((2 * Math.PI * i) / 6)
+              );
+            }
+            ctx.closePath();
+            ctx.fill();
+          }}
+        />
+      )}
+      <div className="text-center mb-8">
         <h2 className="text-3xl font-bold text-gray-800 mb-4">
-          Your Personalized Care Plan
+          Proud of you ✨
         </h2>
-        <p className="text-gray-600 text-lg">
-          Here are the {providers.length} recommendations you selected
+        <p className="text-gray-600 text-lg mb-2">
+          {isRevealed
+            ? `🎉 Congratulations! We have already paid for this care, so you get to enjoy it fully.`
+            : `This is what it feels like to choose the care that’s right for you.`}
+          {/* : `We've carefully selected ${providers.length} recommendations perfect for your needs`} */}
         </p>
-      </motion.div>
-
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        {providers.map((provider, index) => {
-          return (
-            <motion.div
-              key={provider.id}
-              className="bg-white rounded-2xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border border-gray-100"
-              initial={{ opacity: 0, y: 30, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ y: -4 }}
-            >
-              <div className="flex items-start space-x-4">
-                {/* Emoji only */}
-                <div className="flex items-center justify-center">
-                  <div className="text-4xl">{provider.image}</div>
-                </div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <div className="mb-3">
-                    <h3 className="text-lg font-bold text-gray-800 mb-1">
-                      {provider.title}
-                    </h3>
-                    <h4 className="text-base font-semibold text-gray-700">
-                      {provider.name}
-                    </h4>
-                  </div>
-
-                  {/* Rating and location */}
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="flex items-center">
-                      <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                      <span className="text-sm font-medium">
-                        {provider.socialCredential}
-                      </span>
-                    </div>
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="h-3 w-3 mr-1" />
-                      <span className="text-xs">{provider.location}</span>
-                    </div>
-                  </div>
-
-                  {/* Description */}
-                  <p className="text-gray-600 text-sm mb-3 leading-relaxed line-clamp-2">
-                    {provider.description}
-                  </p>
-
-                  {/* Footer */}
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-gray-600">
-                      <Clock className="h-3 w-3 mr-1" />
-                      <span className="text-xs">{provider.availability}</span>
-                    </div>
-                    <div className="text-right">
-                      <div className="space-y-1">
-                        <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-semibold">
-                          Included with HH
-                        </span>
-                        <div className="text-sm font-bold text-blue-600">
-                          {provider.price}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
-
-      {/* Total Savings Summary with Urgency */}
-      <motion.div
-        className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 mb-8 border border-green-100"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-      >
-        <div className="text-center">
-          <div className="bg-red-100 border border-red-200 rounded-lg px-3 py-2 mb-4 inline-block">
-            <span className="text-red-700 font-semibold text-sm">
-              🔥 Almost Sold Out - Only {spotsRemaining} Spots Remaining!
-            </span>
-          </div>
-          <h3 className="text-lg font-bold text-gray-800 mb-2">
-            Your Holding Health Savings
-          </h3>
-          <div className="flex justify-center items-center space-x-4 mb-4">
-            <div className="text-center">
-              <span className="text-sm text-gray-500">Original Total:</span>
-              <p className="text-lg font-semibold text-gray-400 line-through">
-                £{totalSavings.original}
-              </p>
-            </div>
-            <div className="text-center">
-              <span className="text-sm text-gray-500">
-                Holding Health Price:
-              </span>
-              <p className="text-2xl font-bold text-green-600">
-                £{totalSavings.discounted}
-              </p>
-            </div>
-            <div className="text-center">
-              <span className="text-sm text-gray-500">You Save:</span>
-              <p className="text-xl font-bold text-green-500">
-                £{totalSavings.savings}
-              </p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* Action buttons */}
-      <motion.div
-        className="space-y-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-      >
-        {/* Personal Touch Section */}
-        <motion.div
-          className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl p-6 mb-6 border border-violet-100"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
-        >
-          <div className="text-center">
-            <h3 className="text-xl font-bold text-gray-800 mb-3">
-              Let's make this personal.
-            </h3>
-            <p className="text-gray-700 mb-4 leading-relaxed">
-              Hundreds have told us they don't feel heard. <br /> At Holding
-              Health, our healthcare founders want to sit down with you and
-              listen — no sales, just listening.
+        {!isRevealed && (
+          <>
+            <p className="text-purple-600 text-sm mb-4">
+              But hey — actions speak louder than cards, so we’ve got a little
+              something for you...
             </p>
             <motion.button
-              className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-3 rounded-xl font-semibold transition-colors duration-300 inline-flex items-center space-x-2"
+              onClick={handleReveal}
+              className="mt-4 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() =>
-                window.open(
-                  "https://calendly.com/weatholdinghealth-info/30min",
-                  "_blank"
-                )
-              }
             >
-              <span>Book a Call</span>
-              <ArrowRight className="h-4 w-4" />
+              <span className="flex items-center gap-2">
+                <Sparkles className="h-5 w-5" />
+                Click here to see what it is 👀
+              </span>
             </motion.button>
-          </div>
-        </motion.div>
-
-        {/* Combined Access Options */}
-        <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6 mb-6">
-          <div className="text-center mb-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
-              How to Access Your £{totalSavings.savings} Care Plan
-            </h3>
-            <p className="text-gray-600 leading-relaxed">
-              Your personalized recommendations are worth{" "}
-              <strong>£{totalSavings.original}</strong> if you booked them
-              individually. Choose how you'd like to access them through Holding
-              Health:
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            {/* Option 1: Ambassador Program */}
-            <motion.div
-              className="bg-gradient-to-br from-purple-500 to-pink-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-purple-400"
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleMembershipClick("ambassador")}
-            >
-              <div className="text-center">
-                <div className="text-3xl mb-3">✨</div>
-                <h3 className="text-lg font-bold mb-2">Ambassador Access</h3>
-                <div className="bg-white/20 rounded-lg p-3 mb-4">
-                  <p className="text-2xl font-bold">FREE</p>
-                  <p className="text-sm opacity-90">
-                    Access your £{totalSavings.original} care plan
-                  </p>
-                </div>
-                <p className="text-sm opacity-90 mb-4">
-                  Get full access to all {providers.length} of your
-                  recommendations by sharing your wellness journey online
-                </p>
-                <motion.button
-                  className="w-full bg-white text-purple-600 py-2 px-4 rounded-xl font-semibold hover:bg-purple-50 transition-colors flex items-center justify-center space-x-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  disabled={loadingType === "ambassador"}
-                >
-                  {loadingType === "ambassador" ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Setting up...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>I'm In! ✨</span>
-                    </>
-                  )}
-                </motion.button>
-              </div>
-            </motion.div>
-
-            {/* Option 2: Feedback Program */}
-            <motion.div
-              className="bg-gradient-to-br from-blue-500 to-cyan-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-blue-400"
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleMembershipClick("feedback")}
-            >
-              <div className="text-center">
-                <div className="text-3xl mb-3">💙</div>
-                <h3 className="text-lg font-bold mb-2">Feedback Member</h3>
-                <div className="bg-white/20 rounded-lg p-3 mb-4">
-                  <p className="text-sm opacity-75 line-through">
-                    £{totalSavings.original}
-                  </p>
-                  <p className="text-2xl font-bold">£15/month</p>
-                </div>
-                <p className="text-sm opacity-90 mb-4">
-                  Access all {providers.length} of your recommendations for just
-                  £15/month by providing quick feedback after sessions
-                </p>
-                <motion.button
-                  className="w-full bg-white text-blue-600 py-2 px-4 rounded-xl font-semibold hover:bg-blue-50 transition-colors flex items-center justify-center space-x-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  disabled={loadingType === "feedback"}
-                >
-                  {loadingType === "feedback" ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Processing...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Start VIP Access 💙</span>
-                    </>
-                  )}
-                </motion.button>
-              </div>
-            </motion.div>
-
-            {/* Option 3: Waitlist + Referral */}
-            <motion.div
-              className="bg-gradient-to-br from-orange-500 to-red-500 text-white p-6 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 cursor-pointer group border-2 border-orange-400"
-              whileHover={{ y: -4, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleWaitlistClick}
-            >
-              <div className="text-center">
-                <div className="text-3xl mb-3">🎯</div>
-                <h3 className="text-lg font-bold mb-2">Waitlist Priority</h3>
-                <div className="bg-white/20 rounded-lg p-3 mb-4">
-                  <p className="text-2xl font-bold">FREE</p>
-                  <p className="text-sm opacity-90">
-                    your £{totalSavings.original} plan reserved
-                  </p>
-                </div>
-                <p className="text-sm opacity-90 mb-4">
-                  We'll hold your {providers.length} recommendations and notify
-                  you when the next cohort opens. Refer 10 friends = free month!
-                </p>
-                <motion.button
-                  className="w-full bg-white text-orange-600 py-2 px-4 rounded-xl font-semibold hover:bg-orange-50 transition-colors flex items-center justify-center space-x-2"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  disabled={loadingType === "waitlist"}
-                >
-                  {loadingType === "waitlist" ? (
-                    <>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                      <span>Joining...</span>
-                    </>
-                  ) : (
-                    <>
-                      <span>Join Waitlist 🎯</span>
-                    </>
-                  )}
-                </motion.button>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-
-        {/* Urgency Message */}
-        <div className="text-center">
-          <div className="inline-block bg-red-100 border border-red-200 rounded-lg px-4 py-2">
-            <span className="text-red-700 font-semibold text-sm">
-              🔥 Only {spotsRemaining} spots left this month across all
-              programs!
-            </span>
-          </div>
-        </div>
-
-        {/* Secondary action */}
-        <div className="flex justify-center">
-          <motion.button
-            onClick={onStartOver}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium transition-colors duration-300"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
+          </>
+        )}
+      </div>
+      <div className="grid md:grid-cols-2 gap-6 mb-8">
+        {providers.map((provider, index) => (
+          <motion.div
+            key={provider.id}
+            className={`bg-white rounded-2xl p-6 shadow-xl transition-all duration-300 relative ${
+              isRevealed && index === freeSessionIndex
+                ? "border-2 border-purple-500 shadow-2xl"
+                : isRevealed
+                ? "opacity-50 filter blur-[2px]"
+                : "border border-gray-100"
+            }`}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              scale: isRevealed && index === freeSessionIndex ? 1.05 : 1,
+            }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
           >
-            ← Start Over
-          </motion.button>
-        </div>
-      </motion.div>
+            <div className="flex items-start space-x-4">
+              <div className="flex items-center justify-center">
+                <div className="text-4xl">{provider.image}</div>
+              </div>
+              <div className="flex-1">
+                {isRevealed && index === freeSessionIndex && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="inline-block px-3 py-1 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-sm rounded-full font-medium mb-2"
+                  >
+                    UH LALA! THIS ONE IS ON US!! 🤩
+                  </motion.span>
+                )}
+                <h3 className="text-lg font-bold text-gray-800 mb-1">
+                  {provider.title}
+                </h3>
+                <p className="text-gray-600 mb-2">{provider.description}</p>
+                <div className="text-xs text-gray-400 mb-1">
+                  {provider.location} • {provider.availability}
+                </div>
+                <div className="text-xs text-gray-400 mb-1">
+                  <span className="font-semibold">Why:</span>{" "}
+                  {provider.whyRecommended}
+                </div>
+              </div>
+            </div>
+            {isRevealed && index === freeSessionIndex && !emailSubmitted && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                className="mt-4 pt-4 border-t border-gray-100"
+              >
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    try {
+                      // Track the voucher redemption
+                      await analytics.trackFormSubmission({
+                        firstName: "",
+                        lastName: "",
+                        email: email,
+                        reason: `Claimed free session for ${provider.title}`,
+                      });
 
-      {/* Encouraging message with urgency */}
-      <motion.div
-        className="text-center mt-8 space-y-4"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1 }}
-      >
-        {/* <div className="p-6 bg-gradient-to-r from-violet-50 to-purple-50 rounded-2xl border border-violet-100">
-          <p className="text-gray-700 font-medium mb-3">
-            You've taken an important step towards feeling better. Remember,
-            healing takes time and you're not alone in this journey. 💜
-          </p>
-        </div> */}
+                      // Track as a successful conversion
+                      await analytics.trackPaymentSuccess({
+                        email: email,
+                        tier: "free_session",
+                        paymentMethod: "voucher",
+                        amount: 0,
+                        transactionId: `voucher_${Date.now()}`,
+                      });
 
-        {/* <div className="p-4 bg-gradient-to-r from-red-50 to-orange-50 rounded-xl border border-red-200">
-          <p className="text-red-700 font-semibold text-sm">
-            ⏰ Only {spotsRemaining} membership spots left this month! Secure
-            your access to all these services before we're full.
-          </p>
-        </div> */}
-      </motion.div>
+                      setEmailSubmitted(true);
+                      // Show feedback after a delay
+                      setTimeout(() => setShowFeedback(true), 1500);
+                    } catch (error) {
+                      console.error("Failed to process voucher:", error);
+                      // Still show success to user even if analytics fails
+                      setEmailSubmitted(true);
+                      setTimeout(() => setShowFeedback(true), 1500);
+                    }
+                  }}
+                  className="space-y-3"
+                >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email to claim your gift"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+                    required
+                  />
+                  <motion.button
+                    type="submit"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium"
+                  >
+                    Send it already 😭
+                  </motion.button>
+                </form>
+              </motion.div>
+            )}
+            {isRevealed && index === freeSessionIndex && emailSubmitted && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="mt-4 pt-4 border-t border-gray-100 text-center"
+              >
+                <p className="text-green-600 font-medium">
+                  ✨ Thanks for claiming your free session!
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  We'll reach out within 24 hours with your voucher details!
+                </p>
+              </motion.div>
+            )}
+          </motion.div>
+        ))}
+      </div>
+      {showFeedback && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="max-w-md mx-auto mt-8 p-6 bg-white rounded-xl shadow-lg text-center"
+        >
+          <h3 className="text-lg font-semibold mb-4">
+            How was your experience?
+          </h3>
+          <div className="flex justify-center space-x-4 mb-6">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                onClick={() => setRating(star)}
+                className={`text-2xl transition-colors ${
+                  rating >= star ? "text-yellow-400" : "text-gray-300"
+                }`}
+              >
+                ⭐
+              </button>
+            ))}
+          </div>
+          {rating > 0 && (
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-green-600"
+            >
+              Thanks for your feedback! 🙏
+            </motion.p>
+          )}
+        </motion.div>
+      )}
+      <div className="flex justify-center mt-8">
+        <button
+          onClick={() => {
+            onStartOver();
+            window.location.href = "/";
+          }}
+          className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-medium transition-colors duration-300"
+        >
+          ← Back to Home
+        </button>
+      </div>
     </div>
   );
-}
+};
+
+export default SelectedRecommendations;

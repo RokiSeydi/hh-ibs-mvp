@@ -10,7 +10,7 @@ import ProgramSuccess from "./program-success";
 import AmbassadorSignup from "../components/ambassador-signup";
 import FeedbackSignup from "../components/feedback-signup";
 import { analytics } from "../lib/client-analytics";
-import { type Provider } from "../data/providers";
+import { minimalProviders, type Provider } from "../data/providers";
 
 interface IntakeFormData {
   firstName: string;
@@ -38,10 +38,8 @@ const getResponseMessage = (reason: string): string => {
 };
 
 export default function CareAssistant() {
-  const [formData, setFormData] = useState<IntakeFormData | null>(null);
+  const [formData] = useState<IntakeFormData | null>(null);
   const [currentStep, setCurrentStep] = useState<
-    | "input"
-    | "response"
     | "swiping"
     | "results"
     | "thank-you"
@@ -49,8 +47,7 @@ export default function CareAssistant() {
     | "payment-success"
     | "ambassador-signup"
     | "feedback-signup"
-  >("input");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  >("swiping");
   const [selectedProviders, setSelectedProviders] = useState<Provider[]>([]);
   const [programType, setProgramType] = useState<
     "ambassador" | "feedback" | "payment" | "waitlist"
@@ -103,10 +100,8 @@ export default function CareAssistant() {
   };
 
   const handleStartOver = () => {
-    setFormData(null);
-    setCurrentStep("input");
+    setCurrentStep("swiping");
     setSelectedProviders([]);
-    setIsSubmitting(false);
   };
 
   const handleJoinWaitlist = async () => {
@@ -269,8 +264,7 @@ export default function CareAssistant() {
             </motion.h2>
             <SwipeCards
               onSelection={handleProviderSelection}
-              userReason={formData?.reason || "going-through-something"}
-              userEmail={formData?.email}
+              userReason="ibs"
             />
           </motion.div>
         )}

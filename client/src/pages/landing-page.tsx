@@ -59,20 +59,21 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <Badge className="mb-6 bg-blue-100 text-blue-800 border-blue-200">
-              🚀 Launching Soon - Swipe for your matches
+              🫂 Designed with Asian women in mind
             </Badge>
             <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
-              Swipe right on your next
+              IBS care
               <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 {" "}
-                care package
+                built for soy sauce, stomach flips, and saving face
               </span>
             </h1>
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              From breakups to burnout, haircare to back pain — find the care
-              that gets you. <br /> No financial worries. No waiting lists.
-              <br /> Just you, matched to what you need, when you need it.
-              <br /> Forever free with us.
+              Sensitive to both your gut and your culture. <br />
+              IBS-safe care with Asian vibes, real providers, and no side-eye
+              from auntie. <br />
+              <br />
+              Trust your gut (🥲) and swipe right on care that fits you.
             </p>
             <div className="flex flex-col gap-6 items-center">
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
@@ -134,7 +135,7 @@ export default function LandingPage() {
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               From nails to nutrition, therapy to medical care (coming soon) —
-              match to care that fits your needs. <br /> It’s on us.
+              match to care that fits your needs.
             </p>
           </div>
 
@@ -150,7 +151,9 @@ export default function LandingPage() {
                   🧠
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Heartbreak recovery</h3>
+                  <h3 className="font-semibold text-lg">
+                    They ghosted me... and my stomach's a mess.
+                  </h3>
                   <p className="text-sm text-gray-500">
                     {" "}
                     Get real advice from a certified relationship expert
@@ -203,10 +206,10 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">
-                    Osteopath for chronic pain
+                    Back pain every time I sit at my desk too long
                   </h3>
                   <p className="text-sm text-gray-500">
-                    Restore natural movement and long-term comfort
+                    Osteopath-led chronic pain relief
                   </p>
                 </div>
               </div>
@@ -255,10 +258,10 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">
-                    Art Therapy Workshop
+                    I feel anxious, but don’t know how to say it out loud
                   </h3>
                   <p className="text-sm text-gray-500">
-                    Take care of your mental health in a creative way
+                    Art therapy for mental health & self-expression
                   </p>
                 </div>
               </div>
@@ -307,10 +310,10 @@ export default function LandingPage() {
                 </div>
                 <div>
                   <h3 className="font-semibold text-lg">
-                    Butterfly Garden Visit
+                    Sometimes I just need peace... and nature
                   </h3>
                   <p className="text-sm text-gray-500">
-                    Nature therapy experience
+                    Butterfly garden visit for grounding & sensory joy
                   </p>
                 </div>
               </div>
@@ -356,9 +359,11 @@ export default function LandingPage() {
                   💆
                 </div>
                 <div>
-                  <h3 className="font-semibold text-lg">Thai Back Massage</h3>
+                  <h3 className="font-semibold text-lg">
+                    I hold all my stress in my shoulders
+                  </h3>
                   <p className="text-sm text-gray-500">
-                    Because healing often starts with touch
+                    Traditional Thai massage
                   </p>
                 </div>
               </div>
@@ -452,8 +457,8 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Swipe</h3>
               <p className="text-gray-600">
-                Tell us what's going on — feeling low, leveling up, curious, or
-                craving change — and start swiping.
+                Talk to us. What has been going on? We'll listen and prep your
+                recommendations. Then start swiping
               </p>
             </div>
 
@@ -464,7 +469,7 @@ export default function LandingPage() {
               <h3 className="text-xl font-semibold mb-4">Match</h3>
               <p className="text-gray-600">
                 From viral TikTok therapists to local hidden gems — see what
-                fits you today.
+                fits you today
               </p>
             </div>
 
@@ -474,8 +479,8 @@ export default function LandingPage() {
               </div>
               <h3 className="text-xl font-semibold mb-4">Enjoy</h3>
               <p className="text-gray-600">
-                Your membership covers it. Or join our waitlist for
-                free/half-price access by sharing with friends.
+                Explore as much as you want. Our beta testers have free access
+                to our platform
               </p>
             </div>
           </div>
@@ -493,7 +498,7 @@ export default function LandingPage() {
                 Meet your care matches 💘
               </h3>
               <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                If Tinder, Pret a Manger, and the NHS had a baby — it’d look
+                If Tinder and your local health system had a baby — it’d look
                 like this.
               </p>
             </div>
@@ -513,8 +518,7 @@ export default function LandingPage() {
                     “My love language? Picking up the bill.”
                   </p>
                   <p className="mt-4 text-gray-600">
-                    Your membership covers what matters — no surprise charges,
-                    no panic at checkout.
+                    We are in testing mode, so money is not even a topic
                   </p>
                 </CardContent>
               </Card>

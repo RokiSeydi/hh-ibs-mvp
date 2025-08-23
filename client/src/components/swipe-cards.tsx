@@ -14,7 +14,8 @@ import {
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
-import { providersByReason, type Provider } from "../data/providers";
+import { minimalProviders, type Provider } from "../data/providers";
+import { useSimpleSound } from "../hooks/useSimpleSound";
 import { TikTokEmbed } from "./tiktok-embed";
 import { InstagramEmbed } from "./instagram-embed";
 import { analytics } from "../lib/client-analytics";
@@ -40,10 +41,12 @@ export default function SwipeCards({
   const [showCTA, setShowCTA] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Get providers based on user's reason
-  const providers =
-    providersByReason[userReason as keyof typeof providersByReason] ||
-    providersByReason["going-through-something"];
+  // Sound hooks for swipe left/right
+  const playSwipeLeft = useSimpleSound("/sounds/swipe-left.mp3");
+  const playSwipeRight = useSimpleSound("/sounds/swipe-right.mp3");
+
+  // Use minimal providers for MVP
+  const providers = minimalProviders;
   const currentProvider = providers[currentIndex];
 
   // Reset showCTA if selections drop below 4
@@ -55,6 +58,10 @@ export default function SwipeCards({
 
   const handleSwipe = (direction: "left" | "right") => {
     let newSelectedProviders = selectedProviders;
+
+    // Play sound effect
+    if (direction === "left") playSwipeLeft();
+    if (direction === "right") playSwipeRight();
 
     // Track swipe action asynchronously (don't wait for it)
     if (userEmail) {
@@ -443,10 +450,9 @@ export default function SwipeCards({
                   <div className="flex items-center space-x-2">
                     <Heart className="h-4 w-4 text-blue-500" />
                     <p className="text-xs text-blue-700">
-                      <span className="font-semibold">
-                        Holding Health Guarantee:
-                      </span>{" "}
-                      Not satisfied? We will refund your free treatment.
+                      <span className="font-semibold">Any questions?</span>{" "}
+                      <br />
+                      Contact us at info@weatholdinghealth.com
                     </p>
                   </div>
                 </div>
