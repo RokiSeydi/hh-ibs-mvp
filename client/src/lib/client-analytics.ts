@@ -89,10 +89,23 @@ export const analytics = {
   trackWaitlistSignup: async (waitlistData: {
     email: string;
     referralCode?: string;
-    referredBy?: string;
   }) => {
     try {
-      console.log("Analytics disabled:", waitlistData);
+      // Track the event using Vercel Analytics
+      const eventData = {
+        name: 'waitlist_signup',
+        email: waitlistData.email,
+        referralCode: waitlistData.referralCode,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Log to console for debugging
+      console.log("📊 Tracking waitlist signup:", eventData);
+      
+      // Send to Vercel Analytics
+      if (typeof window !== 'undefined' && (window as any).va) {
+        (window as any).va('event', eventData);
+      }
     } catch (error) {
       console.error("❌ Analytics tracking failed:", error);
     }
