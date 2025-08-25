@@ -60,6 +60,8 @@ export default function IntakeForm({
   });
 
   const submitToGoogleSheet = async (data: IntakeFormData) => {
+    setIsSubmittingToSheet(true);
+
     const GOOGLE_SHEET_URL =
       import.meta.env.VITE_GOOGLE_SHEET_URL ||
       "https://script.google.com/macros/s/AKfycbxkHY053w1TXg4IYmMXL2w0zCfhRwdr-pqANjbJC-DHRPBTZ7NGcYaEHzXnuW7v9xM-/exec";
@@ -116,19 +118,11 @@ export default function IntakeForm({
   };
 
   const handleFormSubmit = async (data: IntakeFormData) => {
-    setIsSubmittingToSheet(true);
-
     try {
-      // Submit to Google Sheets
+      // Submit to Google Sheets first
       await submitToGoogleSheet(data);
 
-      // toast({
-      //   title: "Thank you! 💜",
-      //   description:
-      //     "We've received your information and will be in touch soon.",
-      // });
-
-      // Call the parent onSubmit function
+      // Then call the parent onSubmit function (which handles navigation)
       onSubmit(data);
     } catch (error) {
       console.error("Form submission error:", error);
@@ -284,10 +278,15 @@ export default function IntakeForm({
           >
             <Button
               type="submit"
-              disabled={!isValid || isFormSubmitting}
+              disabled={!isValid || isFormSubmitting || isSubmittingToSheet}
               className="w-full bg-gradient-to-r from-[var(--care-purple)] to-[var(--care-blue)] text-white px-6 py-4 rounded-xl font-medium hover:shadow-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
             >
-              {isFormSubmitting ? (
+              {isSubmittingToSheet ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin mr-2" />
+                  Saving your preferences...
+                </>
+              ) : isFormSubmitting ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin mr-2" />
                   Getting your matches ready...

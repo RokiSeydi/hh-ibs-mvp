@@ -71,6 +71,7 @@ export default function LandingPage() {
               A care package that understands Asian dietary needs, <br />
               family dynamics, and modern lifestyle. <br />
               Find relief that fits you.
+              <br /> ...in less than 2 minutes.
             </p>
             <div className="flex flex-col gap-6 items-center">
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

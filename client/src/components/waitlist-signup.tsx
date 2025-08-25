@@ -135,7 +135,14 @@ export default function WaitlistSignup({
         disabled={isSubmitting}
         className="bg-blue-600 hover:bg-blue-700"
       >
-        {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Join"}
+        {isSubmitting ? (
+          <div className="flex items-center gap-2">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            <span>Joining...</span>
+          </div>
+        ) : (
+          "Join"
+        )}
       </Button>
     </form>
   );

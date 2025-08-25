@@ -73,7 +73,12 @@ export default function LandingPage() {
               IBS-safe care with Asian vibes, real providers, and no side-eye
               from auntie. <br />
               <br />
-              Trust your gut (🥲) and swipe right on care that fits you.
+              Trust your gut (🥲) and swipe right to create care that fits you.
+              <br />{" "}
+              <span className="italic text-gray-500">
+                ...in less than 2 minutes
+              </span>{" "}
+              🤫
             </p>
             <div className="flex flex-col gap-6 items-center">
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

@@ -29,6 +29,7 @@ const SelectedRecommendations: React.FC<SelectedRecommendationsProps> = ({
   const [email, setEmail] = useState("");
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [rating, setRating] = useState(0);
   const [windowSize, setWindowSize] = useState({
     width: typeof window !== "undefined" ? window.innerWidth : 1200,
@@ -51,6 +52,22 @@ const SelectedRecommendations: React.FC<SelectedRecommendationsProps> = ({
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+  // Add warning when leaving page during submission
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isSubmitting) {
+        const message =
+          "Your submission is still processing. Are you sure you want to leave?";
+        e.preventDefault();
+        e.returnValue = message;
+        return message;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isSubmitting]);
 
   // Handle reveal with confetti
   const handleReveal = useCallback(() => {
@@ -183,32 +200,47 @@ const SelectedRecommendations: React.FC<SelectedRecommendationsProps> = ({
                 <form
                   onSubmit={async (e) => {
                     e.preventDefault();
+                    setIsSubmitting(true);
                     try {
-                      // Track the voucher redemption
-                      await analytics.trackFormSubmission({
+                      console.log("Starting form submission...");
+                      const startTime = Date.now();
+
+                      // Track both form submission and payment in one request
+                      // Show success message as soon as the request is sent
+                      setEmailSubmitted(true);
+                      setShowFeedback(true);
+
+                      const result = await analytics.trackFormSubmission({
                         firstName: "",
                         lastName: "",
                         email: email,
                         reason: `Claimed free session for ${provider.title}`,
-                      });
-
-                      // Track as a successful conversion
-                      await analytics.trackPaymentSuccess({
-                        email: email,
+                        // Add payment tracking data
                         tier: "free_session",
                         paymentMethod: "voucher",
-                        amount: 0,
+                        amount: "0",
                         transactionId: `voucher_${Date.now()}`,
+                        eventType: "voucher_claim",
                       });
 
-                      setEmailSubmitted(true);
-                      // Show feedback after a delay
-                      setTimeout(() => setShowFeedback(true), 1500);
+                      console.log(
+                        `Form submission took ${Date.now() - startTime}ms`
+                      );
+
+                      // If submission failed, revert the UI state
+                      if (!result?.success) {
+                        setEmailSubmitted(false);
+                        setShowFeedback(false);
+                        throw new Error("Form submission failed");
+                      }
                     } catch (error) {
                       console.error("Failed to process voucher:", error);
-                      // Still show success to user even if analytics fails
-                      setEmailSubmitted(true);
-                      setTimeout(() => setShowFeedback(true), 1500);
+                      // Show error message to user
+                      alert(
+                        "There was a problem saving your email. Please try again!"
+                      );
+                    } finally {
+                      setIsSubmitting(false);
                     }
                   }}
                   className="space-y-3"
@@ -223,11 +255,38 @@ const SelectedRecommendations: React.FC<SelectedRecommendationsProps> = ({
                   />
                   <motion.button
                     type="submit"
+                    disabled={isSubmitting}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium"
+                    className="w-full py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Send it already 😭
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <svg
+                          className="animate-spin h-5 w-5 text-white"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                        >
+                          <circle
+                            className="opacity-25"
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="4"
+                          ></circle>
+                          <path
+                            className="opacity-75"
+                            fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                          ></path>
+                        </svg>
+                        <span>Sending...</span>
+                      </div>
+                    ) : (
+                      "Send it already 😭"
+                    )}
                   </motion.button>
                 </form>
               </motion.div>
