@@ -59,7 +59,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center">
             <Badge className="mb-6 bg-blue-100 text-blue-800 border-blue-200">
-              🫂 Designed with Asian women in mind
+              🫂 Designed with IBS in mind
             </Badge>
             <h1 className="text-4xl sm:text-6xl font-bold text-gray-900 mb-6">
               IBS care
@@ -81,6 +81,18 @@ export default function LandingPage() {
               🤫
             </p>
             <div className="flex flex-col gap-6 items-center">
+              {/* High Demand Notice */}
+              <div className="w-full max-w-2xl bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200 rounded-lg p-4 text-center mb-2">
+                <p className="text-amber-800 font-medium">
+                  🔥 Due to viral demand, some care options are temporarily
+                  unavailable
+                </p>
+                <p className="text-sm text-amber-600 mt-1">
+                  Join the waitlist below or email us at
+                  info@weatholdinghealth.com for special requests
+                </p>
+              </div>
+
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
                 <Link href="/get-started">
                   <Button
